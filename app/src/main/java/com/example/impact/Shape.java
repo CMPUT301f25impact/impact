@@ -1,6 +1,20 @@
 package com.example.impact;
 
-public class Shape {
-    public Integer x;
-    public Integer y;
+public abstract class Shape {
+    private Integer x;
+    private Integer y;
+
+    public Shape(Integer x, Integer y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Integer getX() {
+        return x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
 }

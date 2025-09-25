@@ -1,2 +1,2 @@
-This is our team project repo
-Go Impact!
+CCID: askhan4
+Name: Aisha Khan

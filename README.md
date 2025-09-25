@@ -1,2 +1,2 @@
-This is our team project repo
-Go Impact!
+Name: Jeremy Carefoot
+CCID: carefoot

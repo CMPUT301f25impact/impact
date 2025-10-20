@@ -19,7 +19,7 @@
 | **Responsibilities** | **Collaborators**   |
 |                      |                     |
 
-| **Class**            | OrganizersDashboard |
+| **Class**            | OrganizerDashboard |
 | -------------------- | ------------------- |
 | **Responsibilities** | **Collaborators**   |
 |                      |                     |
@@ -45,7 +45,8 @@
 | **Class**            | ProfileFragment   |
 | -------------------- | ----------------- |
 | **Responsibilities** | **Collaborators** |
-|                      |                   |
+| Form with the ability to edit profile data | User |
+| Ability to delete profile | |
 
 | **Class**            | EntrantEventFragment |
 | -------------------- | -------------------- |
@@ -59,11 +60,6 @@
 | Store image metadata | |
 
 | **Class**            | EntrantDashboard  |
-| -------------------- | ----------------- |
-| **Responsibilities** | **Collaborators** |
-|                      |                   |
-
-| **Class**            | ProfileFragment   |
 | -------------------- | ----------------- |
 | **Responsibilities** | **Collaborators** |
 |                      |                   |
@@ -94,3 +90,9 @@
 | Store created events | User |
 | | Event |
 
+| **Class**            | **MainActivity**  |
+| -------------------- | ----------------- |
+| **Responsibilities** | **Collaborators** |
+| Main view that displays appropriate toolbar/dashboard | AdminDashboard |
+| | EntrantDashboard |
+| | OrganizerDashboard |

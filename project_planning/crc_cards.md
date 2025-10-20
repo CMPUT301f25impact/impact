@@ -1,0 +1,7 @@
+
+| Class            |               |
+| ---------------- | ------------- |
+| Responsibilities | Collaborators |
+|                  |               |
+|                  |               |
+|                  |               |

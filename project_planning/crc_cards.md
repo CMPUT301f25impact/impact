@@ -3,8 +3,6 @@
 | -------------------- | ------------------- |
 | **Responsibilities** | **Collaborators**   |
 |                      |                     |
-|                      |                     |
-|                      |                     |
 
 | **Class**            | SendNotificationsFragment |
 | -------------------- | ------------------------- |
@@ -29,12 +27,15 @@
 | **Class**            | Invitation        |
 | -------------------- | ----------------- |
 | **Responsibilities** | **Collaborators** |
-|                      |                   |
+| Store user and event they were invited to | User |
+| Store any other invitation data (message etc.) | Event |
 
-| **Class**            | Notifications     |
+| **Class**            | Notification     |
 | -------------------- | ----------------- |
 | **Responsibilities** | **Collaborators** |
-|                      |                   |
+| Model notification information | Event |
+| Store notification type | User |
+| Store linked event or waitlist | |
 
 | **Class**            | NotificationsFragment |
 | -------------------- | --------------------- |
@@ -54,7 +55,8 @@
 | **Class**            | Image             |
 | -------------------- | ----------------- |
 | **Responsibilities** | **Collaborators** |
-|                      |                   |
+| Store raw image data | Event |
+| Store image metadata | |
 
 | **Class**            | EntrantDashboard  |
 | -------------------- | ----------------- |
@@ -69,7 +71,9 @@
 | **Class**            | Event             |
 | -------------------- | ----------------- |
 | **Responsibilities** | **Collaborators** |
-|                      |                   |
+| Model event information | User |
+| Keep track of event image/QR code | Image |
+| Store enrolled users | |
 
 | **Class**            | AdminDashboard    |
 | -------------------- | ----------------- |
@@ -79,4 +83,14 @@
 | **Class**            | User              |
 | -------------------- | ----------------- |
 | **Responsibilities** | **Collaborators** |
-|                      |                   |
+| Model profile info | Notification |
+| Model authentication info | Invitation |
+| Store settings or preferences | |
+| Keep track of notifications and invitations  |  |
+
+| **Class**            | Organizer              |
+| -------------------- | ----------------- |
+| **Responsibilities** | **Collaborators** |
+| Store created events | User |
+| | Event |
+

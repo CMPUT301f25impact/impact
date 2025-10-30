@@ -1,4 +1,4 @@
-package com.example.impact;
+package com.example.eventlotteryapp;
 
 import android.os.Bundle;
 

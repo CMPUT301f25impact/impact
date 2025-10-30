@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.eventlotteryapp"
+    namespace = "com.example.impact"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.eventlotteryapp"
+        applicationId = "com.example.impact"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

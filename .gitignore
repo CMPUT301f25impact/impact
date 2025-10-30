@@ -7,3 +7,5 @@ local.properties
 captures/
 .cxx/
 .externalNativeBuild/
+.vscode/
+.DS_Store

@@ -1,4 +1,4 @@
-package com.example.eventlotteryapp;
+package com.example.impact;
 
 import org.junit.Test;
 

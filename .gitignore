@@ -12,3 +12,4 @@ captures/
 .vscode/
 .DS_Store
 app/google-services.json
+local.properties

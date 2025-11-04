@@ -1,6 +1,8 @@
 .idea/
 .gradle/
 local.properties
+
+
 *.iml
 /build/
 **/build/
@@ -9,3 +11,5 @@ captures/
 .externalNativeBuild/
 .vscode/
 .DS_Store
+app/google-services.json
+local.properties

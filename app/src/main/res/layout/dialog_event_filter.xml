@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextFilterInterest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/event_filter_interest_hint"
+        android:inputType="text" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/event_filter_start_date_label" />
+
+    <TextView
+        android:id="@+id/textViewFilterStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/edit_text"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:text="@string/event_filter_any_date" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/event_filter_end_date_label" />
+
+    <TextView
+        android:id="@+id/textViewFilterEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/edit_text"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="12dp"
+        android:text="@string/event_filter_any_date" />
+</LinearLayout>

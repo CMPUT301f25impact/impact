@@ -30,6 +30,23 @@ implementation("com.google.firebase:firebase-firestore")
 
 The google-services plugin is also applied in the same file.
 
+---
+
+## 4. Firestore usage in the entrant iteration (Aisha)
+
+For the entrant user stories delivered this iteration, Firestore is already wired up and pre-populated helpers are in place. Highlights:
+
+- **Shared access:** `utils/FirebaseUtil.java` exposes a single `FirebaseFirestore.getInstance()` so controllers stay clean.
+- **Controllers:**
+  - `controller/EntrantController.java` handles entrant profile save/update/delete and reads entrant history using a `collectionGroup` query on the nested waiting list documents.
+  - `controller/EventController.java` loads events, including optional tag/date filtering.
+  - `controller/WaitingListController.java` joins/leaves `waitingLists/{eventId}/entrants/{entrantId}`.
+- **Models:** Firestore documents map to `model/Entrant`, `Event`, `WaitingListEntry`, and `EntrantHistoryItem` for easy `toObject` hydration.
+- **UI wiring:** Activities in `view/` obtain a controller instance, call the relevant Firestore operation, and react to success/failure callbacks with toasts + UI updates.
+- **Demo data:** `MainActivity` now includes a “Seed Demo Events” button that batches three sample events into the `events` collection so teammates can immediately test browse/filter/join flows without manually creating documents.
+
+Because all Firestore plumbing is already implemented for these stories, teammates only need to add their own `google-services.json`, enable the API once, and (optionally) update security rules—no extra integration work required.
+
 ## 🔹4. Gradle plugin versions
 
 Our Gradle configuration uses:
@@ -73,4 +90,3 @@ Verify that you didn’t rename it.
 Rebuild the project (Build → Clean Project → Rebuild Project).
 
 If issues persist, contact Aisha for the latest project configuration.
-

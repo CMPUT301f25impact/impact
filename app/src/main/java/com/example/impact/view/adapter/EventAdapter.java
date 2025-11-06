@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
 import com.example.impact.model.Event;
+import com.example.impact.utils.DateUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     private final List<Event> events = new ArrayList<>();
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
     private final OnEventClickListener listener;
 
     public EventAdapter(OnEventClickListener listener) {
@@ -64,21 +64,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         notifyDataSetChanged();
     }
 
-    private String formatDateRange(Event event) {
-        Date start = event.getStartDate();
-        Date end = event.getEndDate();
-        if (start != null && end != null) {
-            return dateFormat.format(start) + " - " + dateFormat.format(end);
-        }
-        if (start != null) {
-            return dateFormat.format(start);
-        }
-        if (end != null) {
-            return dateFormat.format(end);
-        }
-        return "";
-    }
-
     class EventViewHolder extends RecyclerView.ViewHolder {
         private final TextView nameText;
         private final TextView dateText;
@@ -93,7 +78,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         void bind(Event event) {
             nameText.setText(event.getName());
-            dateText.setText(formatDateRange(event));
+            dateText.setText(DateUtil.formatDateRange(event));
             descriptionText.setText(event.getDescription());
 
             itemView.setOnClickListener(v -> {

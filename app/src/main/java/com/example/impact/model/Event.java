@@ -23,6 +23,9 @@ public class Event implements Serializable {
     @Nullable
     private String posterUrl;
     private List<String> tags = new ArrayList<>();
+    private String qrCodeUrl;
+    private String organizerId;
+    private Integer capacity;
 
     /**
      * Required empty constructor for Firestore deserialization.
@@ -118,7 +121,17 @@ public class Event implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags != null ? tags : new ArrayList<>();
     }
+    @Nullable
+    public String getQrCodeUrl() { return qrCodeUrl; }
+    public void setQrCodeUrl(@Nullable String qrCodeUrl) { this.qrCodeUrl = qrCodeUrl; }
 
+    @Nullable
+    public String getOrganizerId() { return organizerId; }
+    public void setOrganizerId(@Nullable String organizerId) { this.organizerId = organizerId; }
+
+    @Nullable
+    public Integer getCapacity() { return capacity; }
+    public void setCapacity(@Nullable Integer capacity) { this.capacity = capacity; }
     /**
      * Populates an event from a Firestore snapshot.
      */

@@ -8,10 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/organizerToolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
+            android:layout_height="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.Material3.Light"
+            app:titleTextColor="@android:color/black"
+            app:subtitleTextColor="@android:color/black"
+            app:navigationIconTint="@android:color/black" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/organizerTabLayout"

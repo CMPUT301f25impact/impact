@@ -48,4 +48,25 @@
     <string name="organizer_dashboard_title">Organizer Dashboard</string>
     <string name="organizer_tools_placeholder">Organizer Tools Page Placeholder</string>
     <string name="entrant_view_placeholder">Entrant View Page Placeholder</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button_text">Login</string>
+    <string name="login_success_message">Login successful</string>
+    <string name="login_missing_fields">Please enter email and password</string>
+    <string name="login_invalid_credentials">Invalid email or password</string>
+    <string name="login_error_generic">Unable to complete login</string>
+    <string name="login_go_to_signup">Need an account? Sign up</string>
+    <string name="signup_button_text">Sign Up</string>
+    <string name="signup_missing_fields">Please provide email and password</string>
+    <string name="signup_email_exists">An account with this email already exists</string>
+    <string name="signup_success_message">Account created successfully</string>
+    <string name="signup_error_generic">Unable to complete signup</string>
+    <string name="signup_go_to_login">Already have an account? Log in</string>
+    <string name="splash_loading_message">Checking login status\u2026</string>
+    <string name="logout_action">Logout</string>
+    <string name="logout_success">Signed out</string>
+    <string name="logout_error">Unable to sign out completely</string>
+    <string name="admin_dashboard_placeholder">Admin Dashboard Placeholder</string>
+    <string name="admin_dashboard_title">Admin Dashboard</string>
+    <string name="entrant_dashboard_title">Entrant Dashboard</string>
 </resources>

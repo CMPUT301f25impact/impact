@@ -2,12 +2,17 @@ package com.example.impact.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.impact.R;
+import com.example.impact.utils.SessionManager;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
@@ -22,10 +27,26 @@ import java.util.Map;
 public class EntrantActivity extends AppCompatActivity {
     private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";
 
+    private String entrantId;
+    private SessionManager sessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
+
+        entrantId = getIntent().getStringExtra(LoginActivity.EXTRA_USER_ID);
+        if (TextUtils.isEmpty(entrantId)) {
+            entrantId = PLACEHOLDER_ENTRANT_ID;
+        }
+
+        sessionManager = new SessionManager(this);
+
+        MaterialToolbar toolbar = findViewById(R.id.entrantToolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.entrant_dashboard_title);
+        }
 
         Button profileButton = findViewById(R.id.buttonOpenProfile);
         Button eventsButton = findViewById(R.id.buttonOpenEvents);
@@ -33,15 +54,39 @@ public class EntrantActivity extends AppCompatActivity {
         Button seedButton = findViewById(R.id.buttonSeedDemoData);
 
         profileButton.setOnClickListener(v -> startActivity(new Intent(this, EntrantProfileActivity.class)
-                .putExtra(EntrantProfileActivity.EXTRA_ENTRANT_ID, PLACEHOLDER_ENTRANT_ID)));
+                .putExtra(EntrantProfileActivity.EXTRA_ENTRANT_ID, entrantId)));
 
         eventsButton.setOnClickListener(v -> startActivity(new Intent(this, EventListActivity.class)
-                .putExtra(EventListActivity.EXTRA_ENTRANT_ID, PLACEHOLDER_ENTRANT_ID)));
+                .putExtra(EventListActivity.EXTRA_ENTRANT_ID, entrantId)));
 
         historyButton.setOnClickListener(v -> startActivity(new Intent(this, EventHistoryActivity.class)
-                .putExtra(EventHistoryActivity.EXTRA_ENTRANT_ID, PLACEHOLDER_ENTRANT_ID)));
+                .putExtra(EventHistoryActivity.EXTRA_ENTRANT_ID, entrantId)));
 
         seedButton.setOnClickListener(v -> seedDemoEvents());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_session, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            performLogout();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void performLogout() {
+        sessionManager.clearSession(() -> {
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void seedDemoEvents() {

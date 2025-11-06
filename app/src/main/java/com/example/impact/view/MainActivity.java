@@ -20,8 +20,10 @@ public class MainActivity extends AppCompatActivity {
 
         Button entrantButton = findViewById(R.id.buttonGotoEntrant);
         Button adminButton = findViewById(R.id.buttonGotoAdmin);
+        Button organizerBtn = findViewById(R.id.btnOrganizer);
 
         entrantButton.setOnClickListener(v -> startActivity(new Intent(this, EntrantActivity.class)));
         adminButton.setOnClickListener(v -> startActivity(new Intent(this, AdminActivity.class)));
+        organizerBtn.setOnClickListener(v -> startActivity(new Intent(this, OrganizerActivity.class)));
     }
 }

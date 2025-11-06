@@ -45,4 +45,7 @@
     <string name="main_seed_demo_button">Seed Demo Events</string>
     <string name="main_seed_demo_success">Demo events created</string>
     <string name="main_seed_demo_failure">Unable to create demo events</string>
+    <string name="organizer_dashboard_title">Organizer Dashboard</string>
+    <string name="organizer_tools_placeholder">Organizer Tools Page Placeholder</string>
+    <string name="entrant_view_placeholder">Entrant View Page Placeholder</string>
 </resources>

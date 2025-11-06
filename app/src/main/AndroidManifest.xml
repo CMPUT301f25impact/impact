@@ -15,6 +15,8 @@
         <activity android:name=".view.EventDetailsActivity" />
         <activity android:name=".view.EventListActivity" />
         <activity android:name=".view.EntrantProfileActivity" />
+        <activity android:name=".view.AdminActivity" />
+        <activity android:name=".view.EntrantActivity" />
         <activity
             android:name=".view.MainActivity"
             android:exported="true">

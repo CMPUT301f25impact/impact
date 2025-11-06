@@ -1,34 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp"
-    tools:context=".view.MainActivity">
+    tools:context=".view.EntrantActivity">
 
     <TextView
-        android:id="@+id/roleHubText"
+        android:id="@+id/textViewPlaceholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Please Select Your Role"
+        android:text="Entrant Demo Launcher"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/buttonGotoEntrant"
+        android:id="@+id/buttonOpenProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Entrant" />
+        android:text="Open Profile" />
 
     <Button
-        android:id="@+id/buttonGotoAdmin"
+        android:id="@+id/buttonOpenEvents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Admin" />
+        android:text="Browse Events" />
 
+    <Button
+        android:id="@+id/buttonOpenHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="View Event History" />
+
+    <Button
+        android:id="@+id/buttonSeedDemoData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/main_seed_demo_button" />
 </LinearLayout>

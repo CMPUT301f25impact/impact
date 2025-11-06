@@ -68,5 +68,8 @@
     <string name="logout_error">Unable to sign out completely</string>
     <string name="admin_dashboard_placeholder">Admin Dashboard Placeholder</string>
     <string name="admin_dashboard_title">Admin Dashboard</string>
+    <string name="admin_event_list_error_deletion">Unable to delete event</string>
+    <string name="admin_event_list_deletion">Deleted event %1$s</string>
     <string name="entrant_dashboard_title">Entrant Dashboard</string>
+    <string name="delete_dialog_text">Are you sure you want to delete %1$s? This action cannot be undone.</string>
 </resources>

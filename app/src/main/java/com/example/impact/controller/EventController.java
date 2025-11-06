@@ -136,6 +136,26 @@ public class EventController {
                 });
     }
 
+    /**
+     * Deletes event with provided ID
+     * @param eventId event ID
+     * @param successListener executed on success
+     * @param failureListener executed on failure
+     */
+    public void deleteEvent(@NonNull String eventId,
+                            @Nullable OnSuccessListener<String> successListener,
+                            @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .delete()
+                .addOnSuccessListener(v -> {
+                    if (successListener != null) successListener.onSuccess(eventId);
+                })
+                .addOnFailureListener(err -> {
+                    if (failureListener != null) failureListener.onFailure(err);
+                });
+    }
+
 
     List<Event> dispatchEvents(@Nullable OnSuccessListener<List<Event>> successListener,
                                QuerySnapshot snapshot) {

@@ -100,6 +100,43 @@ public class EventController {
                 });
     }
 
+    /**
+     * Creates an event document. The Event object should have:
+     * name, description, startDate, endDate, (optional) capacity, organizerId.
+     * Returns the new document id via successListener.
+     */
+    public void createEvent(@NonNull Event event,
+                            @Nullable OnSuccessListener<String> successListener,
+                            @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_EVENTS)
+                .add(event)
+                .addOnSuccessListener(ref -> {
+                    if (successListener != null) successListener.onSuccess(ref.getId());
+                })
+                .addOnFailureListener(err -> {
+                    if (failureListener != null) failureListener.onFailure(err);
+                });
+    }
+
+    /**
+     * Stores a QR code download URL in the event doc.
+     */
+    public void updateQrPayload(@NonNull String eventId,
+                                @NonNull String payload,
+                                @Nullable OnSuccessListener<Void> successListener,
+                                @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .update("qrPayload", payload)
+                .addOnSuccessListener(v -> {
+                    if (successListener != null) successListener.onSuccess(v);
+                })
+                .addOnFailureListener(err -> {
+                    if (failureListener != null) failureListener.onFailure(err);
+                });
+    }
+
+
     List<Event> dispatchEvents(@Nullable OnSuccessListener<List<Event>> successListener,
                                QuerySnapshot snapshot) {
         List<Event> events = mapEvents(snapshot);

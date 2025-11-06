@@ -1,16 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="24dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/organizer_tools_placeholder"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+    <LinearLayout
+        android:orientation="vertical" android:padding="16dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/etEventName"
+            android:hint="Event Name"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etEventDescription"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etCapacity"
+            android:hint="Capacity (optional)"
+            android:inputType="number"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnPickStart"
+            android:text="Select Registration Start"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnPickEnd"
+            android:text="Select Registration End"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/imgQrPreview"
+            android:layout_width="180dp" android:layout_height="180dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="QR preview"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnCreateEvent"
+            android:text="Create Event"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

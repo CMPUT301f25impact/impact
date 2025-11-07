@@ -22,12 +22,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabIndicatorFullWidth="false" />
+
+        <Button
+            android:id="@+id/notifications_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Button" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/organizerViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+    </androidx.viewpager2.widget.ViewPager2>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

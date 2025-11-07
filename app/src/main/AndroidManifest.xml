@@ -16,6 +16,7 @@
         <activity android:name=".view.EventListActivity" />
         <activity android:name=".view.EntrantProfileActivity" />
         <activity android:name=".view.WaitingListActivity" />
+        <activity android:name=".view.OrganizerSendNotification" />
         <activity
             android:name=".view.AdminActivity"
             android:exported="false" />

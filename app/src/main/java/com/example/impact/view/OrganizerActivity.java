@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,13 @@ public class OrganizerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer);
+
+        Button notification_button = findViewById(R.id.notifications_button);
+
+        Intent intent = new Intent(this, OrganizerSendNotification.class);
+        intent.putExtra("organizer_id", getIntent().getStringExtra("extra_user_id"));
+
+        notification_button.setOnClickListener(v -> startActivity(intent));
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.organizerToolbar);

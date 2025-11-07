@@ -1,5 +1,11 @@
 package com.example.impact.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
+import androidx.annotation.Nullable;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
@@ -65,6 +71,24 @@ public class Image implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    /**
+     * Attempts to decode stored base64 content to Bitmap
+     * @return bitmap or null
+     */
+    @Nullable
+    public Bitmap decodeBase64ToBitmap() {
+        try {
+            if (base64Content == null || base64Content.isEmpty()) {
+                return null;
+            }
+
+            byte[] decodedBytes = Base64.decode(base64Content, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**

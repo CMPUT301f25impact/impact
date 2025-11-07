@@ -170,6 +170,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 btnViewEntrants.setOnClickListener(v -> {
                     if (listener != null) listener.onViewEntrantsClicked(event);
                 });
+                btnViewEntrants.setFocusable(false);
+                btnViewEntrants.setClickable(true);
             }
         }
     }

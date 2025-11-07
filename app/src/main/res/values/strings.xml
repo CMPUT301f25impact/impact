@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Impact</string>
+    <string name="entrant_nav_events_tab">Events</string>
+    <string name="entrant_nav_profile_tab">Profile</string>
+    <string name="entrant_nav_history_tab">History</string>
     <string name="entrant_profile_full_name_hint">Full Name</string>
     <string name="entrant_profile_email_hint">Email</string>
     <string name="entrant_profile_phone_hint">Phone (optional)</string>

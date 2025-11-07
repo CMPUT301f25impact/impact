@@ -28,4 +28,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnViewEntrants"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="View Entrants" />
+
 </LinearLayout>

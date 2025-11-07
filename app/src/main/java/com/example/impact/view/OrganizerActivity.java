@@ -7,32 +7,33 @@ import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.material.appbar.MaterialToolbar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.impact.R;
-import com.example.impact.view.adapter.OrganizerPagerAdapter;
 import com.example.impact.utils.SessionManager;
+import com.example.impact.view.adapter.OrganizerPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-/**
- * Hosts organizer-specific tools and an entrant preview using tabbed navigation.
- */
 public class OrganizerActivity extends AppCompatActivity {
 
-    private static final String ORGANIZER_TOOLS_TITLE = "Organizer Tools";
-    private static final String ENTRANT_VIEW_TITLE = "Entrant View";
+    private static final String EVENTS_TITLE = "Events";
+    private static final String CREATE_TITLE = "Create";
+
+    /** Optional: pass this in an Intent extra to open a tab directly. */
+    public static final String EXTRA_INITIAL_TAB = "initial_tab"; // 0 = Events, 1 = Create
 
     private SessionManager sessionManager;
+    private ViewPager2 viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer);
 
-        MaterialToolbar toolbar = findViewById(R.id.organizerToolbar);
+        // Toolbar
+        Toolbar toolbar = findViewById(R.id.organizerToolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.organizer_dashboard_title);
@@ -40,17 +41,19 @@ public class OrganizerActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-        ViewPager2 viewPager = findViewById(R.id.organizerViewPager);
-        viewPager.setAdapter(new OrganizerPagerAdapter(this));
+        // ViewPager + Tabs
+        viewPager = findViewById(R.id.organizerViewPager);
+        String organizerEmail = getIntent().getStringExtra("extra_user_email");
+        viewPager.setAdapter(new OrganizerPagerAdapter(this, organizerEmail));
 
         TabLayout tabLayout = findViewById(R.id.organizerTabLayout);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            if (position == 0) {
-                tab.setText(ORGANIZER_TOOLS_TITLE);
-            } else {
-                tab.setText(ENTRANT_VIEW_TITLE);
-            }
-        }).attach();
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
+                tab.setText(position == 0 ? EVENTS_TITLE : CREATE_TITLE)
+        ).attach();
+
+        // Optional: open a specific tab if provided
+        int initialTab = getIntent().getIntExtra(EXTRA_INITIAL_TAB, 0);
+        viewPager.setCurrentItem(initialTab, false);
     }
 
     @Override
@@ -75,5 +78,15 @@ public class OrganizerActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    /** Called from OrganizerEventsFragment’s “+ Create New Event” button. */
+    public void goToCreateTab() {
+        if (viewPager != null) viewPager.setCurrentItem(1, true);
+    }
+
+    /** If you ever need to jump back to Events from Create. */
+    public void goToEventsTab() {
+        if (viewPager != null) viewPager.setCurrentItem(0, true);
     }
 }

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,8 +19,7 @@ import com.example.impact.view.adapter.AdminEventAdapter;
 import java.util.List;
 
 /**
- * This is the list fragment that renders lists of items in the admin dashboard.
- * It can be of multiple types (e.g profiles, images, events)
+ * This is the list fragment that renders list of events in the admin dashboard.
  */
 public class AdminEventListFragment extends Fragment
         implements AdminEventAdapter.DeleteListener {

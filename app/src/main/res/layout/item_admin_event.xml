@@ -23,8 +23,7 @@
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:maxLines="1"
-            android:ellipsize="end"
-            android:text="Event Name Placeholder" />
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/admin_event_description"
@@ -33,15 +32,13 @@
             android:layout_marginTop="4dp"
             android:textSize="14sp"
             android:maxLines="2"
-            android:ellipsize="end"
-            android:text="Short description of the event, summarizing its purpose and details." />
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/admin_event_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="2025-01-01" />
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/admin_event_delete_button"
@@ -49,7 +46,7 @@
             android:layout_height="40dp"
             android:layout_gravity="end"
             android:layout_marginTop="8dp"
-            android:text="Delete Event"
+            android:text="@string/admin_event_list_delete_button"
             android:textSize="12sp"
             android:textColor="@color/white"
             android:paddingHorizontal="16dp"

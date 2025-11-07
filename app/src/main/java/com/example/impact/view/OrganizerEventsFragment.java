@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.model.Event;
+import com.example.impact.model.Organizer;
 import com.example.impact.view.adapter.EventAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -71,7 +72,7 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
             return v;
         }
 
-        adapter = new EventAdapter(this, organizerEmail);
+        adapter = new EventAdapter(this, Organizer.ROLE_KEY);
         rv.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();

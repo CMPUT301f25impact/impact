@@ -10,7 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
+import com.example.impact.model.Entrant;
 import com.example.impact.model.Event;
+import com.example.impact.model.Organizer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private List<Event> events = new ArrayList<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
     private final OnEventClickListener listener;
-    private final @Nullable String currentUserId;  // add
+    private final @Nullable String currentUserRole;  // add
     /**
      * Creates an adapter for entrant consumption without organizer context.
      *
@@ -51,17 +53,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
      */
     public EventAdapter(OnEventClickListener listener) {
         this.listener = listener;
-        this.currentUserId = null;
+        this.currentUserRole = Entrant.ROLE_KEY;
     }
     /**
      * Creates an adapter that can tailor behaviour based on the current user id.
      *
      * @param listener      click listener for row interactions
-     * @param currentUserId optional identifier for behaviour toggles
+     * @param currentUserRole optional for type of EventAdapter
      */
-    public EventAdapter(OnEventClickListener listener, @Nullable String currentUserId) {
+    public EventAdapter(OnEventClickListener listener, @Nullable String currentUserRole) {
         this.listener = listener;
-        this.currentUserId = currentUserId;
+        this.currentUserRole = currentUserRole;
     }
 
     /**
@@ -166,12 +168,17 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 }
             });
             // “View Entrants” button (for organizer)
-            if (btnViewEntrants != null) {
+            if (btnViewEntrants != null
+                    && currentUserRole != null
+                    && currentUserRole.equals(Organizer.ROLE_KEY)) {
                 btnViewEntrants.setOnClickListener(v -> {
                     if (listener != null) listener.onViewEntrantsClicked(event);
                 });
                 btnViewEntrants.setFocusable(false);
                 btnViewEntrants.setClickable(true);
+            } else {
+                if (btnViewEntrants == null) return;
+                btnViewEntrants.setVisibility(View.GONE);
             }
         }
     }

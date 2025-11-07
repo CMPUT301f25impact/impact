@@ -110,6 +110,22 @@ public class EntrantController {
     }
 
     /**
+     * Fetches all entrant profiles for administrative use.
+     */
+    public void fetchAllEntrants(@Nullable OnSuccessListener<List<Entrant>> successListener,
+                                 @Nullable OnFailureListener failureListener) {
+        Task<QuerySnapshot> task = firestore.collection(COLLECTION_ENTRANTS)
+                .get();
+
+        if (successListener != null) {
+            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapEntrants(snapshot)));
+        }
+        if (failureListener != null) {
+            task.addOnFailureListener(failureListener);
+        }
+    }
+
+    /**
      * Retrieves the entrant's waiting list history sorted by timestamp descending.
      */
     public void getEntrantHistory(@NonNull String entrantId,
@@ -125,6 +141,20 @@ public class EntrantController {
         if (failureListener != null) {
             task.addOnFailureListener(failureListener);
         }
+    }
+
+    private List<Entrant> mapEntrants(@Nullable QuerySnapshot snapshot) {
+        List<Entrant> entrants = new ArrayList<>();
+        if (snapshot == null) {
+            return entrants;
+        }
+        for (DocumentSnapshot document : snapshot.getDocuments()) {
+            Entrant entrant = mapSnapshotToEntrant(document);
+            if (entrant != null) {
+                entrants.add(entrant);
+            }
+        }
+        return entrants;
     }
 
     List<EntrantHistoryItem> mapHistory(QuerySnapshot snapshot) {

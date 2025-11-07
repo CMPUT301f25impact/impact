@@ -24,7 +24,7 @@ public class Event implements Serializable {
     private String posterUrl;
     private List<String> tags = new ArrayList<>();
     private String qrCodeUrl;
-    private String organizerId;
+    private String organizerEmail;
     private Integer capacity;
 
     /**
@@ -126,8 +126,8 @@ public class Event implements Serializable {
     public void setQrCodeUrl(@Nullable String qrCodeUrl) { this.qrCodeUrl = qrCodeUrl; }
 
     @Nullable
-    public String getOrganizerId() { return organizerId; }
-    public void setOrganizerId(@Nullable String organizerId) { this.organizerId = organizerId; }
+    public String getOrganizerEmail() { return organizerEmail; }
+    public void setOrganizerEmail(@Nullable String organizerEmail) { this.organizerEmail = organizerEmail; }
 
     @Nullable
     public Integer getCapacity() { return capacity; }

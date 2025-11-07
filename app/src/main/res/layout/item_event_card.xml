@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:padding="12dp" android:background="@android:color/white" android:layout_marginBottom="12dp">
+
+    <TextView android:id="@+id/tvTitle"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:textStyle="bold"/>
+
+    <TextView android:id="@+id/tvRegWindow"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"/>
+
+    <Button
+        android:id="@+id/btnViewEntrants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="View Entrants"/>
+</LinearLayout>

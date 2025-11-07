@@ -14,6 +14,8 @@ import com.example.impact.controller.EventController;
 import com.example.impact.model.Event;
 import com.example.impact.utils.QrUtil;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.WriterException;
 
 import java.util.Date;
@@ -28,7 +30,7 @@ public class OrganizerToolsFragment extends Fragment {
     private final EventController controller = new EventController();
 
     // TODO: replace with real auth when available
-    private final String organizerId = "stub-organizer-uid";
+    String organizerEmail = null;
 
     @Nullable
     @Override
@@ -44,10 +46,21 @@ public class OrganizerToolsFragment extends Fragment {
         imgQr = v.findViewById(R.id.imgQrPreview);
         btnCreate = v.findViewById(R.id.btnCreateEvent);
 
+        if (getArguments() != null) {
+            organizerEmail = getArguments().getString("organizerEmail");
+        }
+
+        if (organizerEmail == null) {
+            Toast.makeText(requireContext(), "Organizer email missing", Toast.LENGTH_SHORT).show();
+            btnCreate.setEnabled(false);
+        } else {
+            btnCreate.setEnabled(true);
+        }
+
+
         btnStart.setOnClickListener(view -> pickDate(true));
         btnEnd.setOnClickListener(view -> pickDate(false));
         btnCreate.setOnClickListener(view -> createEvent());
-
         return v;
     }
 
@@ -87,7 +100,7 @@ public class OrganizerToolsFragment extends Fragment {
         e.setDescription(etDesc.getText().toString().trim());
         e.setStartDate(startDate); // US 02.01.04
         e.setEndDate(endDate);     // US 02.01.04
-        e.setOrganizerId(organizerId);
+        e.setOrganizerEmail(organizerEmail);
         e.setCapacity(capacity);
 
         btnCreate.setEnabled(false);

@@ -7,7 +7,9 @@ import com.example.impact.model.Event;
 import com.example.impact.utils.FirebaseUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -80,25 +82,30 @@ public class EventController {
     }
 
     /**
-     * Fetches a single event by id.
+     * Fetches a single event by organizer.
      */
-    public void fetchEvent(@NonNull String eventId,
-                           @Nullable OnSuccessListener<Event> successListener,
-                           @Nullable OnFailureListener failureListener) {
+    public void fetchEventsByOrganizer(@NonNull String organizerId,
+                                       @Nullable OnSuccessListener<List<Event>> success,
+                                       @Nullable OnFailureListener failure) {
         firestore.collection(COLLECTION_EVENTS)
-                .document(eventId)
+                .whereEqualTo("organizerId", organizerId)
                 .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (successListener != null) {
-                        successListener.onSuccess(Event.fromSnapshot(snapshot));
-                    }
+                .addOnSuccessListener(snap -> {
+                    List<Event> events = mapEvents(snap);
+                    if (success != null) success.onSuccess(events);
                 })
-                .addOnFailureListener(error -> {
-                    if (failureListener != null) {
-                        failureListener.onFailure(error);
-                    }
-                });
+                .addOnFailureListener(e -> { if (failure != null) failure.onFailure(e); });
     }
+
+    public ListenerRegistration listenEventsByOrganizer(
+            @NonNull String email,
+            @NonNull EventListener<QuerySnapshot> listener) {
+
+        return firestore.collection("events")
+                .whereEqualTo("organizerEmail", email)
+                .addSnapshotListener(listener);
+    }
+
 
     /**
      * Creates an event document. The Event object should have:
@@ -166,7 +173,7 @@ public class EventController {
         return events;
     }
 
-    List<Event> mapEvents(@Nullable QuerySnapshot snapshot) {
+    public List<Event> mapEvents(@Nullable QuerySnapshot snapshot) {
         List<Event> events = new ArrayList<>();
         if (snapshot == null) {
             return events;
@@ -174,4 +181,6 @@ public class EventController {
         snapshot.getDocuments().forEach(document -> events.add(Event.fromSnapshot(document)));
         return events;
     }
+
 }
+

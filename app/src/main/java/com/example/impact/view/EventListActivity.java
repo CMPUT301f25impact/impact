@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +48,11 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     private Date selectedStartDate;
     @Nullable
     private Date selectedEndDate;
+    @Override
+    public void onViewEntrantsClicked(@NonNull Event event) {
+        // This screen doesn’t use “View Entrants”. No-op is fine.
+        // (Only Organizer screens navigate to WaitingListActivity.)
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

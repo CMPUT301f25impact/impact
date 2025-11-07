@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/entrant_nav_events"
+        android:icon="@drawable/outline_article_30"
+        android:title="@string/entrant_nav_events_tab" />
+    <item
+        android:id="@+id/entrant_nav_profile"
+        android:icon="@drawable/outline_account_circle_30"
+        android:title="@string/entrant_nav_profile_tab" />
+    <item
+        android:id="@+id/entrant_nav_history"
+        android:icon="@drawable/outline_history_30"
+        android:title="@string/entrant_nav_history_tab" />
+</menu>

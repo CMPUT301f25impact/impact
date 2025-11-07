@@ -1,16 +1,22 @@
 package com.example.impact.view;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.impact.R;
 import com.example.impact.controller.WaitingListController;
 import com.example.impact.model.Event;
+import com.google.android.gms.common.annotation.NonNullApi;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,7 +25,7 @@ import java.util.Locale;
 /**
  * Displays event details and lets entrants manage their waiting list status.
  */
-public class EventDetailsActivity extends AppCompatActivity {
+public class EventDetailsFragment extends Fragment {
     public static final String EXTRA_EVENT = "event";
     public static final String EXTRA_ENTRANT_ID = "entrant_id";
 
@@ -34,28 +40,53 @@ public class EventDetailsActivity extends AppCompatActivity {
     private TextView statusText;
     private String currentStatus;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_details);
+    /**
+     * Factory method to create a new instance of this fragment
+     * using the provided Event and entrant ID as arguments.
+     */
+    public static EventDetailsFragment newInstance(Event event, String entrantId) {
+        EventDetailsFragment fragment = new EventDetailsFragment();
+        Bundle args = new Bundle();
 
-        event = (Event) getIntent().getSerializableExtra(EXTRA_EVENT);
-        entrantId = getIntent().getStringExtra(EXTRA_ENTRANT_ID);
+        args.putSerializable(EXTRA_EVENT, event);
+        args.putString(EXTRA_ENTRANT_ID, entrantId);
+
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_event_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            event = (Event) args.getSerializable(EXTRA_EVENT);
+            entrantId = args.getString(EXTRA_ENTRANT_ID);
+        }
 
         if (event == null || entrantId == null || entrantId.trim().isEmpty()) {
-            Toast.makeText(this, R.string.event_details_error_missing_data, Toast.LENGTH_SHORT).show();
-            finish();
+            if (getContext() != null) {
+                Toast.makeText(getContext(), R.string.event_details_error_missing_data, Toast.LENGTH_SHORT).show();
+            }
+            getParentFragmentManager().popBackStack();
             return;
         }
 
         waitingListController = new WaitingListController();
 
-        TextView nameText = findViewById(R.id.textViewEventDetailName);
-        TextView dateText = findViewById(R.id.textViewEventDetailDate);
-        TextView descriptionText = findViewById(R.id.textViewEventDetailDescription);
-        statusText = findViewById(R.id.textViewEventDetailStatus);
-        joinButton = findViewById(R.id.buttonJoinWaitingList);
-        leaveButton = findViewById(R.id.buttonLeaveWaitingList);
+        TextView nameText = view.findViewById(R.id.textViewEventDetailName);
+        TextView dateText = view.findViewById(R.id.textViewEventDetailDate);
+        TextView descriptionText = view.findViewById(R.id.textViewEventDetailDescription);
+        statusText = view.findViewById(R.id.textViewEventDetailStatus);
+        joinButton = view.findViewById(R.id.buttonJoinWaitingList);
+        leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
 
         nameText.setText(event.getName());
         dateText.setText(formatDateRange(event));
@@ -63,10 +94,37 @@ public class EventDetailsActivity extends AppCompatActivity {
         currentStatus = getString(R.string.event_status_pending);
         updateStatusLabel();
 
-        joinButton.setOnClickListener(view -> joinWaitingList());
-        leaveButton.setOnClickListener(view -> leaveWaitingList());
+        joinButton.setOnClickListener(v -> joinWaitingList());
+        leaveButton.setOnClickListener(v -> leaveWaitingList());
 
         resolveCurrentStatus();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity hostActivity = (AppCompatActivity) getActivity();
+            if (hostActivity.getSupportActionBar() != null) {
+                hostActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+                if (event != null) {
+                    hostActivity.getSupportActionBar().setTitle(event.getName());
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getActivity() instanceof AppCompatActivity) {
+            AppCompatActivity hostActivity = (AppCompatActivity) getActivity();
+            if (hostActivity.getSupportActionBar() != null) {
+                hostActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                hostActivity.getSupportActionBar().setTitle(R.string.entrant_nav_events_tab);
+            }
+        }
     }
 
     /**
@@ -83,7 +141,7 @@ public class EventDetailsActivity extends AppCompatActivity {
                 updateStatusLabel();
                 setButtonsForJoinedState(false);
             }
-        }, error -> Toast.makeText(this, R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
+        }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -94,8 +152,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();
             setButtonsForJoinedState(true);
-            Toast.makeText(this, R.string.event_details_join_success, Toast.LENGTH_SHORT).show();
-        }, error -> Toast.makeText(this, R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
+            Toast.makeText(requireContext(), R.string.event_details_join_success, Toast.LENGTH_SHORT).show();
+        }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -106,8 +164,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();
             setButtonsForJoinedState(false);
-            Toast.makeText(this, R.string.event_details_leave_success, Toast.LENGTH_SHORT).show();
-        }, error -> Toast.makeText(this, R.string.event_details_leave_error, Toast.LENGTH_SHORT).show());
+            Toast.makeText(requireContext(), R.string.event_details_leave_success, Toast.LENGTH_SHORT).show();
+        }, error -> Toast.makeText(requireContext(), R.string.event_details_leave_error, Toast.LENGTH_SHORT).show());
     }
 
     /**

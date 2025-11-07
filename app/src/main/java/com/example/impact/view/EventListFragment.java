@@ -1,11 +1,13 @@
 package com.example.impact.view;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,7 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +35,7 @@ import java.util.Locale;
 /**
  * Displays a list of events and exposes filtering for entrant interests and availability.
  */
-public class EventListActivity extends AppCompatActivity implements EventAdapter.OnEventClickListener {
+public class EventListFragment extends Fragment implements EventAdapter.OnEventClickListener {
     public static final String EXTRA_ENTRANT_ID = "entrant_id";
 
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
@@ -48,6 +50,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     private Date selectedStartDate;
     @Nullable
     private Date selectedEndDate;
+
+    // Use a static factory method to create the fragment and set arguments
+    public static EventListFragment newInstance(String entrantId) {
+        EventListFragment fragment = new EventListFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ENTRANT_ID, entrantId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onViewEntrantsClicked(@NonNull Event event) {
         // This screen doesn’t use “View Entrants”. No-op is fine.
@@ -55,25 +67,50 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_list);
+    public void onEventClicked(Event event) {
+        if (event == null) {
+            return;
+        }
+        EventDetailsFragment detailsFragment = EventDetailsFragment.newInstance(event, entrantId);
 
-        entrantId = getIntent().getStringExtra(EXTRA_ENTRANT_ID);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.entrant_fragment_container, detailsFragment)
+                .addToBackStack(null) // This is crucial for back button support
+                .commit();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            entrantId = getArguments().getString(EXTRA_ENTRANT_ID);
+        }
 
         eventController = new EventController();
-        emptyStateView = findViewById(R.id.textViewEmptyState);
+    }
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewEvents);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_event_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        emptyStateView = view.findViewById(R.id.textViewEmptyState);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEvents);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         eventAdapter = new EventAdapter(this);
         recyclerView.setAdapter(eventAdapter);
 
-        Button filterButton = findViewById(R.id.buttonFilterEvents);
-        Button clearFilterButton = findViewById(R.id.buttonClearFilter);
+        Button filterButton = view.findViewById(R.id.buttonFilterEvents);
+        Button clearFilterButton = view.findViewById(R.id.buttonClearFilter);
 
-        filterButton.setOnClickListener(view -> showFilterDialog());
-        clearFilterButton.setOnClickListener(view -> {
+        filterButton.setOnClickListener(v -> showFilterDialog());
+        clearFilterButton.setOnClickListener(v -> {
             selectedTags = null;
             selectedStartDate = null;
             selectedEndDate = null;
@@ -89,10 +126,10 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
     private void loadEvents() {
         if (hasActiveFilter()) {
             eventController.fetchFilteredEvents(selectedTags, selectedStartDate, selectedEndDate, this::onEventsLoaded,
-                    error -> Toast.makeText(this, R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
+                    error -> Toast.makeText(requireContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
         } else {
             eventController.fetchAvailableEvents(this::onEventsLoaded,
-                    error -> Toast.makeText(this, R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
+                    error -> Toast.makeText(requireContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -117,7 +154,10 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
      * Presents the filter dialog for selecting tags and date ranges.
      */
     private void showFilterDialog() {
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_event_filter, null, false);
+        Context context = getContext();
+        if (context == null) return;
+
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_event_filter, null, false);
         EditText interestInput = dialogView.findViewById(R.id.editTextFilterInterest);
         TextView startDateText = dialogView.findViewById(R.id.textViewFilterStartDate);
         TextView endDateText = dialogView.findViewById(R.id.textViewFilterEndDate);
@@ -150,7 +190,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             return true;
         });
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(context)
                 .setTitle(R.string.event_filter_title)
                 .setView(dialogView)
                 .setPositiveButton(R.string.event_filter_apply, (dialog, which) -> {
@@ -197,7 +237,7 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
             calendar.setTime(initialDate);
         }
 
-        DatePickerDialog dialog = new DatePickerDialog(this, (picker, year, month, dayOfMonth) -> {
+        DatePickerDialog dialog = new DatePickerDialog(requireContext(), (picker, year, month, dayOfMonth) -> {
             Calendar selected = Calendar.getInstance();
             selected.set(Calendar.YEAR, year);
             selected.set(Calendar.MONTH, month);
@@ -210,17 +250,6 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
         dialog.show();
-    }
-
-    @Override
-    public void onEventClicked(Event event) {
-        if (event == null) {
-            return;
-        }
-        Intent intent = new Intent(this, EventDetailsActivity.class);
-        intent.putExtra(EventDetailsActivity.EXTRA_EVENT, event);
-        intent.putExtra(EventDetailsActivity.EXTRA_ENTRANT_ID, entrantId);
-        startActivity(intent);
     }
 
     /**

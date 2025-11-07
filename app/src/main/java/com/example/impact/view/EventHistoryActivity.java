@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
-import com.example.impact.controller.EntrantController;
+import com.example.impact.controller.UserController;
 import com.example.impact.model.EntrantHistoryItem;
 import com.example.impact.view.adapter.EventHistoryAdapter;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class EventHistoryActivity extends AppCompatActivity {
     public static final String EXTRA_ENTRANT_ID = "entrant_id";
 
-    private EntrantController entrantController;
+    private UserController userController;
     private EventHistoryAdapter historyAdapter;
     private TextView emptyStateView;
     private String entrantId;
@@ -40,7 +40,7 @@ public class EventHistoryActivity extends AppCompatActivity {
             return;
         }
 
-        entrantController = new EntrantController();
+        userController = new UserController();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewEventHistory);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -56,7 +56,7 @@ public class EventHistoryActivity extends AppCompatActivity {
      * Requests the entrant's waiting-list history.
      */
     private void loadHistory() {
-        entrantController.getEntrantHistory(entrantId, this::onHistoryLoaded,
+        userController.getEntrantHistory(entrantId, this::onHistoryLoaded,
                 error -> Toast.makeText(this, R.string.event_history_error_loading, Toast.LENGTH_SHORT).show());
     }
 

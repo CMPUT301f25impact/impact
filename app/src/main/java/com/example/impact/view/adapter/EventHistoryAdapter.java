@@ -24,6 +24,13 @@ public class EventHistoryAdapter extends RecyclerView.Adapter<EventHistoryAdapte
     private final List<EntrantHistoryItem> items = new ArrayList<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy h:mm a", Locale.getDefault());
 
+    /**
+     * Inflates a history row.
+     *
+     * @param parent parent recycler
+     * @param viewType unused view type
+     * @return view holder instance
+     */
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -31,16 +38,30 @@ public class EventHistoryAdapter extends RecyclerView.Adapter<EventHistoryAdapte
         return new HistoryViewHolder(view);
     }
 
+    /**
+     * Binds a history row.
+     *
+     * @param holder   view holder
+     * @param position adapter position
+     */
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         holder.bind(items.get(position));
     }
 
+    /**
+     * @return number of history entries tracked
+     */
     @Override
     public int getItemCount() {
         return items.size();
     }
 
+    /**
+     * Replaces displayed history entries.
+     *
+     * @param newItems list of history items
+     */
     public void setItems(List<EntrantHistoryItem> newItems) {
         items.clear();
         if (newItems != null) {
@@ -49,6 +70,9 @@ public class EventHistoryAdapter extends RecyclerView.Adapter<EventHistoryAdapte
         notifyDataSetChanged();
     }
 
+    /**
+     * Renders a single history entry row.
+     */
     class HistoryViewHolder extends RecyclerView.ViewHolder {
         private final TextView nameText;
         private final TextView statusText;
@@ -61,6 +85,11 @@ public class EventHistoryAdapter extends RecyclerView.Adapter<EventHistoryAdapte
             dateText = itemView.findViewById(R.id.textViewHistoryDate);
         }
 
+        /**
+         * Binds an entrant history item to the row.
+         *
+         * @param item history entry to display
+         */
         void bind(EntrantHistoryItem item) {
             nameText.setText(item.getEventName());
             statusText.setText(itemView.getContext().getString(R.string.event_details_status_label, item.getStatus()));

@@ -25,6 +25,15 @@ public class WaitingListEntry implements Serializable {
         // Default constructor for Firestore
     }
 
+    /**
+     * Creates a waiting list entry snapshot.
+     *
+     * @param eventId   associated event id
+     * @param eventName associated event name
+     * @param entrantId entrant id occupying the slot
+     * @param timestamp time the record was created
+     * @param status    current waiting-list status
+     */
     public WaitingListEntry(String eventId, String eventName, String entrantId, Date timestamp, String status) {
         this.eventId = eventId;
         this.eventName = eventName;
@@ -33,48 +42,81 @@ public class WaitingListEntry implements Serializable {
         this.status = status;
     }
 
+    /**
+     * @return parent event id
+     */
     public String getEventId() {
         return eventId;
     }
 
+    /**
+     * @param eventId parent event id
+     */
     public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
+    /**
+     * @return event name snapshot
+     */
     public String getEventName() {
         return eventName;
     }
 
+    /**
+     * @param eventName event name snapshot
+     */
     public void setEventName(String eventName) {
         this.eventName = eventName;
     }
 
+    /**
+     * @return entrant identifier stored in the record
+     */
     public String getEntrantId() {
         return entrantId;
     }
 
+    /**
+     * @param entrantId entrant identifier stored in the record
+     */
     public void setEntrantId(String entrantId) {
         this.entrantId = entrantId;
     }
 
+    /**
+     * @return timestamp assigned by Firestore
+     */
     public Date getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * @param timestamp timestamp assigned by Firestore
+     */
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
+    /**
+     * @return current waiting-list status
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * @param status current waiting-list status
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
     /**
      * Builds a waiting list entry from a snapshot, ensuring id integrity.
+     *
+     * @param snapshot Firestore document
+     * @return populated WaitingListEntry
      */
     public static WaitingListEntry fromSnapshot(DocumentSnapshot snapshot) {
         WaitingListEntry entry = snapshot.toObject(WaitingListEntry.class);

@@ -48,11 +48,17 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
         return view;
     }
 
+    /**
+     * Requests all entrant profiles from Firestore.
+     */
     private void loadProfiles() {
         entrantController.fetchAllEntrants(this::onProfilesLoaded,
                 error -> showToast(R.string.admin_profile_list_error_loading));
     }
 
+    /**
+     * Supplies fetched profiles to the adapter.
+     */
     private void onProfilesLoaded(List<Entrant> entrants) {
         adapter.setProfiles(entrants);
     }
@@ -65,6 +71,9 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
         loadProfiles();
     }
 
+    /**
+     * Convenience overload for showing a toast by resource id.
+     */
     private void showToast(int stringResId) {
         if (getContext() == null) {
             return;
@@ -72,6 +81,9 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
         Toast.makeText(getContext(), stringResId, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Convenience overload for showing a toast using direct text.
+     */
     private void showToast(String message) {
         if (getContext() == null) {
             return;

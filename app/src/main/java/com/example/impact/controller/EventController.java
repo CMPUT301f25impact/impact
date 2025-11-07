@@ -25,16 +25,27 @@ public class EventController {
 
     private final FirebaseFirestore firestore;
 
+    /**
+     * Builds a controller backed by the shared Firestore instance.
+     */
     public EventController() {
         this(FirebaseUtil.getFirestore());
     }
 
+    /**
+     * Builds a controller with an injected Firestore instance (useful for tests).
+     *
+     * @param firestore Firestore dependency
+     */
     public EventController(@NonNull FirebaseFirestore firestore) {
         this.firestore = firestore;
     }
 
     /**
      * Loads all available events.
+     *
+     * @param successListener invoked with the mapped events list
+     * @param failureListener invoked when the Firestore read fails
      */
     public void fetchAvailableEvents(@Nullable OnSuccessListener<List<Event>> successListener,
                                      @Nullable OnFailureListener failureListener) {
@@ -50,6 +61,12 @@ public class EventController {
 
     /**
      * Performs a filtered fetch constrained by tags and date range.
+     *
+     * @param tags            list of interests to match against event tags
+     * @param startDate       inclusive lower bound for event start date
+     * @param endDate         inclusive upper bound for event start date
+     * @param successListener invoked with the filtered events
+     * @param failureListener invoked when the query fails
      */
     public void fetchFilteredEvents(@Nullable List<String> tags,
                                     @Nullable Date startDate,
@@ -83,6 +100,10 @@ public class EventController {
 
     /**
      * Fetches a single event by organizer.
+     *
+     * @param organizerId Firestore id of the organizer
+     * @param success     invoked with the organizer's events
+     * @param failure     invoked when the read fails
      */
     public void fetchEventsByOrganizer(@NonNull String organizerId,
                                        @Nullable OnSuccessListener<List<Event>> success,
@@ -97,6 +118,13 @@ public class EventController {
                 .addOnFailureListener(e -> { if (failure != null) failure.onFailure(e); });
     }
 
+    /**
+     * Subscribes to real-time updates for events owned by an organizer email.
+     *
+     * @param email organizer email address
+     * @param listener callback invoked with snapshot updates
+     * @return listener registration to dispose of updates
+     */
     public ListenerRegistration listenEventsByOrganizer(
             @NonNull String email,
             @NonNull EventListener<QuerySnapshot> listener) {
@@ -111,6 +139,10 @@ public class EventController {
      * Creates an event document. The Event object should have:
      * name, description, startDate, endDate, (optional) capacity, organizerId.
      * Returns the new document id via successListener.
+     *
+     * @param event           event model to persist
+     * @param successListener invoked with the generated document id
+     * @param failureListener invoked when the write fails
      */
     public void createEvent(@NonNull Event event,
                             @Nullable OnSuccessListener<String> successListener,
@@ -127,6 +159,11 @@ public class EventController {
 
     /**
      * Stores a QR code download URL in the event doc.
+     *
+     * @param eventId         id of the event document
+     * @param payload         data to store under {@code qrPayload}
+     * @param successListener optional success callback
+     * @param failureListener optional failure callback
      */
     public void updateQrPayload(@NonNull String eventId,
                                 @NonNull String payload,
@@ -164,6 +201,13 @@ public class EventController {
     }
 
 
+    /**
+     * Converts a snapshot to models and forwards them to the optional listener.
+     *
+     * @param successListener optional callback for the mapped events
+     * @param snapshot        Firestore query result
+     * @return mapped list (never {@code null})
+     */
     List<Event> dispatchEvents(@Nullable OnSuccessListener<List<Event>> successListener,
                                QuerySnapshot snapshot) {
         List<Event> events = mapEvents(snapshot);
@@ -173,6 +217,12 @@ public class EventController {
         return events;
     }
 
+    /**
+     * Maps Firestore documents into {@link Event} instances.
+     *
+     * @param snapshot query result
+     * @return mapped events list
+     */
     public List<Event> mapEvents(@Nullable QuerySnapshot snapshot) {
         List<Event> events = new ArrayList<>();
         if (snapshot == null) {
@@ -183,4 +233,3 @@ public class EventController {
     }
 
 }
-

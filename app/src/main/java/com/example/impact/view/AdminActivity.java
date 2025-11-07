@@ -80,6 +80,9 @@ public class AdminActivity extends AppCompatActivity {
         }).attach();
     }
 
+    /**
+     * Clears admin session and returns to login.
+     */
     private void performLogout() {
         sessionManager.clearSession(() -> {
             Intent intent = new Intent(this, LoginActivity.class);

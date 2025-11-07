@@ -52,11 +52,17 @@ public class EventHistoryActivity extends AppCompatActivity {
         loadHistory();
     }
 
+    /**
+     * Requests the entrant's waiting-list history.
+     */
     private void loadHistory() {
         entrantController.getEntrantHistory(entrantId, this::onHistoryLoaded,
                 error -> Toast.makeText(this, R.string.event_history_error_loading, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Updates the recycler view with the fetched history.
+     */
     private void onHistoryLoaded(List<EntrantHistoryItem> historyItems) {
         historyAdapter.setItems(historyItems);
         emptyStateView.setVisibility(historyItems == null || historyItems.isEmpty() ? View.VISIBLE : View.GONE);

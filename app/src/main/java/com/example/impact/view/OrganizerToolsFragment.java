@@ -20,6 +20,9 @@ import com.google.zxing.WriterException;
 
 import java.util.Date;
 
+/**
+ * Provides organizers with a simple form to create events and preview QR codes.
+ */
 public class OrganizerToolsFragment extends Fragment {
 
     private EditText etName, etDesc, etCapacity;
@@ -64,6 +67,9 @@ public class OrganizerToolsFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Shows a material date picker and stores the chosen start/end date.
+     */
     private void pickDate(boolean isStart) {
         MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker().build();
         picker.addOnPositiveButtonClickListener(ms -> {
@@ -78,6 +84,9 @@ public class OrganizerToolsFragment extends Fragment {
         picker.show(getParentFragmentManager(), isStart ? "reg_start" : "reg_end");
     }
 
+    /**
+     * Validates the form, persists the event, and generates its QR payload.
+     */
     private void createEvent() {
         String name = etName.getText().toString().trim();
         if (TextUtils.isEmpty(name) || startDate == null || endDate == null) {
@@ -132,6 +141,9 @@ public class OrganizerToolsFragment extends Fragment {
         });
     }
 
+    /**
+     * Convenience helper for short Toast messages.
+     */
     private void toast(String s) {
         Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
     }

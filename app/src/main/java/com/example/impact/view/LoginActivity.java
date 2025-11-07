@@ -54,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Validates input and performs a Firestore query for the user record.
+     */
     private void attemptLogin() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
@@ -88,6 +91,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Updates device bindings and routes users to their dashboards.
+     */
     private void handleSuccessfulLogin(DocumentSnapshot userDoc) {
         String role = userDoc.getString("role");
         if (role == null) {
@@ -105,6 +111,9 @@ public class LoginActivity extends AppCompatActivity {
         navigateToRole(role, userDoc.getId(), userDoc.getString("email"));
     }
 
+    /**
+     * Starts the activity that matches the provided role.
+     */
     private void navigateToRole(String role, String userId, @Nullable String email) {
         Intent intent;
         switch (role != null ? role : "") {
@@ -126,6 +135,9 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Enables/disables form elements while login is in progress.
+     */
     private void setLoadingState(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         loginButton.setEnabled(!loading);

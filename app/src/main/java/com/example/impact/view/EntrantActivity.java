@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Launcher screen for entrant-specific tools and shortcuts.
+ */
 public class EntrantActivity extends AppCompatActivity {
     private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";
 
@@ -80,6 +83,9 @@ public class EntrantActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Clears session data then routes back to the login screen.
+     */
     private void performLogout() {
         sessionManager.clearSession(() -> {
             Intent intent = new Intent(this, LoginActivity.class);
@@ -89,6 +95,9 @@ public class EntrantActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Writes a set of sample events to Firestore for demo purposes.
+     */
     private void seedDemoEvents() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         WriteBatch batch = firestore.batch();
@@ -105,6 +114,9 @@ public class EntrantActivity extends AppCompatActivity {
                 .addOnFailureListener(error -> Toast.makeText(this, R.string.main_seed_demo_failure, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Builds the in-memory sample events used for seeding.
+     */
     private List<Map<String, Object>> buildSampleEvents() {
         Calendar calendar = Calendar.getInstance();
 

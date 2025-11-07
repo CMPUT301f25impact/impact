@@ -24,16 +24,30 @@ public class WaitingListController {
 
     private final FirebaseFirestore firestore;
 
+    /**
+     * Creates a controller backed by the default Firestore instance.
+     */
     public WaitingListController() {
         this(FirebaseUtil.getFirestore());
     }
 
+    /**
+     * Creates a controller with an injected Firestore instance.
+     *
+     * @param firestore shared Firestore reference
+     */
     public WaitingListController(@NonNull FirebaseFirestore firestore) {
         this.firestore = firestore;
     }
 
     /**
      * Adds the entrant to the waiting list for the specified event.
+     *
+     * @param eventId         event identifier
+     * @param eventName       friendly name stored with the entry
+     * @param entrantId       entrant identifier
+     * @param successListener invoked when the write succeeds
+     * @param failureListener invoked when the write fails
      */
     public void joinWaitingList(@NonNull String eventId,
                                 @NonNull String eventName,
@@ -54,6 +68,11 @@ public class WaitingListController {
 
     /**
      * Removes the entrant from the waiting list.
+     *
+     * @param eventId         event identifier
+     * @param entrantId       entrant identifier
+     * @param successListener invoked when the delete succeeds
+     * @param failureListener invoked when the delete fails
      */
     public void leaveWaitingList(@NonNull String eventId,
                                  @NonNull String entrantId,
@@ -72,6 +91,11 @@ public class WaitingListController {
 
     /**
      * Checks whether an entrant already joined the waiting list.
+     *
+     * @param eventId         event identifier
+     * @param entrantId       entrant identifier
+     * @param successListener invoked with the mapped entry (may be {@code null})
+     * @param failureListener invoked when the read fails
      */
     public void fetchWaitingListEntry(@NonNull String eventId,
                                       @NonNull String entrantId,
@@ -94,6 +118,12 @@ public class WaitingListController {
                 });
     }
 
+    /**
+     * Converts a document snapshot into a {@link WaitingListEntry}.
+     *
+     * @param snapshot Firestore document snapshot
+     * @return mapped entry or {@code null} if not found
+     */
     WaitingListEntry mapSnapshot(DocumentSnapshot snapshot) {
         if (snapshot == null || !snapshot.exists()) {
             return null;
@@ -101,6 +131,14 @@ public class WaitingListController {
         return WaitingListEntry.fromSnapshot(snapshot);
     }
 
+    /**
+     * Builds the Firestore payload for a waiting-list entry.
+     *
+     * @param eventId   associated event id
+     * @param eventName associated event name
+     * @param entrantId entrant id stored inside the subcollection
+     * @return map ready to persist
+     */
     Map<String, Object> buildWaitingListData(String eventId,
                                              String eventName,
                                              String entrantId) {
@@ -113,12 +151,18 @@ public class WaitingListController {
         return data;
     }
 
+    /**
+     * Ensures ids are non-null and non-empty.
+     */
     private void validateIds(String eventId, String entrantId) {
         if (isNullOrBlank(eventId) || isNullOrBlank(entrantId)) {
             throw new IllegalArgumentException("Event id and entrant id are required");
         }
     }
 
+    /**
+     * Applies optional success/failure callbacks to Firestore tasks.
+     */
     private void attachListeners(Task<Void> task,
                                  @Nullable OnSuccessListener<Void> successListener,
                                  @Nullable OnFailureListener failureListener) {
@@ -130,6 +174,9 @@ public class WaitingListController {
         }
     }
 
+    /**
+     * Simple helper for string validation.
+     */
     private boolean isNullOrBlank(String value) {
         return value == null || value.trim().isEmpty();
     }

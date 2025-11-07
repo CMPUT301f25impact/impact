@@ -10,9 +10,15 @@ import com.example.impact.view.adapter.EntrantRow;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Minimal adapter used by admin tools to show entrant records.
+ */
 public class SimpleEntrantAdapter extends RecyclerView.Adapter<SimpleEntrantAdapter.VH> {
     private final List<EntrantRow> data = new ArrayList<>();
 
+    /**
+     * Replaces the displayed dataset.
+     */
     public void submit(List<EntrantRow> rows) {
         data.clear();
         if (rows != null) data.addAll(rows);
@@ -34,6 +40,9 @@ public class SimpleEntrantAdapter extends RecyclerView.Adapter<SimpleEntrantAdap
 
     @Override public int getItemCount() { return data.size(); }
 
+    /**
+     * Holds references to the entrant row views.
+     */
     static class VH extends RecyclerView.ViewHolder {
         TextView name, status, date;
         VH(@NonNull View v) {

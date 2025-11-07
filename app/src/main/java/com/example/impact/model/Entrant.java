@@ -36,35 +36,59 @@ public class Entrant implements Serializable {
         this.phone = phone;
     }
 
+    /**
+     * @return unique identifier for the entrant
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * @param id unique identifier to set
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * @return full name for display
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name updated entrant name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return contact email address
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * @param email contact email address
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
     @Nullable
+    /**
+     * @return optional phone number, or {@code null}
+     */
     public String getPhone() {
         return phone;
     }
 
+    /**
+     * @param phone optional phone number (may be {@code null})
+     */
     public void setPhone(@Nullable String phone) {
         this.phone = phone;
     }

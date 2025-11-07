@@ -56,6 +56,9 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Validates fields and checks for duplicate emails.
+     */
     private void attemptSignup() {
         String email = emailInput.getText().toString().trim();
         String password = passwordInput.getText().toString().trim();
@@ -90,6 +93,9 @@ public class SignupActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Persists a new entrant record in Firestore.
+     */
     private void createUser(String email, String password, String deviceId) {
         Map<String, Object> data = new HashMap<>();
         data.put("email", email);
@@ -114,6 +120,9 @@ public class SignupActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Toggles form interactions while network requests run.
+     */
     private void setLoadingState(boolean loading) {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         signupButton.setEnabled(!loading);

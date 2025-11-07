@@ -62,6 +62,9 @@ public class EntrantProfileActivity extends AppCompatActivity {
         loadProfile();
     }
 
+    /**
+     * Loads any previously saved profile and toggles buttons accordingly.
+     */
     private void loadProfile() {
         entrantController.fetchProfile(entrantId, entrant -> {
             if (entrant != null) {
@@ -77,6 +80,9 @@ public class EntrantProfileActivity extends AppCompatActivity {
         }, error -> Toast.makeText(this, R.string.entrant_profile_error_load, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Attempts to create a profile from current field values.
+     */
     private void saveProfile() {
         Entrant entrant = buildEntrantFromInputs();
         OnSuccessListener<Void> successListener = unused -> {
@@ -90,6 +96,9 @@ public class EntrantProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.entrant_profile_error_save_failed, Toast.LENGTH_SHORT).show()));
     }
 
+    /**
+     * Persists modifications to an existing profile.
+     */
     private void updateProfile() {
         if (!hasExistingProfile) {
             Toast.makeText(this, R.string.entrant_profile_error_validation, Toast.LENGTH_SHORT).show();
@@ -103,6 +112,9 @@ public class EntrantProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.entrant_profile_error_save_failed, Toast.LENGTH_SHORT).show()));
     }
 
+    /**
+     * Prompts the entrant to confirm profile deletion.
+     */
     private void confirmDeleteProfile() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.entrant_profile_delete_confirm_title)
@@ -112,6 +124,9 @@ public class EntrantProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Removes the profile document and closes the screen.
+     */
     private void deleteProfile(DialogInterface dialogInterface, int which) {
         entrantController.deleteProfile(entrantId, unused -> {
             Toast.makeText(this, R.string.entrant_profile_deleted_message, Toast.LENGTH_SHORT).show();
@@ -119,6 +134,9 @@ public class EntrantProfileActivity extends AppCompatActivity {
         }, error -> Toast.makeText(this, R.string.entrant_profile_error_save_failed, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Creates an in-memory entrant model from the text fields.
+     */
     private Entrant buildEntrantFromInputs() {
         String phoneValue = phoneInput.getText().toString().trim();
         phoneValue = phoneValue.isEmpty() ? null : phoneValue;
@@ -131,6 +149,9 @@ public class EntrantProfileActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Wraps mutations in validation handling so the UI can show errors.
+     */
     private void executeProfileMutation(Runnable mutation) {
         try {
             mutation.run();

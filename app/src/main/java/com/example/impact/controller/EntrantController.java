@@ -51,6 +51,7 @@ public class EntrantController {
      * @param entrant         entrant profile to save
      * @param successListener optional success callback
      * @param failureListener optional failure callback
+     * @throws IllegalArgumentException when required entrant fields are missing
      */
     public void saveProfileToFirestore(@NonNull Entrant entrant,
                                        @Nullable OnSuccessListener<Void> successListener,
@@ -66,6 +67,11 @@ public class EntrantController {
 
     /**
      * Updates an existing entrant profile in Firestore using merge semantics.
+     *
+     * @param entrant         updated entrant model
+     * @param successListener optional success callback
+     * @param failureListener optional failure callback
+     * @throws IllegalArgumentException when required entrant fields are missing
      */
     public void updateProfile(@NonNull Entrant entrant,
                               @Nullable OnSuccessListener<Void> successListener,
@@ -81,6 +87,10 @@ public class EntrantController {
 
     /**
      * Fetches the entrant profile and forwards it to the provided callback.
+     *
+     * @param entrantId       Firestore document id
+     * @param successListener invoked with the mapped entrant (may be {@code null})
+     * @param failureListener invoked if the read fails
      */
     public void fetchProfile(@NonNull String entrantId,
                              @Nullable OnSuccessListener<Entrant> successListener,
@@ -99,6 +109,10 @@ public class EntrantController {
 
     /**
      * Removes the entrant profile document from Firestore.
+     *
+     * @param entrantId       Firestore document id
+     * @param successListener optional success callback
+     * @param failureListener optional failure callback
      */
     public void deleteProfile(@NonNull String entrantId,
                               @Nullable OnSuccessListener<Void> successListener,
@@ -111,6 +125,9 @@ public class EntrantController {
 
     /**
      * Fetches all entrant profiles for administrative use.
+     *
+     * @param successListener invoked with the mapped entrants list (never {@code null})
+     * @param failureListener invoked if the read fails
      */
     public void fetchAllEntrants(@Nullable OnSuccessListener<List<Entrant>> successListener,
                                  @Nullable OnFailureListener failureListener) {
@@ -127,6 +144,10 @@ public class EntrantController {
 
     /**
      * Retrieves the entrant's waiting list history sorted by timestamp descending.
+     *
+     * @param entrantId       id of the entrant whose history is needed
+     * @param successListener invoked with the mapped history list
+     * @param failureListener invoked if the query fails
      */
     public void getEntrantHistory(@NonNull String entrantId,
                                   @Nullable OnSuccessListener<List<EntrantHistoryItem>> successListener,
@@ -143,6 +164,12 @@ public class EntrantController {
         }
     }
 
+    /**
+     * Converts a snapshot into entrant models.
+     *
+     * @param snapshot Firestore query result
+     * @return list of Entrant models (never {@code null})
+     */
     private List<Entrant> mapEntrants(@Nullable QuerySnapshot snapshot) {
         List<Entrant> entrants = new ArrayList<>();
         if (snapshot == null) {
@@ -157,6 +184,12 @@ public class EntrantController {
         return entrants;
     }
 
+    /**
+     * Converts waiting-list documents into entrant history items.
+     *
+     * @param snapshot waiting list query result
+     * @return sorted history items
+     */
     List<EntrantHistoryItem> mapHistory(QuerySnapshot snapshot) {
         List<EntrantHistoryItem> history = new ArrayList<>();
         for (DocumentSnapshot document : snapshot.getDocuments()) {
@@ -183,6 +216,12 @@ public class EntrantController {
         return history;
     }
 
+    /**
+     * Safely maps a snapshot into an {@link Entrant}.
+     *
+     * @param snapshot Firestore document snapshot
+     * @return entrant instance or {@code null} when snapshot missing
+     */
     static Entrant mapSnapshotToEntrant(@Nullable DocumentSnapshot snapshot) {
         if (snapshot == null || !snapshot.exists()) {
             return null;
@@ -195,6 +234,11 @@ public class EntrantController {
         return entrant;
     }
 
+    /**
+     * Ensures required fields exist before write operations.
+     *
+     * @param entrant model to validate
+     */
     static void validateEntrant(@NonNull Entrant entrant) {
         if (isNullOrBlank(entrant.getId())) {
             throw new IllegalArgumentException("Entrant id is required");
@@ -207,6 +251,12 @@ public class EntrantController {
         }
     }
 
+    /**
+     * Builds the Firestore payload for a given entrant.
+     *
+     * @param entrant model to serialize
+     * @return map of primitive data ready for Firestore
+     */
     static Map<String, Object> buildEntrantData(@NonNull Entrant entrant) {
         Map<String, Object> data = new HashMap<>();
         data.put("id", entrant.getId());
@@ -222,6 +272,13 @@ public class EntrantController {
         return value == null || value.trim().isEmpty();
     }
 
+    /**
+     * Applies optional success/failure listeners to a Firestore task.
+     *
+     * @param task             Firestore task to observe
+     * @param successListener  optional success callback
+     * @param failureListener  optional failure callback
+     */
     private void attachListeners(Task<Void> task,
                                  @Nullable OnSuccessListener<Void> successListener,
                                  @Nullable OnFailureListener failureListener) {

@@ -69,6 +69,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         resolveCurrentStatus();
     }
 
+    /**
+     * Consumes Firestore to determine if the entrant already joined this event.
+     */
     private void resolveCurrentStatus() {
         waitingListController.fetchWaitingListEntry(event.getId(), entrantId, entry -> {
             if (entry != null) {
@@ -83,6 +86,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         }, error -> Toast.makeText(this, R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Calls the controller to join the waiting list.
+     */
     private void joinWaitingList() {
         waitingListController.joinWaitingList(event.getId(), event.getName(), entrantId, unused -> {
             currentStatus = getString(R.string.event_status_pending);
@@ -92,6 +98,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         }, error -> Toast.makeText(this, R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Removes the entrant from the waiting list.
+     */
     private void leaveWaitingList() {
         waitingListController.leaveWaitingList(event.getId(), entrantId, unused -> {
             currentStatus = getString(R.string.event_status_pending);
@@ -101,15 +110,24 @@ public class EventDetailsActivity extends AppCompatActivity {
         }, error -> Toast.makeText(this, R.string.event_details_leave_error, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Enables/disables CTA buttons based on membership.
+     */
     private void setButtonsForJoinedState(boolean joined) {
         joinButton.setEnabled(!joined);
         leaveButton.setEnabled(joined);
     }
 
+    /**
+     * Refreshes the textual status indicator.
+     */
     private void updateStatusLabel() {
         statusText.setText(getString(R.string.event_details_status_label, currentStatus));
     }
 
+    /**
+     * Formats the event date window for the header.
+     */
     private String formatDateRange(Event event) {
         Date start = event.getStartDate();
         Date end = event.getEndDate();

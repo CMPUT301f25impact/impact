@@ -14,6 +14,9 @@ import com.google.firebase.firestore.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Displays a live list of entrants waiting for a specific event.
+ */
 public class WaitingListActivity extends AppCompatActivity {
 
     private RecyclerView rv;
@@ -39,6 +42,9 @@ public class WaitingListActivity extends AppCompatActivity {
 
     private ListenerRegistration reg;
 
+    /**
+     * Subscribes to waiting list updates for the provided event id.
+     */
     private void loadWaitingListRealtime(String eventId) {
         reg = FirebaseFirestore.getInstance()
                 .collection("waitingLists").document(eventId)
@@ -66,8 +72,12 @@ public class WaitingListActivity extends AppCompatActivity {
                 });
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
-        if (reg != null) { reg.remove(); reg = null; }
+        if (reg != null) {
+            reg.remove();
+            reg = null;
+        }
     }
 }

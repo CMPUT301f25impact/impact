@@ -16,6 +16,9 @@ import com.example.impact.view.adapter.OrganizerPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+/**
+ * Hosts the organizer dashboard tabs for managing and creating events.
+ */
 public class OrganizerActivity extends AppCompatActivity {
 
     private static final String EVENTS_TITLE = "Events";
@@ -71,6 +74,9 @@ public class OrganizerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Clears organizer session then navigates back to login.
+     */
     private void performLogout() {
         sessionManager.clearSession(() -> {
             Intent intent = new Intent(this, LoginActivity.class);

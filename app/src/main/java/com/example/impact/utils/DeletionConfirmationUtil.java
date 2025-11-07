@@ -6,16 +6,18 @@ import android.content.Context;
 import com.example.impact.R;
 
 /**
- * Class used to construct a basic deletion confirmation dialog
+ * Utility wrapper that builds a consistent deletion confirmation dialog.
  */
 public class DeletionConfirmationUtil {
 
     private final AlertDialog dialog;
 
     /**
-     * Create a new confirm deletion dialog
-     * @param context app context
-     * @param item item string to confirm
+     * Creates a new confirmation dialog for destructive actions.
+     *
+     * @param context   context used to build the dialog
+     * @param item      descriptive name of the resource being deleted
+     * @param onSuccess runnable executed when the user confirms deletion
      */
     public DeletionConfirmationUtil(Context context, String item, Runnable onSuccess) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -38,7 +40,7 @@ public class DeletionConfirmationUtil {
     }
 
     /**
-     * Show the dialog
+     * Displays the dialog to the user.
      */
     public void show() {
         dialog.show();

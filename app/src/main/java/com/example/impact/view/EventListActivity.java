@@ -83,6 +83,9 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         loadEvents();
     }
 
+    /**
+     * Requests events from Firestore, applying filters if needed.
+     */
     private void loadEvents() {
         if (hasActiveFilter()) {
             eventController.fetchFilteredEvents(selectedTags, selectedStartDate, selectedEndDate, this::onEventsLoaded,
@@ -93,17 +96,26 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         }
     }
 
+    /**
+     * Indicates whether any filter criteria are currently set.
+     */
     private boolean hasActiveFilter() {
         return (selectedTags != null && !selectedTags.isEmpty())
                 || selectedStartDate != null
                 || selectedEndDate != null;
     }
 
+    /**
+     * Updates the adapter when Firestore returns results.
+     */
     private void onEventsLoaded(List<Event> events) {
         eventAdapter.setEvents(events);
         emptyStateView.setVisibility(events == null || events.isEmpty() ? View.VISIBLE : View.GONE);
     }
 
+    /**
+     * Presents the filter dialog for selecting tags and date ranges.
+     */
     private void showFilterDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_event_filter, null, false);
         EditText interestInput = dialogView.findViewById(R.id.editTextFilterInterest);
@@ -151,6 +163,9 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
                 .show();
     }
 
+    /**
+     * Splits comma-delimited interest text into tags.
+     */
     private List<String> parseTags(String input) {
         if (TextUtils.isEmpty(input)) {
             return null;
@@ -166,10 +181,16 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         return tags.isEmpty() ? null : tags;
     }
 
+    /**
+     * Updates the date labels inside the filter dialog.
+     */
     private void updateDateLabel(TextView view, @Nullable Date date) {
         view.setText(date != null ? dateFormat.format(date) : getString(R.string.event_filter_any_date));
     }
 
+    /**
+     * Displays a picker and returns the chosen date through the callback.
+     */
     private void showDatePicker(@Nullable Date initialDate, DateSelectionCallback callback) {
         Calendar calendar = Calendar.getInstance();
         if (initialDate != null) {
@@ -202,6 +223,9 @@ public class EventListActivity extends AppCompatActivity implements EventAdapter
         startActivity(intent);
     }
 
+    /**
+     * Listener for date picker results.
+     */
     private interface DateSelectionCallback {
         void onDateSelected(Date date);
     }

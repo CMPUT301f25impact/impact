@@ -14,9 +14,10 @@ public class DateUtil {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
 
     /**
-     * Formats a date range for an event
-     * @param event event
-     * @return formatted date
+     * Formats the event's start/end date range for UI display.
+     *
+     * @param event event whose dates should be formatted
+     * @return formatted date string (empty when both dates missing)
      */
     public static String formatDateRange(Event event) {
         Date start = event.getStartDate();

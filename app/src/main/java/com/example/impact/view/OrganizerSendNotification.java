@@ -3,6 +3,7 @@ package com.example.impact.view;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ public class OrganizerSendNotification extends AppCompatActivity {
         setContentView(R.layout.activity_organizer_send_notification);
 
         Button sendButton = findViewById(R.id.send_button);
+        Spinner eventSpinner = findViewById(R.id.notification_event_select);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewPastNotifications);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

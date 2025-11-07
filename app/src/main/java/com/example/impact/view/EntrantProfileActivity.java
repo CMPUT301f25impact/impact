@@ -11,9 +11,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.impact.R;
-import com.example.impact.controller.EntrantController;
+import com.example.impact.controller.UserController;
 import com.example.impact.model.Entrant;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 /**
@@ -28,7 +27,7 @@ public class EntrantProfileActivity extends AppCompatActivity {
     private Button updateButton;
     private Button deleteButton;
 
-    private EntrantController entrantController;
+    private UserController userController;
     private String entrantId;
     private boolean hasExistingProfile;
 
@@ -37,7 +36,7 @@ public class EntrantProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant_profile);
 
-        entrantController = new EntrantController();
+        userController = new UserController();
 
         nameInput = findViewById(R.id.editTextEntrantName);
         emailInput = findViewById(R.id.editTextEntrantEmail);
@@ -66,7 +65,7 @@ public class EntrantProfileActivity extends AppCompatActivity {
      * Loads any previously saved profile and toggles buttons accordingly.
      */
     private void loadProfile() {
-        entrantController.fetchProfile(entrantId, entrant -> {
+        userController.fetchProfile(entrantId, entrant -> {
             if (entrant != null) {
                 hasExistingProfile = true;
                 nameInput.setText(entrant.getName());
@@ -92,7 +91,7 @@ public class EntrantProfileActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.entrant_profile_saved_message, Toast.LENGTH_SHORT).show();
         };
 
-        executeProfileMutation(() -> entrantController.saveProfileToFirestore(entrant, successListener, error ->
+        executeProfileMutation(() -> userController.saveProfileToFirestore(entrant, successListener, error ->
                 Toast.makeText(this, R.string.entrant_profile_error_save_failed, Toast.LENGTH_SHORT).show()));
     }
 
@@ -108,7 +107,7 @@ public class EntrantProfileActivity extends AppCompatActivity {
         OnSuccessListener<Void> successListener = unused ->
                 Toast.makeText(this, R.string.entrant_profile_update_message, Toast.LENGTH_SHORT).show();
 
-        executeProfileMutation(() -> entrantController.updateProfile(entrant, successListener, error ->
+        executeProfileMutation(() -> userController.updateProfile(entrant, successListener, error ->
                 Toast.makeText(this, R.string.entrant_profile_error_save_failed, Toast.LENGTH_SHORT).show()));
     }
 
@@ -128,7 +127,7 @@ public class EntrantProfileActivity extends AppCompatActivity {
      * Removes the profile document and closes the screen.
      */
     private void deleteProfile(DialogInterface dialogInterface, int which) {
-        entrantController.deleteProfile(entrantId, unused -> {
+        userController.deleteProfile(entrantId, unused -> {
             Toast.makeText(this, R.string.entrant_profile_deleted_message, Toast.LENGTH_SHORT).show();
             finish();
         }, error -> Toast.makeText(this, R.string.entrant_profile_error_save_failed, Toast.LENGTH_SHORT).show());

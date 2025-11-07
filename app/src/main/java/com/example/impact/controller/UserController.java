@@ -3,8 +3,11 @@ package com.example.impact.controller;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.impact.model.Admin;
 import com.example.impact.model.Entrant;
 import com.example.impact.model.EntrantHistoryItem;
+import com.example.impact.model.Organizer;
+import com.example.impact.model.User;
 import com.example.impact.model.WaitingListEntry;
 import com.example.impact.utils.FirebaseUtil;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -21,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Coordinates Firestore persistence for entrant profile information.
+ * Coordinates Firestore persistence for user profile information.
  */
-public class EntrantController {
-    private static final String COLLECTION_ENTRANTS = "entrants";
+public class UserController {
+    private static final String COLLECTION_USERS = "users";
     private static final String COLLECTION_GROUP_WAITING_LIST_ENTRANTS = "entrants";
 
     private final FirebaseFirestore firestore;
@@ -32,7 +35,7 @@ public class EntrantController {
     /**
      * Builds a controller using the shared Firestore instance.
      */
-    public EntrantController() {
+    public UserController() {
         this(FirebaseUtil.getFirestore());
     }
 
@@ -41,66 +44,66 @@ public class EntrantController {
      *
      * @param firestore Firestore reference, must not be {@code null}
      */
-    public EntrantController(@NonNull FirebaseFirestore firestore) {
+    public UserController(@NonNull FirebaseFirestore firestore) {
         this.firestore = firestore;
     }
 
     /**
-     * Persists the provided entrant profile to Firestore.
+     * Persists the provided user profile to Firestore.
      *
-     * @param entrant         entrant profile to save
+     * @param user         user profile to save
      * @param successListener optional success callback
      * @param failureListener optional failure callback
      * @throws IllegalArgumentException when required entrant fields are missing
      */
-    public void saveProfileToFirestore(@NonNull Entrant entrant,
+    public void saveProfileToFirestore(@NonNull User user,
                                        @Nullable OnSuccessListener<Void> successListener,
                                        @Nullable OnFailureListener failureListener) {
-        validateEntrant(entrant);
-        Map<String, Object> data = buildEntrantData(entrant);
+        validateUser(user);
+        Map<String, Object> data = buildUserData(user);
 
-        Task<Void> task = firestore.collection(COLLECTION_ENTRANTS)
-                .document(entrant.getId())
+        Task<Void> task = firestore.collection(COLLECTION_USERS)
+                .document(user.getId())
                 .set(data);
         attachListeners(task, successListener, failureListener);
     }
 
     /**
-     * Updates an existing entrant profile in Firestore using merge semantics.
+     * Updates an existing user profile in Firestore using merge semantics.
      *
-     * @param entrant         updated entrant model
+     * @param user        updated user model
      * @param successListener optional success callback
      * @param failureListener optional failure callback
      * @throws IllegalArgumentException when required entrant fields are missing
      */
-    public void updateProfile(@NonNull Entrant entrant,
+    public void updateProfile(@NonNull User user,
                               @Nullable OnSuccessListener<Void> successListener,
                               @Nullable OnFailureListener failureListener) {
-        validateEntrant(entrant);
-        Map<String, Object> data = buildEntrantData(entrant);
+        validateUser(user);
+        Map<String, Object> data = buildUserData(user);
 
-        Task<Void> task = firestore.collection(COLLECTION_ENTRANTS)
-                .document(entrant.getId())
+        Task<Void> task = firestore.collection(COLLECTION_USERS)
+                .document(user.getId())
                 .set(data, SetOptions.merge());
         attachListeners(task, successListener, failureListener);
     }
 
     /**
-     * Fetches the entrant profile and forwards it to the provided callback.
+     * Fetches the user profile and forwards it to the provided callback.
      *
-     * @param entrantId       Firestore document id
+     * @param userId       Firestore document id
      * @param successListener invoked with the mapped entrant (may be {@code null})
      * @param failureListener invoked if the read fails
      */
-    public void fetchProfile(@NonNull String entrantId,
-                             @Nullable OnSuccessListener<Entrant> successListener,
+    public void fetchProfile(@NonNull String userId,
+                             @Nullable OnSuccessListener<User> successListener,
                              @Nullable OnFailureListener failureListener) {
-        Task<DocumentSnapshot> task = firestore.collection(COLLECTION_ENTRANTS)
-                .document(entrantId)
+        Task<DocumentSnapshot> task = firestore.collection(COLLECTION_USERS)
+                .document(userId)
                 .get();
 
         if (successListener != null) {
-            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapSnapshotToEntrant(snapshot)));
+            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapSnapshotToUser(snapshot)));
         }
         if (failureListener != null) {
             task.addOnFailureListener(failureListener);
@@ -108,34 +111,38 @@ public class EntrantController {
     }
 
     /**
-     * Removes the entrant profile document from Firestore.
+     * Removes the user profile document from Firestore.
      *
-     * @param entrantId       Firestore document id
+     * @param userId       Firestore document id
      * @param successListener optional success callback
      * @param failureListener optional failure callback
      */
-    public void deleteProfile(@NonNull String entrantId,
+    public void deleteProfile(@NonNull String userId,
                               @Nullable OnSuccessListener<Void> successListener,
                               @Nullable OnFailureListener failureListener) {
-        Task<Void> task = firestore.collection(COLLECTION_ENTRANTS)
-                .document(entrantId)
+        Task<Void> task = firestore.collection(COLLECTION_USERS)
+                .document(userId)
                 .delete();
         attachListeners(task, successListener, failureListener);
     }
 
     /**
-     * Fetches all entrant profiles for administrative use.
+     * Fetches all user profiles for administrative use.
      *
+     * @param roles roles to query
      * @param successListener invoked with the mapped entrants list (never {@code null})
      * @param failureListener invoked if the read fails
      */
-    public void fetchAllEntrants(@Nullable OnSuccessListener<List<Entrant>> successListener,
+    public void fetchAllUsers(
+            List<String> roles,
+            @Nullable OnSuccessListener<List<User>> successListener,
                                  @Nullable OnFailureListener failureListener) {
-        Task<QuerySnapshot> task = firestore.collection(COLLECTION_ENTRANTS)
+        Task<QuerySnapshot> task = firestore.collection(COLLECTION_USERS)
+                .whereIn("role", roles)
                 .get();
 
         if (successListener != null) {
-            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapEntrants(snapshot)));
+            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapUsers(snapshot)));
         }
         if (failureListener != null) {
             task.addOnFailureListener(failureListener);
@@ -165,23 +172,23 @@ public class EntrantController {
     }
 
     /**
-     * Converts a snapshot into entrant models.
+     * Converts a snapshot into user models
      *
      * @param snapshot Firestore query result
-     * @return list of Entrant models (never {@code null})
+     * @return list of User models (never {@code null})
      */
-    private List<Entrant> mapEntrants(@Nullable QuerySnapshot snapshot) {
-        List<Entrant> entrants = new ArrayList<>();
+    private List<User> mapUsers(@Nullable QuerySnapshot snapshot) {
+        List<User> users = new ArrayList<>();
         if (snapshot == null) {
-            return entrants;
+            return users;
         }
         for (DocumentSnapshot document : snapshot.getDocuments()) {
-            Entrant entrant = mapSnapshotToEntrant(document);
-            if (entrant != null) {
-                entrants.add(entrant);
+            User user = mapSnapshotToUser(document);
+            if (user != null) {
+                users.add(user);
             }
         }
-        return entrants;
+        return users;
     }
 
     /**
@@ -217,53 +224,76 @@ public class EntrantController {
     }
 
     /**
-     * Safely maps a snapshot into an {@link Entrant}.
+     * Safely maps a snapshot into an {@link User}.
      *
      * @param snapshot Firestore document snapshot
      * @return entrant instance or {@code null} when snapshot missing
      */
-    static Entrant mapSnapshotToEntrant(@Nullable DocumentSnapshot snapshot) {
+    static User mapSnapshotToUser(@Nullable DocumentSnapshot snapshot) {
         if (snapshot == null || !snapshot.exists()) {
             return null;
         }
-        Entrant entrant = snapshot.toObject(Entrant.class);
-        if (entrant == null) {
-            entrant = new Entrant();
+
+        String role = snapshot.getString("role");
+        if (role == null) return null;
+
+        // Return correct user object determined by role
+        User user;
+        switch(role) {
+            case Entrant.ROLE_KEY:
+                user = snapshot.toObject(Entrant.class);
+                break;
+            case Organizer.ROLE_KEY:
+                user = snapshot.toObject(Organizer.class);
+                break;
+            case Admin.ROLE_KEY:
+                user = snapshot.toObject(Admin.class);
+                break;
+            default:
+                user = null;
         }
-        entrant.setId(snapshot.getId());
-        return entrant;
+
+        if (user == null) {
+            user = new Entrant();
+        }
+        user.setId(snapshot.getId());
+        return user;
     }
 
     /**
      * Ensures required fields exist before write operations.
      *
-     * @param entrant model to validate
+     * @param user model to validate
      */
-    static void validateEntrant(@NonNull Entrant entrant) {
-        if (isNullOrBlank(entrant.getId())) {
-            throw new IllegalArgumentException("Entrant id is required");
+    static void validateUser(@NonNull User user) {
+        if (isNullOrBlank(user.getId())) {
+            throw new IllegalArgumentException("User id is required");
         }
-        if (isNullOrBlank(entrant.getName())) {
-            throw new IllegalArgumentException("Entrant name is required");
+        if (isNullOrBlank(user.getName())) {
+            throw new IllegalArgumentException("User name is required");
         }
-        if (isNullOrBlank(entrant.getEmail())) {
-            throw new IllegalArgumentException("Entrant email is required");
+        if (isNullOrBlank(user.getEmail())) {
+            throw new IllegalArgumentException("User email is required");
+        }
+        if (isNullOrBlank(user.getRole())) {
+            throw new IllegalArgumentException("User role is required");
         }
     }
 
     /**
-     * Builds the Firestore payload for a given entrant.
+     * Builds the Firestore payload for a given user.
      *
-     * @param entrant model to serialize
+     * @param user model to serialize
      * @return map of primitive data ready for Firestore
      */
-    static Map<String, Object> buildEntrantData(@NonNull Entrant entrant) {
+    static Map<String, Object> buildUserData(@NonNull User user) {
         Map<String, Object> data = new HashMap<>();
-        data.put("id", entrant.getId());
-        data.put("name", entrant.getName());
-        data.put("email", entrant.getEmail());
+        data.put("id", user.getId());
+        data.put("name", user.getName());
+        data.put("email", user.getEmail());
+        data.put("role", user.getRole());
 
-        String phone = entrant.getPhone();
+        String phone = user.getPhone();
         data.put("phone", !isNullOrBlank(phone) ? phone : null);
         return data;
     }

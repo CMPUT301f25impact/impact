@@ -63,4 +63,6 @@ public abstract class User implements Serializable {
     public void setPhone(@Nullable String phone) {
         this.phone = phone;
     }
+
+    public abstract String getRole();
 }

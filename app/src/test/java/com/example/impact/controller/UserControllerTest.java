@@ -22,13 +22,13 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests covering basic entrant controller validation and mapping logic.
  */
-public class EntrantControllerTest {
+public class UserControllerTest {
 
     @Test
     public void buildEntrantData_includesCoreFields() {
         Entrant entrant = new Entrant("id-123", "Sam Sample", "sam@example.com", null);
 
-        Map<String, Object> data = EntrantController.buildEntrantData(entrant);
+        Map<String, Object> data = UserController.buildUserData(entrant);
 
         assertThat(data.get("id"), is("id-123"));
         assertThat(data.get("name"), is("Sam Sample"));
@@ -40,7 +40,7 @@ public class EntrantControllerTest {
     public void buildEntrantData_includesPhoneWhenPresent() {
         Entrant entrant = new Entrant("id-456", "Alex Example", "alex@example.com", "7801234567");
 
-        Map<String, Object> data = EntrantController.buildEntrantData(entrant);
+        Map<String, Object> data = UserController.buildUserData(entrant);
 
         assertThat(data.get("phone"), is("7801234567"));
     }
@@ -49,7 +49,7 @@ public class EntrantControllerTest {
     public void validateEntrant_rejectsMissingName() {
         Entrant entrant = new Entrant("id-456", "", "alex@example.com", null);
 
-        EntrantController.validateEntrant(entrant);
+        UserController.validateUser(entrant);
     }
 
     @Test
@@ -68,10 +68,12 @@ public class EntrantControllerTest {
         QuerySnapshot querySnapshot = mock(QuerySnapshot.class);
         when(querySnapshot.getDocuments()).thenReturn(Arrays.asList(olderSnapshot, newerSnapshot));
 
-        EntrantController controller = new EntrantController(mock(com.google.firebase.firestore.FirebaseFirestore.class));
+        UserController controller = new UserController(mock(com.google.firebase.firestore.FirebaseFirestore.class));
         List<EntrantHistoryItem> items = controller.mapHistory(querySnapshot);
 
         assertThat(items.get(0).getEventId(), is("eventB"));
         assertThat(items.get(1).getEventId(), is("eventA"));
     }
+
+    // TODO test organizer/admin
 }

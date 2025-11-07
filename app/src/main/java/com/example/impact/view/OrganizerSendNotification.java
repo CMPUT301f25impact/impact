@@ -23,6 +23,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 public class OrganizerSendNotification extends AppCompatActivity {
+
+    public static final String EXTRA_ORGANIZER_ID = "extra_organizer_id";
     private OrganizerPastNotificationAdapter pastNotificationAdapter;
     private TextView emptyStateView;
     private NotificationController notificatonController;
@@ -45,12 +47,14 @@ public class OrganizerSendNotification extends AppCompatActivity {
 
         emptyStateView = findViewById(R.id.textViewPastEmpty);
         notificatonController = new NotificationController();
+        userController = new UserController();
 
-        loadPast();
+        getCurrentOrganizer();
     }
 
     private void getCurrentOrganizer() {
-        String organizerId = getIntent().getStringExtra("organizer_id");
+        String organizerId = getIntent().getStringExtra(EXTRA_ORGANIZER_ID);
+        if (organizerId == null) return;
 
         userController.fetchProfile(organizerId, this::onOrganizerFetch, error -> Toast.makeText(this, "Organizer not found", Toast.LENGTH_SHORT).show());
         if (current_organizer != null) {

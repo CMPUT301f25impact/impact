@@ -31,6 +31,7 @@ public class OrganizerActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private ViewPager2 viewPager;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +40,7 @@ public class OrganizerActivity extends AppCompatActivity {
         Button notification_button = findViewById(R.id.notifications_button);
 
         Intent intent = new Intent(this, OrganizerSendNotification.class);
-        intent.putExtra("organizer_id", getIntent().getStringExtra("extra_user_id"));
-
+        intent.putExtra(OrganizerSendNotification.EXTRA_ORGANIZER_ID, getIntent().getStringExtra(LoginActivity.EXTRA_USER_ID));
         notification_button.setOnClickListener(v -> startActivity(intent));
 
         // Toolbar

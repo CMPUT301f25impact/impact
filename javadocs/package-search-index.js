@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.impact.controller"},{"l":"com.example.impact.model"},{"l":"com.example.impact.utils"},{"l":"com.example.impact.view"},{"l":"com.example.impact.view.adapter"}];updateSearchResults();

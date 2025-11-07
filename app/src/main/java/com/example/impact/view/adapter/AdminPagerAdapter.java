@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.impact.view.AdminEventListFragment;
 import com.example.impact.view.AdminImageListFragment;
+import com.example.impact.view.AdminProfileListFragment;
 
 /**
  * Supplies admin dashboard fragments to the ViewPager
@@ -32,9 +33,7 @@ public class AdminPagerAdapter extends FragmentStateAdapter {
             case "Images":
                 return new AdminImageListFragment();
             case "Profiles":
-                // TODO temporarily rendering images under profiles
-                // add profiles to this tab when done (AdminProfileListFragment)
-                return new AdminImageListFragment();
+                return new AdminProfileListFragment();
         }
         // this should never be hit
         return null;

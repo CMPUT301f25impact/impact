@@ -117,6 +117,14 @@ public class Image implements Serializable {
         }
     }
 
+    public static Bitmap decodeBase64ToBitmapStatic(String base64) {
+        try {
+            if (base64 == null || base64.isEmpty()) return null;
+            byte[] decoded = android.util.Base64.decode(base64, android.util.Base64.DEFAULT);
+            return android.graphics.BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+        } catch(Exception e) { return null; }
+    }
+
     /**
      * Populates an image from a Firestore snapshot.
      *

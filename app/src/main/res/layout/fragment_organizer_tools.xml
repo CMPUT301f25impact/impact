@@ -40,6 +40,22 @@
             android:contentDescription="QR preview"
             android:layout_marginTop="12dp"/>
 
+        <ImageView
+            android:id="@+id/imgPosterPreview"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/darker_gray"/>
+
+        <Button
+            android:id="@+id/btnUploadPoster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Poster (optional)"
+            android:layout_marginTop="8dp"/>
+
         <Button
             android:id="@+id/btnCreateEvent"
             android:text="Create Event"

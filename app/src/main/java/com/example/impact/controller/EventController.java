@@ -126,6 +126,24 @@ public class EventController {
     }
 
     /**
+     * Updates the posterUrl field for the event document.
+     */
+    public void updatePosterUrl(@NonNull String eventId,
+                                @NonNull String posterImageId,
+                                @Nullable OnSuccessListener<Void> successListener,
+                                @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .update("posterUrl", posterImageId)
+                .addOnSuccessListener(v -> {
+                    if (successListener != null) successListener.onSuccess(v);
+                })
+                .addOnFailureListener(err -> {
+                    if (failureListener != null) failureListener.onFailure(err);
+                });
+    }
+
+    /**
      * Stores a QR code download URL in the event doc.
      */
     public void updateQrPayload(@NonNull String eventId,

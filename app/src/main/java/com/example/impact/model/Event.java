@@ -135,12 +135,22 @@ public class Event implements Serializable {
     /**
      * Populates an event from a Firestore snapshot.
      */
-    public static Event fromSnapshot(DocumentSnapshot snapshot) {
-        Event event = snapshot.toObject(Event.class);
-        if (event == null) {
-            event = new Event();
+    public static Event fromSnapshot(DocumentSnapshot doc) {
+        Event e = doc.toObject(Event.class);
+        if (e == null) {
+            e = new Event();
         }
-        event.setId(snapshot.getId());
-        return event;
+        // set the canonical document id (so e.getId() returns the Firestore doc id)
+        e.setId(doc.getId());
+
+        // Firestore field name for poster you used is posterUrl
+        // but .toObject may or may not map it depending on naming.
+        // Ensure falling back to reading field directly:
+        if (doc.contains("posterUrl")) {
+            String poster = doc.getString("posterUrl");
+            e.setPosterUrl(poster);
+        }
+
+        return e;
     }
 }

@@ -2,6 +2,14 @@
     android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content"
     android:padding="12dp" android:background="@android:color/white" android:layout_marginBottom="12dp">
 
+    <ImageView
+        android:id="@+id/ivPoster"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
+
     <TextView android:id="@+id/tvTitle"
         android:layout_width="match_parent" android:layout_height="wrap_content"
         android:textStyle="bold"/>

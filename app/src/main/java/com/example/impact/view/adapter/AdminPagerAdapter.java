@@ -15,11 +15,23 @@ import com.example.impact.view.AdminProfileListFragment;
 public class AdminPagerAdapter extends FragmentStateAdapter {
 
     private final String[] tabs;
+    /**
+     * Creates a pager adapter scoped to the admin dashboard.
+     *
+     * @param tabs              labels indicating which fragment to instantiate
+     * @param fragmentActivity  host activity backing the pager
+     */
     public AdminPagerAdapter(String[] tabs, @NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
         this.tabs = tabs;
     }
 
+    /**
+     * Instantiates the fragment that corresponds to the requested tab.
+     *
+     * @param position pager index
+     * @return fragment for the tab
+     */
     @NonNull
     @Override
     public Fragment createFragment(int position) {
@@ -39,6 +51,9 @@ public class AdminPagerAdapter extends FragmentStateAdapter {
         return null;
     }
 
+    /**
+     * @return number of tabs configured for the admin dashboard
+     */
     @Override
     public int getItemCount() {
         return tabs.length;

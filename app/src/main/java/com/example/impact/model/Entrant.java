@@ -7,65 +7,20 @@ import java.io.Serializable;
 /**
  * Represents an entrant using the app and stores their profile information.
  */
-public class Entrant implements Serializable {
-    private String id;
-    private String name;
-    private String email;
-    @Nullable
-    private String phone;
+public class Entrant extends User {
 
-    /**
-     * Required empty constructor for Firestore deserialization.
-     */
+    public static final String ROLE_KEY = "entrant";
+
     public Entrant() {
-        // Default constructor required for calls to DataSnapshot.getValue(Entrant.class)
+        // Default constructor for Firestore
     }
 
-    /**
-     * Creates an entrant profile using the provided details.
-     *
-     * @param id    unique identifier for the entrant
-     * @param name  entrant full name
-     * @param email entrant contact email
-     * @param phone optional entrant phone number
-     */
     public Entrant(String id, String name, String email, @Nullable String phone) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
+        super(id, name, email, phone);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Nullable
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(@Nullable String phone) {
-        this.phone = phone;
+    @Override
+    public String getRole() {
+        return ROLE_KEY;
     }
 }

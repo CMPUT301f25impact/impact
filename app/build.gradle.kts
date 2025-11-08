@@ -1,3 +1,6 @@
+import com.android.build.gradle.AppExtension
+import org.gradle.api.tasks.javadoc.Javadoc
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -59,4 +62,21 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
+}
+
+afterEvaluate {
+    val androidExt = extensions.getByType<AppExtension>()
+    tasks.register<Javadoc>("androidJavadocs") {
+        val debugVariant = androidExt.applicationVariants.first { it.name == "debug" }
+        val javaCompileProvider = debugVariant.javaCompileProvider.get()
+
+        setSource(androidExt.sourceSets.getByName("main").java.getSourceFiles())
+        classpath = files(
+            javaCompileProvider.classpath,
+            androidExt.bootClasspath
+        )
+        setDestinationDir(rootProject.file("javadocs"))
+        options.encoding = "UTF-8"
+        isFailOnError = false
+    }
 }

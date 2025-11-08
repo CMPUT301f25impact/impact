@@ -17,18 +17,43 @@ import com.example.impact.model.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for showing uploaded images to administrators.
+ */
 public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.AdminImageViewHolder> {
     private final List<Image> images;
     private final AdminImageAdapter.DeleteListener deleteListener;
 
+    /**
+     * Triggered when an admin taps the delete image button.
+     */
     public interface DeleteListener {
+        /**
+         * Called when the delete action is triggered for an image row.
+         *
+         * @param position adapter position
+         * @param image    image being removed
+         */
         void onDeleteImageClicked(int position, Image image);
     }
+
+    /**
+     * Builds an adapter with the provided delete listener.
+     *
+     * @param deleteListener callback invoked upon delete taps
+     */
     public AdminImageAdapter(AdminImageAdapter.DeleteListener deleteListener) {
         this.images = new ArrayList<>();
         this.deleteListener = deleteListener;
     }
 
+    /**
+     * Inflates an admin image row.
+     *
+     * @param parent parent recycler
+     * @param viewType unused view type
+     * @return view holder instance
+     */
     @NonNull
     @Override
     public AdminImageAdapter.AdminImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,20 +62,30 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Ad
         return new AdminImageAdapter.AdminImageViewHolder(view);
     }
 
+    /**
+     * Binds an image to its row.
+     *
+     * @param holder   view holder
+     * @param position adapter position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdminImageAdapter.AdminImageViewHolder holder, int position) {
         Image currentImage = images.get(position);
         holder.bind(currentImage, position);
     }
 
+    /**
+     * @return number of images rendered
+     */
     @Override
     public int getItemCount() {
         return images.size();
     }
 
     /**
-     * Update adapter with new images
-     * @param newImages new images to load
+     * Updates the adapter dataset with the supplied images.
+     *
+     * @param newImages list of images to render (may be {@code null})
      */
     public void setImages(List<Image> newImages) {
         images.clear();
@@ -61,13 +96,16 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Ad
     }
 
     /**
-     * ViewHolder wrapper class to hold the views for a single image item
+     * ViewHolder wrapper class to hold the views for a single image item.
      */
     class AdminImageViewHolder extends RecyclerView.ViewHolder {
         final TextView filenameTextView;
         final Button deleteButton;
         final ImageView imageView;
 
+        /**
+         * @param itemView inflated row view
+         */
         AdminImageViewHolder(View itemView) {
             super(itemView);
             filenameTextView = itemView.findViewById(R.id.admin_image_filename);
@@ -75,6 +113,12 @@ public class AdminImageAdapter extends RecyclerView.Adapter<AdminImageAdapter.Ad
             imageView = itemView.findViewById(R.id.admin_image);
         }
 
+        /**
+         * Binds an image to the row.
+         *
+         * @param image    image being displayed
+         * @param position adapter position
+         */
         void bind(Image image, int position) {
             String imageFilename = image.getFileName();
             Bitmap imageBitmap = image.decodeBase64ToBitmap();

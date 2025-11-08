@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
-import com.example.impact.controller.EntrantController;
+import com.example.impact.controller.UserController;
 import com.example.impact.model.Entrant;
+import com.example.impact.model.Organizer;
+import com.example.impact.model.User;
 import com.example.impact.utils.DeletionConfirmationUtil;
 import com.example.impact.view.adapter.AdminProfileAdapter;
 
@@ -26,12 +28,12 @@ import java.util.List;
 public class AdminProfileListFragment extends Fragment implements AdminProfileAdapter.DeleteListener {
 
     private AdminProfileAdapter adapter;
-    private EntrantController entrantController;
+    private UserController userController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        entrantController = new EntrantController();
+        userController = new UserController();
     }
 
     @Override
@@ -48,13 +50,21 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
         return view;
     }
 
+    /**
+     * Requests all entrant profiles from Firestore.
+     */
     private void loadProfiles() {
-        entrantController.fetchAllEntrants(this::onProfilesLoaded,
+        userController.fetchAllUsers(
+                List.of(Entrant.ROLE_KEY, Organizer.ROLE_KEY),
+                this::onProfilesLoaded,
                 error -> showToast(R.string.admin_profile_list_error_loading));
     }
 
-    private void onProfilesLoaded(List<Entrant> entrants) {
-        adapter.setProfiles(entrants);
+    /**
+     * Supplies fetched profiles to the adapter.
+     */
+    private void onProfilesLoaded(List<User> users) {
+        adapter.setProfiles(users);
     }
 
     private void onProfileDelete(String name) {
@@ -65,6 +75,9 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
         loadProfiles();
     }
 
+    /**
+     * Convenience overload for showing a toast by resource id.
+     */
     private void showToast(int stringResId) {
         if (getContext() == null) {
             return;
@@ -72,6 +85,9 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
         Toast.makeText(getContext(), stringResId, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Convenience overload for showing a toast using direct text.
+     */
     private void showToast(String message) {
         if (getContext() == null) {
             return;
@@ -80,18 +96,18 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
     }
 
     @Override
-    public void onDeleteProfileClicked(int position, Entrant entrant) {
+    public void onDeleteProfileClicked(int position, User user) {
         if (getContext() == null || !isAdded()) {
             return;
         }
-        String displayName = !TextUtils.isEmpty(entrant.getName())
-                ? entrant.getName()
+        String displayName = !TextUtils.isEmpty(user.getName())
+                ? user.getName()
                 : getString(R.string.admin_profile_list_name_placeholder);
 
         DeletionConfirmationUtil confirmation = new DeletionConfirmationUtil(
                 getContext(),
                 displayName,
-                () -> entrantController.deleteProfile(entrant.getId(),
+                () -> userController.deleteProfile(user.getId(),
                         unused -> onProfileDelete(displayName),
                         error -> showToast(R.string.admin_profile_list_error_deletion)));
         confirmation.show();

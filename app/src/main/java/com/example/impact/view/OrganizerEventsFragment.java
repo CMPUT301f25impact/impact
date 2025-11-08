@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.model.Event;
+import com.example.impact.model.Organizer;
 import com.example.impact.view.adapter.EventAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -40,6 +41,9 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         // No need to call reg here — listener starts in onCreateView
     }
 
+    /**
+     * Inflates the organizer events list and wires up real-time listeners.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -68,7 +72,7 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
             return v;
         }
 
-        adapter = new EventAdapter(this, organizerEmail);
+        adapter = new EventAdapter(this, Organizer.ROLE_KEY);
         rv.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -99,6 +103,9 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         return v;
     }
 
+    /**
+     * Stops the snapshot listener when leaving the screen.
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -108,6 +115,9 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         }
     }
 
+    /**
+     * Opens the waiting list view when an event row itself is tapped.
+     */
     @Override
     public void onEventClicked(@NonNull Event event) {
         Intent intent = new Intent(requireContext(), WaitingListActivity.class);
@@ -115,6 +125,9 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         startActivity(intent);
     }
 
+    /**
+     * Also routes to waiting-list management when the entrants button is pressed.
+     */
     @Override
     public void onViewEntrantsClicked(@NonNull Event event) {
         Intent intent = new Intent(requireContext(), WaitingListActivity.class);

@@ -23,14 +23,35 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ad
     private final List<Event> events;
     private final DeleteListener deleteListener;
 
+    /**
+     * Triggered when an admin taps the delete button.
+     */
     public interface DeleteListener {
+        /**
+         * Called when a row's delete action is triggered.
+         *
+         * @param position adapter position
+         * @param event    event being deleted
+         */
         void onDeleteEventClicked(int position, Event event);
     }
+    /**
+     * Builds an adapter with the provided deletion callback.
+     *
+     * @param deleteListener listener invoked when the delete button is tapped
+     */
     public AdminEventAdapter(DeleteListener deleteListener) {
         this.events = new ArrayList<>();
         this.deleteListener = deleteListener;
     }
 
+    /**
+     * Inflates an admin event row.
+     *
+     * @param parent parent recycler view
+     * @param viewType unused view type flag
+     * @return populated view holder
+     */
     @NonNull
     @Override
     public AdminEventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,20 +60,30 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ad
         return new AdminEventViewHolder(view);
     }
 
+    /**
+     * Binds an event to its row.
+     *
+     * @param holder   view holder
+     * @param position adapter index being bound
+     */
     @Override
     public void onBindViewHolder(@NonNull AdminEventViewHolder holder, int position) {
         Event currentEvent = events.get(position);
         holder.bind(currentEvent, position);
     }
 
+    /**
+     * @return number of rendered events
+     */
     @Override
     public int getItemCount() {
         return events.size();
     }
 
     /**
-     * Update adapter with new events
-     * @param newEvents new events to load
+     * Updates the adapter dataset.
+     *
+     * @param newEvents events to display (may be {@code null})
      */
     public void setEvents(List<Event> newEvents) {
         events.clear();
@@ -63,7 +94,7 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ad
     }
 
     /**
-     * ViewHolder wrapper class to hold the views for a single event item
+     * ViewHolder wrapper class to hold the views for a single event item.
      */
      class AdminEventViewHolder extends RecyclerView.ViewHolder {
         final TextView nameTextView;
@@ -71,6 +102,9 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ad
         final TextView dateTextView;
         final Button deleteButton;
 
+        /**
+         * @param itemView inflated row view
+         */
         AdminEventViewHolder(View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.admin_event_name);
@@ -79,6 +113,12 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ad
             deleteButton = itemView.findViewById(R.id.admin_event_delete_button);
         }
 
+        /**
+         * Binds event data to the row and wires up delete behavior.
+         *
+         * @param event    event being rendered
+         * @param position adapter position of the event
+         */
         void bind(Event event, int position) {
             nameTextView.setText(event.getName());
             dateTextView.setText(DateUtil.formatDateRange(event));

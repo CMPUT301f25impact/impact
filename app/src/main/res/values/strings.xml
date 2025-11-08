@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Impact</string>
+    <string name="entrant_nav_events_tab">Events</string>
+    <string name="entrant_nav_profile_tab">Profile</string>
+    <string name="entrant_nav_history_tab">History</string>
     <string name="entrant_profile_full_name_hint">Full Name</string>
     <string name="entrant_profile_email_hint">Email</string>
     <string name="entrant_profile_phone_hint">Phone (optional)</string>
@@ -82,6 +85,7 @@
     <string name="admin_profile_list_name_placeholder">Unnamed profile</string>
     <string name="admin_profile_list_email_placeholder">No email provided</string>
     <string name="admin_profile_list_phone_placeholder">No phone provided</string>
+    <string name="admin_profile_list_role_format">Role: %1$s</string>
     <string name="admin_profile_list_email_format">Email: %1$s</string>
     <string name="admin_profile_list_phone_format">Phone: %1$s</string>
     <string name="admin_profile_list_id_format">ID: %1$s</string>

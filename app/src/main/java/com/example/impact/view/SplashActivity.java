@@ -30,6 +30,9 @@ public class SplashActivity extends AppCompatActivity {
         checkSession();
     }
 
+    /**
+     * Determines whether an existing device-bound session can be reused.
+     */
     private void checkSession() {
         String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         if (TextUtils.isEmpty(deviceId)) {
@@ -52,6 +55,9 @@ public class SplashActivity extends AppCompatActivity {
                 .addOnFailureListener(error -> proceedToLogin(true));
     }
 
+    /**
+     * Routes to the dashboard that matches the stored role.
+     */
     private void proceedToRole(DocumentSnapshot userDoc) {
         String role = userDoc.getString("role");
         String email = userDoc.getString("email");
@@ -71,6 +77,9 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Navigates to the login screen, optionally surfacing an error toast.
+     */
     private void proceedToLogin(boolean showError) {
         if (showError) {
             Toast.makeText(this, R.string.login_error_generic, Toast.LENGTH_SHORT).show();

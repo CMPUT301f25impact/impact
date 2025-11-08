@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top|center_horizontal"
-    android:orientation="vertical"
-    android:padding="24dp"
     tools:context=".view.EntrantActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -14,44 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.Material3.Light"
+        app:layout_constraintTop_toTopOf="parent"
         app:titleTextColor="@android:color/black"
         app:subtitleTextColor="@android:color/black"
         app:navigationIconTint="@android:color/black" />
 
-    <TextView
-        android:id="@+id/textViewPlaceholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:text="Entrant Demo Launcher"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textStyle="bold" />
+    <FrameLayout
+        android:id="@+id/entrant_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/entrantToolbar"
+        app:layout_constraintBottom_toTopOf="@id/entrant_bottom_nav_view"/>
 
-    <Button
-        android:id="@+id/buttonOpenProfile"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/entrant_bottom_nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Open Profile" />
-
-    <Button
-        android:id="@+id/buttonOpenEvents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Browse Events" />
-
-    <Button
-        android:id="@+id/buttonOpenHistory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="View Event History" />
-
-    <Button
-        android:id="@+id/buttonSeedDemoData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/main_seed_demo_button" />
-</LinearLayout>
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/entrant_nav_menu" />
+</androidx.constraintlayout.widget.ConstraintLayout>

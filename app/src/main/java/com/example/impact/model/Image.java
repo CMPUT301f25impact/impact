@@ -28,11 +28,12 @@ public class Image implements Serializable {
     }
 
     /**
-     * Primary constructors
-     * @param imageId unique ID to identify image
-     * @param mimeType MIME image type
-     * @param fileName file name
-     * @param base64Content base64-encoded image data
+     * Primary constructor.
+     *
+     * @param imageId        unique ID to identify image
+     * @param mimeType       MIME image type
+     * @param fileName       file name
+     * @param base64Content  base64-encoded image data
      */
     public Image(String imageId, String mimeType, String fileName, String base64Content) {
         this.imageId = imageId;
@@ -41,41 +42,66 @@ public class Image implements Serializable {
         this.base64Content = base64Content;
     }
 
+    /**
+     * @return Firestore document id
+     */
     public String getImageId() {
         return imageId;
     }
 
+    /**
+     * @param imageId Firestore document id
+     */
     public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 
+    /**
+     * @return base64 payload storing the image
+     */
     public String getBase64Content() {
         return base64Content;
     }
 
+    /**
+     * @param base64Content updated base64 payload
+     */
     public void setBase64Content(String base64Content) {
         this.base64Content = base64Content;
     }
 
+    /**
+     * @return MIME type (e.g., {@code image/png})
+     */
     public String getMimeType() {
         return mimeType;
     }
 
+    /**
+     * @param mimeType MIME type (e.g., {@code image/png})
+     */
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
 
+    /**
+     * @return original file name
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * @param fileName original file name
+     */
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
     /**
-     * Attempts to decode stored base64 content to Bitmap
-     * @return bitmap or null
+     * Attempts to decode stored base64 content to bitmap form.
+     *
+     * @return decoded bitmap or {@code null} when invalid
      */
     @Nullable
     public Bitmap decodeBase64ToBitmap() {
@@ -101,6 +127,9 @@ public class Image implements Serializable {
 
     /**
      * Populates an image from a Firestore snapshot.
+     *
+     * @param snapshot Firestore document
+     * @return mapped Image instance
      */
     public static Image fromSnapshot(DocumentSnapshot snapshot) {
         Image image = snapshot.toObject(Image.class);

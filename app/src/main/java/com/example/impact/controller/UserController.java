@@ -49,12 +49,7 @@ public class UserController {
                                        @Nullable OnSuccessListener<Void> successListener,
                                        @Nullable OnFailureListener failureListener) {
         validateUser(user);
-        Map<String, Object> data = buildUserData(user);
-
-        Task<Void> task = firestore.collection(COLLECTION_USERS)
-                .document(user.getId())
-                .set(data);
-        attachListeners(task, successListener, failureListener);
+        FirebaseUtils.setDocument(COLLECTION_USERS, user.getId(), user, successListener, failureListener);
     }
 
     /**

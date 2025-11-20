@@ -30,23 +30,12 @@ public class UserController {
     private static final String COLLECTION_USERS = "users";
     private static final String COLLECTION_GROUP_WAITING_LIST_ENTRANTS = "entrants";
 
-    private final FirebaseFirestore firestore;
+//    private final FirebaseFirestore firestore;
 
     /**
-     * Builds a controller using the shared Firestore instance.
+     * Initializes the controller.
      */
-    public UserController() {
-        this(FirebaseUtils.getFirestore());
-    }
-
-    /**
-     * Builds a controller with an injected Firestore instance to ease testing.
-     *
-     * @param firestore Firestore reference, must not be {@code null}
-     */
-    public UserController(@NonNull FirebaseFirestore firestore) {
-        this.firestore = firestore;
-    }
+    public UserController() {}
 
     /**
      * Persists the provided user profile to Firestore.

@@ -6,13 +6,12 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +196,62 @@ public final class FirebaseUtils {
                     if (onSuccess != null) {
                         T obj = snapshot.exists() ? snapshot.toObject(clazz) : null;
                         onSuccess.onSuccess(obj);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
+    }
+
+    /**
+     * Get all documents from a collection.
+     *
+     * @param collection Collection name
+     * @param onSuccess Callback with QuerySnapshot
+     * @param onFailure Failure callback
+     */
+    public static void getAllDocuments(String collection,
+                                       @Nullable OnSuccessListener<QuerySnapshot> onSuccess,
+                                       @Nullable OnFailureListener onFailure) {
+        firestore.collection(collection)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (onSuccess != null) {
+                        onSuccess.onSuccess(snapshot);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
+    }
+
+    /**
+     * Get all documents from a collection as a list of objects.
+     *
+     * @param collection Collection name
+     * @param clazz Class to convert documents to
+     * @param onSuccess Callback with list of objects
+     * @param onFailure Failure callback
+     */
+    public static <T> void getAllDocuments(String collection, Class<T> clazz,
+                                           @Nullable OnSuccessListener<List<T>> onSuccess,
+                                           @Nullable OnFailureListener onFailure) {
+        firestore.collection(collection)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (onSuccess != null) {
+                        List<T> list = new ArrayList<>();
+                        for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                            T obj = doc.toObject(clazz);
+                            if (obj != null) {
+                                list.add(obj);
+                            }
+                        }
+                        onSuccess.onSuccess(list);
                     }
                 })
                 .addOnFailureListener(e -> {

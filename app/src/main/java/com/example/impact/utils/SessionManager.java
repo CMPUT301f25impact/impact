@@ -8,8 +8,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.impact.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -37,7 +35,7 @@ public class SessionManager {
      */
     public SessionManager(@NonNull Context context) {
         this.context = context.getApplicationContext();
-        this.firestore = FirebaseUtil.getFirestore();
+        this.firestore = FirebaseUtils.getFirestore();
     }
 
     /**

@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.impact.R;
-import com.example.impact.utils.FirebaseUtil;
+import com.example.impact.utils.FirebaseUtils;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,7 +40,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        firestore = FirebaseUtil.getFirestore();
+        firestore = FirebaseUtils.getFirestore();
 
         emailInput = findViewById(R.id.editTextSignupEmail);
         passwordInput = findViewById(R.id.editTextSignupPassword);

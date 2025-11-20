@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public final class FirebaseUtils {
 
     /**
      * Creates or overwrites a document with a specific ID.
+     * Will delete fields not in the provided object
      *
      * @param collection Collection name
      * @param documentId Document ID
@@ -74,6 +76,26 @@ public final class FirebaseUtils {
         firestore.collection(collection)
                 .document(documentId)
                 .set(data)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * Set a document with merge option (updates existing fields, adds new ones).
+     * Leaves old fields as is.
+     *
+     * @param collection Collection name
+     * @param documentId Document ID
+     * @param data Data object to store
+     * @param onSuccess Success callback
+     * @param onFailure Failure callback
+     */
+    public static void setMergeDocument(String collection, String documentId, Object data,
+                                        OnSuccessListener<Void> onSuccess,
+                                        OnFailureListener onFailure) {
+        firestore.collection(collection)
+                .document(documentId)
+                .set(data, SetOptions.merge())
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }

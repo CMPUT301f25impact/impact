@@ -30,11 +30,52 @@ public final class FirebaseUtils {
 
     /**
      * Provides a singleton instance of {@link FirebaseFirestore} configured for the app.
+     * Should avoid using this method
      *
      * @return shared Firestore instance
      */
     public static FirebaseFirestore getFirestore() {
         return firestore;
+    }
+
+    /**
+     * Add a document to a collection with auto-generated ID.
+     *
+     * @param collection Collection name
+     * @param data Data object to store
+     * @param onSuccess Callback with generated document ID
+     * @param onFailure Callback for errors
+     */
+    public static void createDocument(String collection, Object data, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
+        firestore.collection(collection)
+                .add(data)
+                .addOnSuccessListener(docRef -> {
+                    if (onSuccess != null) {
+                        onSuccess.onSuccess(docRef.getId());
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
+    }
+
+    /**
+     * Creates or overwrites a document with a specific ID.
+     *
+     * @param collection Collection name
+     * @param documentId Document ID
+     * @param data Data object to store
+     * @param onSuccess Success callback
+     * @param onFailure Failure callback
+     */
+    public static void setDocument(String collection, String documentId, Object data, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        firestore.collection(collection)
+                .document(documentId)
+                .set(data)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
     }
 
     /**

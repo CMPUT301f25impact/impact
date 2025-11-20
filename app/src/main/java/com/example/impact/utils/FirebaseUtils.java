@@ -2,8 +2,11 @@ package com.example.impact.utils;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -47,7 +50,7 @@ public final class FirebaseUtils {
      * @param onSuccess Callback with generated document ID
      * @param onFailure Callback for errors
      */
-    public static void createDocument(String collection, Object data, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
+    public static void createDocument(String collection, Object data, @Nullable OnSuccessListener<String> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .add(data)
                 .addOnSuccessListener(docRef -> {
@@ -72,13 +75,22 @@ public final class FirebaseUtils {
      * @param onSuccess Success callback
      * @param onFailure Failure callback
      */
-    public static void setDocument(String collection, String documentId, Object data, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public static void setDocument(String collection, String documentId, Object data, @Nullable OnSuccessListener<Void> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .document(documentId)
                 .set(data)
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+                .addOnSuccessListener(aVoid -> {
+                    if (onSuccess != null) {
+                        onSuccess.onSuccess(aVoid);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
+
 
     /**
      * Set a document with merge option (updates existing fields, adds new ones).
@@ -90,14 +102,20 @@ public final class FirebaseUtils {
      * @param onSuccess Success callback
      * @param onFailure Failure callback
      */
-    public static void setMergeDocument(String collection, String documentId, Object data,
-                                        OnSuccessListener<Void> onSuccess,
-                                        OnFailureListener onFailure) {
+    public static void setMergeDocument(String collection, String documentId, Object data, @Nullable OnSuccessListener<Void> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .document(documentId)
                 .set(data, SetOptions.merge())
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+                .addOnSuccessListener(aVoid -> {
+                    if (onSuccess != null) {
+                        onSuccess.onSuccess(aVoid);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
 
     /**
@@ -128,13 +146,27 @@ public final class FirebaseUtils {
      * @param onSuccess Callback with DocumentSnapshot
      * @param onFailure Failure callback
      */
-    public static void getDocument(String collection, String documentId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
+    public static void getDocument(
+            String collection,
+            String documentId,
+            @Nullable OnSuccessListener<DocumentSnapshot> onSuccess,
+            @Nullable OnFailureListener onFailure) {
+
         firestore.collection(collection)
                 .document(documentId)
                 .get()
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+                .addOnSuccessListener(snapshot -> {
+                    if (onSuccess != null) {
+                        onSuccess.onSuccess(snapshot);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
+
 
     /**
      * Get a document by ID and collection and convert to a class.
@@ -157,7 +189,7 @@ public final class FirebaseUtils {
     error -> Log.e("Firestore", "Error: " + error.getMessage()));
 
      */
-    public static <T> void getDocument(String collection, String documentId, Class<T> clazz, OnSuccessListener<T> onSuccess, OnFailureListener onFailure) {
+    public static <T> void getDocument(String collection, String documentId, Class<T> clazz, @Nullable OnSuccessListener<T> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .document(documentId)
                 .get()
@@ -167,7 +199,11 @@ public final class FirebaseUtils {
                         onSuccess.onSuccess(obj);
                     }
                 })
-                .addOnFailureListener(onFailure);
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
 
     /**
@@ -195,7 +231,7 @@ public final class FirebaseUtils {
     error -> proceedToLogin(true));
 
      */
-    public static <T> void queryDocuments(String collection, String field, Object value, Class<T> clazz, OnSuccessListener<List<T>> onSuccess, OnFailureListener onFailure) {
+    public static <T> void queryDocuments(String collection, String field, Object value, Class<T> clazz, @Nullable OnSuccessListener<List<T>> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .whereEqualTo(field, value)
                 .get()
@@ -211,7 +247,11 @@ public final class FirebaseUtils {
                         onSuccess.onSuccess(list);
                     }
                 })
-                .addOnFailureListener(onFailure);
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
 
     /**
@@ -234,12 +274,20 @@ public final class FirebaseUtils {
         error -> Log.e("Firestore", "Error: " + error.getMessage()));
 
      */
-    public static void updateDocument(String collection, String documentId, Map<String, Object> updates, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public static void updateDocument(String collection, String documentId, Map<String, Object> updates, @Nullable OnSuccessListener<Void> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .document(documentId)
                 .update(updates)
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+                .addOnSuccessListener(aVoid -> {
+                    if (onSuccess != null) {
+                        onSuccess.onSuccess(aVoid);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
 
     /**
@@ -250,12 +298,20 @@ public final class FirebaseUtils {
      * @param onSuccess Success callback
      * @param onFailure Failure callback
      */
-    public static void deleteDocument(String collection, String documentId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public static void deleteDocument(String collection, String documentId, @Nullable OnSuccessListener<Void> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .document(documentId)
                 .delete()
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+                .addOnSuccessListener(aVoid -> {
+                    if (onSuccess != null) {
+                        onSuccess.onSuccess(aVoid);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
 
     /**
@@ -267,7 +323,7 @@ public final class FirebaseUtils {
      * @param onSuccess Callback with count of deleted documents
      * @param onFailure Failure callback
      */
-    public static void deleteDocumentsByQuery(String collection, String field, Object value, OnSuccessListener<Integer> onSuccess, OnFailureListener onFailure) {
+    public static void deleteDocumentsByQuery(String collection, String field, Object value, @Nullable OnSuccessListener<Integer> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .whereEqualTo(field, value)
                 .get()
@@ -285,9 +341,17 @@ public final class FirebaseUtils {
                                     onSuccess.onSuccess(deletedCount);
                                 }
                             })
-                            .addOnFailureListener(onFailure);
+                            .addOnFailureListener(e -> {
+                                if (onFailure != null) {
+                                    onFailure.onFailure(e);
+                                }
+                            });
                 })
-                .addOnFailureListener(onFailure);
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
 
     /**
@@ -298,7 +362,7 @@ public final class FirebaseUtils {
      * @param onSuccess Callback with boolean result (true if exists)
      * @param onFailure Failure callback
      */
-    public static void documentExists(String collection, String documentId, OnSuccessListener<Boolean> onSuccess, OnFailureListener onFailure) {
+    public static void documentExists(String collection, String documentId, @Nullable OnSuccessListener<Boolean> onSuccess, @Nullable OnFailureListener onFailure) {
         firestore.collection(collection)
                 .document(documentId)
                 .get()
@@ -307,7 +371,11 @@ public final class FirebaseUtils {
                         onSuccess.onSuccess(snapshot.exists());
                     }
                 })
-                .addOnFailureListener(onFailure);
+                .addOnFailureListener(e -> {
+                    if (onFailure != null) {
+                        onFailure.onFailure(e);
+                    }
+                });
     }
 
 

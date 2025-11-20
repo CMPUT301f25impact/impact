@@ -121,6 +121,22 @@ public final class FirebaseUtils {
     }
 
     /**
+     * Get a single document by ID.
+     *
+     * @param collection Collection name
+     * @param documentId Document ID
+     * @param onSuccess Callback with DocumentSnapshot
+     * @param onFailure Failure callback
+     */
+    public static void getDocument(String collection, String documentId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
+        firestore.collection(collection)
+                .document(documentId)
+                .get()
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
      * Get a document by ID and collection and convert to a class.
      *
      * @param collection Collection name

@@ -64,12 +64,7 @@ public class UserController {
                               @Nullable OnSuccessListener<Void> successListener,
                               @Nullable OnFailureListener failureListener) {
         validateUser(user);
-        Map<String, Object> data = buildUserData(user);
-
-        Task<Void> task = firestore.collection(COLLECTION_USERS)
-                .document(user.getId())
-                .set(data, SetOptions.merge());
-        attachListeners(task, successListener, failureListener);
+        FirebaseUtils.setMergeDocument(COLLECTION_USERS, user.getId(), user, successListener, failureListener);
     }
 
     /**
@@ -80,18 +75,13 @@ public class UserController {
      * @param failureListener invoked if the read fails
      */
     public void fetchProfile(@NonNull String userId,
-                             @Nullable OnSuccessListener<User> successListener,
+                             OnSuccessListener<User> successListener,
                              @Nullable OnFailureListener failureListener) {
-        Task<DocumentSnapshot> task = firestore.collection(COLLECTION_USERS)
-                .document(userId)
-                .get();
-
+        OnSuccessListener<DocumentSnapshot> wrapperSuccessListener = null;
         if (successListener != null) {
-            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapSnapshotToUser(snapshot)));
+            wrapperSuccessListener = snapshot -> successListener.onSuccess(mapSnapshotToUser(snapshot));
         }
-        if (failureListener != null) {
-            task.addOnFailureListener(failureListener);
-        }
+        FirebaseUtils.getDocument(COLLECTION_USERS, userId, wrapperSuccessListener, failureListener);
     }
 
     /**
@@ -104,10 +94,7 @@ public class UserController {
     public void deleteProfile(@NonNull String userId,
                               @Nullable OnSuccessListener<Void> successListener,
                               @Nullable OnFailureListener failureListener) {
-        Task<Void> task = firestore.collection(COLLECTION_USERS)
-                .document(userId)
-                .delete();
-        attachListeners(task, successListener, failureListener);
+        FirebaseUtils.deleteDocument(COLLECTION_USERS, userId, successListener, failureListener);
     }
 
     /**
@@ -121,7 +108,7 @@ public class UserController {
             List<String> roles,
             @Nullable OnSuccessListener<List<User>> successListener,
                                  @Nullable OnFailureListener failureListener) {
-        Task<QuerySnapshot> task = firestore.collection(COLLECTION_USERS)
+        Task<QuerySnapshot> task = FirebaseUtils.getFirestore().collection(COLLECTION_USERS)
                 .whereIn("role", roles)
                 .get();
 
@@ -143,7 +130,7 @@ public class UserController {
     public void getEntrantHistory(@NonNull String entrantId,
                                   @Nullable OnSuccessListener<List<EntrantHistoryItem>> successListener,
                                   @Nullable OnFailureListener failureListener) {
-        Task<QuerySnapshot> task = firestore.collectionGroup(COLLECTION_GROUP_WAITING_LIST_ENTRANTS)
+        Task<QuerySnapshot> task = FirebaseUtils.getFirestore().collectionGroup(COLLECTION_GROUP_WAITING_LIST_ENTRANTS)
                 .whereEqualTo("entrantId", entrantId)
                 .get();
 

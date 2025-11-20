@@ -14,14 +14,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 /**
  * Coordinates Firestore persistence for user profile information.
@@ -251,43 +247,7 @@ public class UserController {
         }
     }
 
-    /**
-     * Builds the Firestore payload for a given user.
-     *
-     * @param user model to serialize
-     * @return map of primitive data ready for Firestore
-     */
-    static Map<String, Object> buildUserData(@NonNull User user) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", user.getId());
-        data.put("name", user.getName());
-        data.put("email", user.getEmail());
-        data.put("role", user.getRole());
-
-        String phone = user.getPhone();
-        data.put("phone", !isNullOrBlank(phone) ? phone : null);
-        return data;
-    }
-
     private static boolean isNullOrBlank(@Nullable String value) {
         return value == null || value.trim().isEmpty();
-    }
-
-    /**
-     * Applies optional success/failure listeners to a Firestore task.
-     *
-     * @param task             Firestore task to observe
-     * @param successListener  optional success callback
-     * @param failureListener  optional failure callback
-     */
-    private void attachListeners(Task<Void> task,
-                                 @Nullable OnSuccessListener<Void> successListener,
-                                 @Nullable OnFailureListener failureListener) {
-        if (successListener != null) {
-            task.addOnSuccessListener(successListener);
-        }
-        if (failureListener != null) {
-            task.addOnFailureListener(failureListener);
-        }
     }
 }

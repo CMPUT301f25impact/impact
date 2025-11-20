@@ -15,7 +15,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles event retrieval and filtering logic between Firestore and the UI.
@@ -23,23 +25,10 @@ import java.util.List;
 public class EventController {
     private static final String COLLECTION_EVENTS = "events";
 
-    private final FirebaseFirestore firestore;
-
     /**
-     * Builds a controller backed by the shared Firestore instance.
+     * Initializes the controller.
      */
-    public EventController() {
-        this(FirebaseUtils.getFirestore());
-    }
-
-    /**
-     * Builds a controller with an injected Firestore instance (useful for tests).
-     *
-     * @param firestore Firestore dependency
-     */
-    public EventController(@NonNull FirebaseFirestore firestore) {
-        this.firestore = firestore;
-    }
+    public EventController() {}
 
     /**
      * Loads all available events.
@@ -49,14 +38,7 @@ public class EventController {
      */
     public void fetchAvailableEvents(@Nullable OnSuccessListener<List<Event>> successListener,
                                      @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .get()
-                .addOnSuccessListener(snapshot -> dispatchEvents(successListener, snapshot))
-                .addOnFailureListener(error -> {
-                    if (failureListener != null) {
-                        failureListener.onFailure(error);
-                    }
-                });
+        FirebaseUtils.getAllDocuments(COLLECTION_EVENTS, Event.class, successListener, failureListener);
     }
 
     /**
@@ -73,7 +55,7 @@ public class EventController {
                                     @Nullable Date endDate,
                                     @Nullable OnSuccessListener<List<Event>> successListener,
                                     @Nullable OnFailureListener failureListener) {
-        Query query = firestore.collection(COLLECTION_EVENTS);
+        Query query = FirebaseUtils.getFirestore().collection(COLLECTION_EVENTS);
 
         if (startDate != null && endDate != null) {
             query = query
@@ -108,14 +90,7 @@ public class EventController {
     public void fetchEventsByOrganizer(@NonNull String organizerId,
                                        @Nullable OnSuccessListener<List<Event>> success,
                                        @Nullable OnFailureListener failure) {
-        firestore.collection(COLLECTION_EVENTS)
-                .whereEqualTo("organizerId", organizerId)
-                .get()
-                .addOnSuccessListener(snap -> {
-                    List<Event> events = mapEvents(snap);
-                    if (success != null) success.onSuccess(events);
-                })
-                .addOnFailureListener(e -> { if (failure != null) failure.onFailure(e); });
+        FirebaseUtils.queryDocuments(COLLECTION_EVENTS, "organizerId", organizerId, Event.class, success, failure);
     }
 
     /**
@@ -129,7 +104,7 @@ public class EventController {
             @NonNull String email,
             @NonNull EventListener<QuerySnapshot> listener) {
 
-        return firestore.collection("events")
+        return FirebaseUtils.getFirestore().collection(COLLECTION_EVENTS)
                 .whereEqualTo("organizerEmail", email)
                 .addSnapshotListener(listener);
     }
@@ -147,14 +122,7 @@ public class EventController {
     public void createEvent(@NonNull Event event,
                             @Nullable OnSuccessListener<String> successListener,
                             @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .add(event)
-                .addOnSuccessListener(ref -> {
-                    if (successListener != null) successListener.onSuccess(ref.getId());
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
+        FirebaseUtils.createDocument(COLLECTION_EVENTS, event, successListener, failureListener);
     }
 
     /**
@@ -164,15 +132,9 @@ public class EventController {
                                 @NonNull String posterImageId,
                                 @Nullable OnSuccessListener<Void> successListener,
                                 @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .document(eventId)
-                .update("posterUrl", posterImageId)
-                .addOnSuccessListener(v -> {
-                    if (successListener != null) successListener.onSuccess(v);
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("posterUrl", posterImageId);
+        FirebaseUtils.updateDocument(COLLECTION_EVENTS, eventId, updates, successListener, failureListener);
     }
 
     /**
@@ -187,15 +149,9 @@ public class EventController {
                                 @NonNull String payload,
                                 @Nullable OnSuccessListener<Void> successListener,
                                 @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .document(eventId)
-                .update("qrPayload", payload)
-                .addOnSuccessListener(v -> {
-                    if (successListener != null) successListener.onSuccess(v);
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("qrPayload", payload);
+        FirebaseUtils.updateDocument(COLLECTION_EVENTS, eventId, updates, successListener, failureListener);
     }
 
     /**
@@ -205,17 +161,9 @@ public class EventController {
      * @param failureListener executed on failure
      */
     public void deleteEvent(@NonNull String eventId,
-                            @Nullable OnSuccessListener<String> successListener,
+                            @Nullable OnSuccessListener<Void> successListener,
                             @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .document(eventId)
-                .delete()
-                .addOnSuccessListener(v -> {
-                    if (successListener != null) successListener.onSuccess(eventId);
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
+        FirebaseUtils.deleteDocument(COLLECTION_EVENTS, eventId, successListener, failureListener);
     }
 
 

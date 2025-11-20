@@ -37,7 +37,7 @@ public class EventControllerTest {
         QuerySnapshot querySnapshot = mock(QuerySnapshot.class);
         when(querySnapshot.getDocuments()).thenReturn(Arrays.asList(firstSnapshot, secondSnapshot));
 
-        EventController controller = new EventController(mock(FirebaseFirestore.class));
+        EventController controller = new EventController();
         List<Event> events = controller.mapEvents(querySnapshot);
 
         assertThat(events.size(), is(2));

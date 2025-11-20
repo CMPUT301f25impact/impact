@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public final class FirebaseUtils {
     private static final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    // ^ creates a memory leak, we need a deconstructor for this class
+    // ^^ False positive memory leak warning
 
     private static final OnSuccessListener<Void> DEFAULT_SUCCESS_HANDLER = aVoid -> Log.d("Firestore", "Operation successful");
     private static final OnFailureListener DEFAULT_ERROR_HANDLER = error -> Log.e("Firestore", "Error: " + error.getMessage());

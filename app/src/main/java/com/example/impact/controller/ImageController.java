@@ -3,9 +3,8 @@ package com.example.impact.controller;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.impact.model.Event;
 import com.example.impact.model.Image;
-import com.example.impact.utils.FirebaseUtil;
+import com.example.impact.utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,7 +25,7 @@ public class ImageController {
      * Creates a controller using the shared Firestore instance.
      */
     public ImageController() {
-        this(FirebaseUtil.getFirestore());
+        this(FirebaseUtils.getFirestore());
     }
 
     /**

@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.impact.model.WaitingListEntry;
-import com.example.impact.utils.FirebaseUtil;
+import com.example.impact.utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -28,7 +28,7 @@ public class WaitingListController {
      * Creates a controller backed by the default Firestore instance.
      */
     public WaitingListController() {
-        this(FirebaseUtil.getFirestore());
+        this(FirebaseUtils.getFirestore());
     }
 
     /**

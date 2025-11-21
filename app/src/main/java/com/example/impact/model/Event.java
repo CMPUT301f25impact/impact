@@ -1,5 +1,6 @@
 package com.example.impact.model;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -144,7 +145,15 @@ public class Event implements Serializable {
     }
 
     /**
-     * @param posterUrl optional image URL
+     * @return identifier of the poster image document (last path segment)
+     */
+    @Nullable
+    public String getPosterImageId() {
+        return extractImageId(posterUrl);
+    }
+
+    /**
+     * @param posterUrl optional image URL/path
      */
     public void setPosterUrl(@Nullable String posterUrl) {
         this.posterUrl = posterUrl;
@@ -169,6 +178,14 @@ public class Event implements Serializable {
     @Nullable
     public String getQrCodeUrl() {
         return qrCodeUrl;
+    }
+
+    /**
+     * @return identifier of the QR image document (last path segment)
+     */
+    @Nullable
+    public String getQrImageId() {
+        return extractImageId(qrCodeUrl);
     }
 
     /**
@@ -231,5 +248,27 @@ public class Event implements Serializable {
         }
 
         return e;
+    }
+
+    /**
+     * Builds a canonical Firestore path for an image nested under an event.
+     */
+    public static String buildImagePath(@NonNull String eventId, @NonNull String imageDocumentId) {
+        return "events/" + eventId + "/images/" + imageDocumentId;
+    }
+
+    /**
+     * Extracts the document id from a stored Firestore path.
+     */
+    @Nullable
+    public static String extractImageId(@Nullable String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) {
+            return null;
+        }
+        int slash = imagePath.lastIndexOf('/');
+        if (slash == -1 || slash == imagePath.length() - 1) {
+            return imagePath;
+        }
+        return imagePath.substring(slash + 1);
     }
 }

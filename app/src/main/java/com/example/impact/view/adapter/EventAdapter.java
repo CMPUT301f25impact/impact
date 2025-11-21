@@ -202,16 +202,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             ivPoster.setImageResource(android.R.drawable.ic_menu_report_image);
             ivPoster.setVisibility(View.VISIBLE);
 
-            String posterId = event.getPosterUrl(); // ensure Event has this getter
-            Log.d("EventAdapter", "bind event=" + event.getId() + " posterId=" + posterId);
+            String posterId = event.getPosterImageId();
+            Log.d("EventAdapter", "bind event=" + event.getId() + " posterDoc=" + posterId);
 
             if (posterId == null || posterId.trim().isEmpty()) {
                 // No poster for this event - keep placeholder or hide if you prefer:
                 // ivPoster.setVisibility(View.GONE);
                 return;
             }
-            // Fetch the image doc from "images" collection and load it
-            imageController.fetchImage(posterId, new com.google.android.gms.tasks.OnSuccessListener<Image>() {
+            // Fetch the image doc from the event's images subcollection and load it
+            imageController.fetchImage(event.getId(), posterId, new com.google.android.gms.tasks.OnSuccessListener<Image>() {
                 @Override
                 public void onSuccess(Image img) {
                     try {

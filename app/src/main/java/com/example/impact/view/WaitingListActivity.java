@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
+import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.EntrantRow;
 import com.google.firebase.firestore.*;
 
@@ -46,9 +47,9 @@ public class WaitingListActivity extends AppCompatActivity {
      * Subscribes to waiting list updates for the provided event id.
      */
     private void loadWaitingListRealtime(String eventId) {
-        reg = FirebaseFirestore.getInstance()
-                .collection("waitingLists").document(eventId)
-                .collection("entrants")
+        reg = AppSession.db()
+                .collection("events").document(eventId)
+                .collection("waitingList")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((snap, e) -> {
                     if (e != null || snap == null) return;

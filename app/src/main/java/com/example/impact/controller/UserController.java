@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class UserController {
     private static final String COLLECTION_USERS = "users";
-    private static final String COLLECTION_GROUP_WAITING_LIST_ENTRANTS = "entrants";
+    private static final String COLLECTION_GROUP_WAITING_LIST_ENTRANTS = "waitingList";
 
     private final FirebaseFirestore firestore;
 

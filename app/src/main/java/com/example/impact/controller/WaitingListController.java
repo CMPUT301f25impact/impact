@@ -8,6 +8,7 @@ import com.example.impact.utils.AppSession;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,8 +20,10 @@ import java.util.Map;
  * Handles operations for joining or leaving event waiting lists.
  */
 public class WaitingListController {
-    private static final String COLLECTION_WAITING_LISTS = "waitingLists";
-    private static final String SUB_COLLECTION_ENTRANTS = "entrants";
+    private static final String COLLECTION_EVENTS = "events";
+    private static final String SUB_COLLECTION_WAITING_LIST = "waitingList";
+    private static final String SUB_COLLECTION_CHOSEN = "chosen";
+    private static final String SUB_COLLECTION_CANCELLED = "cancelled";
 
     private final FirebaseFirestore firestore;
 
@@ -57,9 +60,7 @@ public class WaitingListController {
         validateIds(eventId, entrantId);
 
         Map<String, Object> data = buildWaitingListData(eventId, eventName, entrantId);
-        Task<Void> task = firestore.collection(COLLECTION_WAITING_LISTS)
-                .document(eventId)
-                .collection(SUB_COLLECTION_ENTRANTS)
+        Task<Void> task = waitingListCollection(eventId)
                 .document(entrantId)
                 .set(data);
 
@@ -80,9 +81,7 @@ public class WaitingListController {
                                  @Nullable OnFailureListener failureListener) {
         validateIds(eventId, entrantId);
 
-        Task<Void> task = firestore.collection(COLLECTION_WAITING_LISTS)
-                .document(eventId)
-                .collection(SUB_COLLECTION_ENTRANTS)
+        Task<Void> task = waitingListCollection(eventId)
                 .document(entrantId)
                 .delete();
 
@@ -101,9 +100,7 @@ public class WaitingListController {
                                       @NonNull String entrantId,
                                       @Nullable OnSuccessListener<WaitingListEntry> successListener,
                                       @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_WAITING_LISTS)
-                .document(eventId)
-                .collection(SUB_COLLECTION_ENTRANTS)
+        waitingListCollection(eventId)
                 .document(entrantId)
                 .get()
                 .addOnSuccessListener(snapshot -> {
@@ -179,5 +176,23 @@ public class WaitingListController {
      */
     private boolean isNullOrBlank(String value) {
         return value == null || value.trim().isEmpty();
+    }
+
+    private CollectionReference waitingListCollection(String eventId) {
+        return firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_WAITING_LIST);
+    }
+
+    private CollectionReference chosenCollection(String eventId) {
+        return firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_CHOSEN);
+    }
+
+    private CollectionReference cancelledCollection(String eventId) {
+        return firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_CANCELLED);
     }
 }

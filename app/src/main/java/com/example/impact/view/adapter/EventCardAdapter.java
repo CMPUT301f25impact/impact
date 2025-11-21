@@ -1,8 +1,6 @@
 package com.example.impact.view.adapter;
 import com.example.impact.model.Image;
 import android.graphics.Bitmap;
-
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,10 +91,10 @@ public class EventCardAdapter extends RecyclerView.Adapter<EventCardAdapter.VH> 
 
         // poster handling
         h.ivPoster.setVisibility(View.GONE);
-        String posterId = e.getPosterUrl(); // keep consistent with your Event model
+        String posterId = e.getPosterImageId();
         if (posterId != null && !posterId.isEmpty()) {
-            Log.d("EventAdapter", "Bind pos=" + i + " eventId=" + (e.getId()) + " posterId=" + e.getPosterUrl());
-            imageController.fetchImage(posterId,
+            Log.d("EventAdapter", "Bind pos=" + i + " eventId=" + (e.getId()) + " posterDoc=" + posterId);
+            imageController.fetchImage(e.getId(), posterId,
                     (Image img) -> {
                         Log.d("EventAdapter", "fetchImage success for id=" + posterId + " img=" + (img!=null));
                         if (img != null && img.getBase64Content() != null) {

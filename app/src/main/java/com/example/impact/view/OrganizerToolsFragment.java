@@ -24,8 +24,6 @@ import com.example.impact.model.Event;
 import com.example.impact.utils.ImageUtil;
 import com.example.impact.utils.QrUtil;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.WriterException;
 
 import java.io.InputStream;
@@ -41,7 +39,7 @@ public class OrganizerToolsFragment extends Fragment {
     private ImageView imgQr;
     private Date startDate, endDate;
     private ImageView imgPosterPreview;
-    private String uploadedImageId = null;
+    private Image pendingPosterImage;
 
 
     private final EventController controller = new EventController();
@@ -99,7 +97,7 @@ public class OrganizerToolsFragment extends Fragment {
                 imgPosterPreview.setVisibility(View.VISIBLE);
             }
 
-            // Convert bmp to base64 and upload
+            // Convert bmp to base64 and retain locally until event creation
             String base64 = ImageUtil.bitmapToBase64(bmp);
             String fileName = queryFileName(uri);
             String mime = requireContext().getContentResolver().getType(uri);
@@ -109,16 +107,8 @@ public class OrganizerToolsFragment extends Fragment {
             imageModel.setFileName(fileName != null ? fileName : "poster.jpg");
             imageModel.setMimeType(mime);
             imageModel.setBase64Content(base64);
-
-            btnUploadPoster.setEnabled(false);
-            imageController.createImage(imageModel, imageId -> {
-                uploadedImageId = imageId;
-                btnUploadPoster.setEnabled(true);
-                Toast.makeText(requireContext(), "Poster uploaded", Toast.LENGTH_SHORT).show();
-            }, err -> {
-                btnUploadPoster.setEnabled(true);
-                Toast.makeText(requireContext(), "Upload failed: " + (err != null ? err.getMessage() : "unknown"), Toast.LENGTH_SHORT).show();
-            });
+            pendingPosterImage = imageModel;
+            Toast.makeText(requireContext(), "Poster ready to upload with event", Toast.LENGTH_SHORT).show();
 
         } catch (Exception ex) {
             Toast.makeText(requireContext(), "Failed to read image: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -188,20 +178,11 @@ public class OrganizerToolsFragment extends Fragment {
         e.setOrganizerEmail(organizerEmail);
         e.setCapacity(capacity);
 
-        if (uploadedImageId != null) {
-            e.setPosterUrl(uploadedImageId);   // ensure Event has a posterUrl field
-        }
-
         btnCreate.setEnabled(false);
 
         controller.createEvent(e, eventId -> {
 
-            if (uploadedImageId != null) {
-                controller.updatePosterUrl(eventId, uploadedImageId,
-                        v -> { /* optional success */ },
-                        err -> toast("Saved event but poster update failed: " + (err != null ? err.getMessage() : "unknown"))
-                );
-            }
+            savePosterIfNeeded(eventId);
             // Build the QR payload (deep link or just the eventId)
             String payload = "impact://event/" + eventId;
 
@@ -233,5 +214,28 @@ public class OrganizerToolsFragment extends Fragment {
      */
     private void toast(String s) {
         Toast.makeText(requireContext(), s, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Writes the pending poster image into the event's image subcollection if needed.
+     */
+    private void savePosterIfNeeded(@NonNull String eventId) {
+        if (pendingPosterImage == null) {
+            return;
+        }
+        Image image = pendingPosterImage;
+        image.setImageId("poster");
+        btnUploadPoster.setEnabled(false);
+        imageController.createImage(eventId, image, imageId -> {
+            String path = Event.buildImagePath(eventId, imageId);
+            controller.updatePosterUrl(eventId, path,
+                    v -> { },
+                    err -> toast("Poster saved but metadata update failed: " + (err != null ? err.getMessage() : "unknown")));
+            pendingPosterImage = null;
+            btnUploadPoster.setEnabled(true);
+        }, err -> {
+            btnUploadPoster.setEnabled(true);
+            toast("Poster upload failed: " + (err != null ? err.getMessage() : "unknown"));
+        });
     }
 }

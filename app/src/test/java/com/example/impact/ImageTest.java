@@ -11,11 +11,13 @@ public class ImageTest {
     @Test
     public void testImageConstructorSetsFields() {
         Image img = new Image("IMG1", "image/png", "pic.png", "base64data");
+        img.setEventId("EVENT42");
 
         assertEquals("IMG1", img.getImageId());
         assertEquals("image/png", img.getMimeType());
         assertEquals("pic.png", img.getFileName());
         assertEquals("base64data", img.getBase64Content());
+        assertEquals("EVENT42", img.getEventId());
     }
 
     @Test
@@ -25,11 +27,13 @@ public class ImageTest {
         img.setMimeType("image/jpg");
         img.setFileName("photo.jpg");
         img.setBase64Content("data123");
+        img.setEventId("E12");
 
         assertEquals("IMG2", img.getImageId());
         assertEquals("image/jpg", img.getMimeType());
         assertEquals("photo.jpg", img.getFileName());
         assertEquals("data123", img.getBase64Content());
+        assertEquals("E12", img.getEventId());
     }
 
     @Test

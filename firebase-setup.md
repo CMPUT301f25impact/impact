@@ -40,7 +40,7 @@ For the entrant user stories delivered this iteration, Firestore is already wire
 - **Controllers:**
   - `controller/EntrantController.java` handles entrant profile save/update/delete and reads entrant history using a `collectionGroup` query on the nested waiting list documents.
   - `controller/EventController.java` loads events, including optional tag/date filtering.
-  - `controller/WaitingListController.java` joins/leaves `waitingLists/{eventId}/entrants/{entrantId}`.
+- `controller/WaitingListController.java` joins/leaves `events/{eventId}/waitingList/{entrantId}`.
 - **Models:** Firestore documents map to `model/Entrant`, `Event`, `WaitingListEntry`, and `EntrantHistoryItem` for easy `toObject` hydration.
 - **UI wiring:** Activities in `view/` obtain a controller instance, call the relevant Firestore operation, and react to success/failure callbacks with toasts + UI updates.
 - **Demo data:** `MainActivity` now includes a “Seed Demo Events” button that batches three sample events into the `events` collection so teammates can immediately test browse/filter/join flows without manually creating documents.

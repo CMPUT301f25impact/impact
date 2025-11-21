@@ -22,7 +22,7 @@ public class EventTest {
                 "24h coding challenge",
                 start,
                 end,
-                "poster.png",
+                Event.buildImagePath("E100", "poster"),
                 Arrays.asList("coding", "tech")
         );
 
@@ -31,7 +31,8 @@ public class EventTest {
         assertEquals("24h coding challenge", event.getDescription());
         assertEquals(start, event.getStartDate());
         assertEquals(end, event.getEndDate());
-        assertEquals("poster.png", event.getPosterUrl());
+        assertEquals(Event.buildImagePath("E100", "poster"), event.getPosterUrl());
+        assertEquals("poster", event.getPosterImageId());
         assertTrue(event.getTags().contains("coding"));
     }
 
@@ -42,13 +43,13 @@ public class EventTest {
         event.setId("E200");
         event.setName("Science Fair");
         event.setDescription("Robotics and physics");
-        event.setPosterUrl("image.jpg");
+        event.setPosterUrl(Event.buildImagePath("E200", "poster"));
         event.setCapacity(100);
 
         assertEquals("E200", event.getId());
         assertEquals("Science Fair", event.getName());
         assertEquals("Robotics and physics", event.getDescription());
-        assertEquals("image.jpg", event.getPosterUrl());
+        assertEquals(Event.buildImagePath("E200", "poster"), event.getPosterUrl());
         assertEquals(Integer.valueOf(100), event.getCapacity());
     }
 

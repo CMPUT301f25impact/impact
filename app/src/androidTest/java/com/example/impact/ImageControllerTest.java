@@ -12,7 +12,7 @@ public class ImageControllerTest {
     public void testFetchAllImagesSuccess() {
         ImageController controller = new ImageController(null);
 
-        controller.fetchAllImages(
+        controller.fetchAllImages("EVENT1",
                 images -> assertNotNull(images),
                 error -> fail("Should not fail")
         );
@@ -23,6 +23,7 @@ public class ImageControllerTest {
         ImageController controller = new ImageController(null);
 
         controller.deleteImage(
+                "EVENT1",
                 "IMG1",
                 id -> assertEquals("IMG1", id),
                 error -> fail("Should not fail")

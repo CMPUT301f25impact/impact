@@ -6,6 +6,7 @@ import android.util.Base64;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 public class Image implements Serializable {
 
     private String imageId;
+    private String eventId;
     private String base64Content;
     private String mimeType;
     private String fileName;
@@ -99,6 +101,21 @@ public class Image implements Serializable {
     }
 
     /**
+     * @return event identifier this image belongs to
+     */
+    @Nullable
+    public String getEventId() {
+        return eventId;
+    }
+
+    /**
+     * @param eventId event identifier this image belongs to
+     */
+    public void setEventId(@Nullable String eventId) {
+        this.eventId = eventId;
+    }
+
+    /**
      * Attempts to decode stored base64 content to bitmap form.
      *
      * @return decoded bitmap or {@code null} when invalid
@@ -137,6 +154,12 @@ public class Image implements Serializable {
             image = new Image();
         }
         image.setImageId(snapshot.getId());
+        if (image.getEventId() == null) {
+            DocumentReference parent = snapshot.getReference().getParent().getParent();
+            if (parent != null) {
+                image.setEventId(parent.getId());
+            }
+        }
         return image;
     }
 }

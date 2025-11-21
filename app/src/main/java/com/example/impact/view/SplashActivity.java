@@ -17,7 +17,8 @@ import com.example.impact.utils.role.EntrantDb;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 /**
- * Entry point that auto-logs users based on stored device identifiers.
+ * Entry point that auto-logs users based on stored device identifiers via {@link EntrantDb#findUserByDeviceId(String)}.
+ * After the user is located, {@link AppSession} is initialized for downstream screens.
  */
 public class SplashActivity extends AppCompatActivity {
 

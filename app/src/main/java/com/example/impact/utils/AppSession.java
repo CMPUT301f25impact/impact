@@ -6,7 +6,13 @@ import com.example.impact.model.User;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * Simple in-memory session store for the currently authenticated user and shared Firestore.
+ * Central in-memory session store that exposes the authenticated {@link User},
+ * the cached role/identifier, and the shared {@link FirebaseFirestore} instance.
+ * <p>
+ * The rest of the codebase (controllers, role utilities, and activities) should always
+ * obtain session context from this class instead of re-querying Firestore or passing user
+ * details between screens. Firestore access should flow through {@link #db()} so that every
+ * role utility works with the same configured instance.
  */
 public final class AppSession {
 
@@ -21,9 +27,9 @@ public final class AppSession {
     }
 
     /**
-     * Populates the session state with the provided user model.
+     * Initializes or clears the session with the supplied user.
      *
-     * @param user authenticated user (or {@code null} to clear the session)
+     * @param user authenticated user (or {@code null} to clear the stored state)
      */
     public static void initialize(@Nullable User user) {
         currentUser = user;
@@ -32,7 +38,9 @@ public final class AppSession {
     }
 
     /**
-     * @return currently cached user model
+     * Returns the currently cached user (if any).
+     *
+     * @return authenticated {@link User} or {@code null} when no one is logged in
      */
     @Nullable
     public static User getUser() {
@@ -40,7 +48,9 @@ public final class AppSession {
     }
 
     /**
-     * @return identifier of the cached user, or {@code null}
+     * Returns the cached Firestore document id for the authenticated user.
+     *
+     * @return user id or {@code null} when the session has been cleared
      */
     @Nullable
     public static String getUserId() {
@@ -48,7 +58,9 @@ public final class AppSession {
     }
 
     /**
-     * @return cached role for the authenticated user
+     * Returns the cached role key (entrant/organizer/admin) for the authenticated user.
+     *
+     * @return role string or {@code null} when no session is active
      */
     @Nullable
     public static String getRole() {
@@ -56,7 +68,11 @@ public final class AppSession {
     }
 
     /**
-     * @return shared Firestore instance for the app
+     * Exposes the shared {@link FirebaseFirestore} configured for the application.
+     * Role utilities should always call this method rather than instantiating their own
+     * Firestore references so that every query and write uses the same configuration.
+     *
+     * @return shared Firestore instance
      */
     public static FirebaseFirestore db() {
         return db;

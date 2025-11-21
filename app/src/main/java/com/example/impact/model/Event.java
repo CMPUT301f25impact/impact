@@ -11,7 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Represents an event that entrants can view and join waiting lists for.
+ * Represents an event stored under the root {@code events/} collection.
+ * Includes helpers for dealing with nested image subcollections created in Step B of the refactor.
  */
 public class Event implements Serializable {
     private String id;
@@ -106,11 +107,11 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @Nullable
-    /**
-     * @return optional start date
-     */
-    public Date getStartDate() {
+/**
+ * @return optional start date
+ */
+@Nullable
+public Date getStartDate() {
         return startDate;
     }
 
@@ -121,11 +122,11 @@ public class Event implements Serializable {
         this.startDate = startDate;
     }
 
-    @Nullable
-    /**
-     * @return optional end date
-     */
-    public Date getEndDate() {
+/**
+ * @return optional end date
+ */
+@Nullable
+public Date getEndDate() {
         return endDate;
     }
 
@@ -136,16 +137,16 @@ public class Event implements Serializable {
         this.endDate = endDate;
     }
 
-    @Nullable
-    /**
-     * @return poster URL if one exists
-     */
-    public String getPosterUrl() {
+/**
+ * @return poster URL if one exists
+ */
+@Nullable
+public String getPosterUrl() {
         return posterUrl;
     }
 
     /**
-     * @return identifier of the poster image document (last path segment)
+     * @return identifier of the poster image document (last path segment under {@code events/{id}/images})
      */
     @Nullable
     public String getPosterImageId() {
@@ -181,7 +182,7 @@ public class Event implements Serializable {
     }
 
     /**
-     * @return identifier of the QR image document (last path segment)
+     * @return identifier of the QR image document (last path segment under {@code events/{id}/images})
      */
     @Nullable
     public String getQrImageId() {
@@ -226,7 +227,8 @@ public class Event implements Serializable {
     }
 
     /**
-     * Populates an event from a Firestore snapshot.
+     * Populates an event from a Firestore snapshot ensuring {@link #getId()} reflects the document id
+     * even when {@link com.google.firebase.firestore.DocumentSnapshot#toObject(Class)} omits it.
      *
      * @param snapshot Firestore document
      * @return mapped Event instance
@@ -251,14 +253,21 @@ public class Event implements Serializable {
     }
 
     /**
-     * Builds a canonical Firestore path for an image nested under an event.
+     * Builds a canonical Firestore path for an image nested under {@code events/{eventId}/images/}.
+     *
+     * @param eventId event identifier
+     * @param imageDocumentId image document id
+     * @return canonical path string (e.g., {@code events/{eventId}/images/{imageDocumentId}})
      */
     public static String buildImagePath(@NonNull String eventId, @NonNull String imageDocumentId) {
         return "events/" + eventId + "/images/" + imageDocumentId;
     }
 
     /**
-     * Extracts the document id from a stored Firestore path.
+     * Extracts the image document id from an event-scoped path such as {@code events/{id}/images/poster}.
+     *
+     * @param imagePath canonical Firestore path
+     * @return image document id or {@code null} when the path is empty
      */
     @Nullable
     public static String extractImageId(@Nullable String imagePath) {

@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Recycler adapter rendering the list of events available to entrants.
+ * Recycler adapter rendering the list of events available to entrants. Poster thumbnails are loaded
+ * through {@link ImageController}, which in turn routes to the role utilities for nested Firestore paths.
  */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 

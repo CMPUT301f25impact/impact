@@ -20,7 +20,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
- * Launcher screen for entrant-specific tools and shortcuts.
+ * Launcher screen for entrant-specific tools and shortcuts. Entrant identity is read from
+ * {@link AppSession}, and logout/device binding cleanup is delegated to {@link EntrantDb}.
  */
 public class EntrantActivity extends AppCompatActivity implements EntrantProfileFragment.ProfileInteractionListener {
     private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";

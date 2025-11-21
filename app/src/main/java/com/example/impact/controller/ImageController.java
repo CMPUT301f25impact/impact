@@ -14,12 +14,17 @@ import com.google.android.gms.tasks.Task;
 import java.util.List;
 
 /**
- * Thin wrapper around role utilities for image-related operations.
+ * Bridges UI callers to the image helpers provided by {@link OrganizerDb}, {@link EntrantDb}, and {@link AdminDb}.
+ * No Firestore paths are constructed here—the controller simply forwards the request to the correct role utility.
  */
 public class ImageController {
 
     /**
-     * Retrieves images stored under the specified event.
+     * Retrieves every image in {@code events/{eventId}/images/} through {@link OrganizerDb}.
+     *
+     * @param eventId event whose images should be fetched
+     * @param successListener optional callback with the loaded images
+     * @param failureListener optional failure callback
      */
     public void fetchAllImages(@NonNull String eventId,
                                @Nullable OnSuccessListener<List<Image>> successListener,
@@ -28,7 +33,12 @@ public class ImageController {
     }
 
     /**
-     * Fetches a single event image (used for posters/QR codes).
+     * Fetches a single image document owned by the event via {@link EntrantDb}.
+     *
+     * @param eventId event identifier
+     * @param imageId document id inside {@code images/}
+     * @param successListener optional success callback
+     * @param failureListener optional failure callback
      */
     public void fetchImage(@NonNull String eventId,
                            @NonNull String imageId,
@@ -38,7 +48,12 @@ public class ImageController {
     }
 
     /**
-     * Creates or overwrites an event-scoped image document.
+     * Uploads or overwrites an image inside {@code events/{eventId}/images/} via {@link OrganizerDb#uploadPoster}.
+     *
+     * @param eventId event identifier
+     * @param image model containing metadata and base64 content
+     * @param successListener optional callback with the stored id
+     * @param failureListener optional failure callback
      */
     public void createImage(@NonNull String eventId,
                             @NonNull Image image,
@@ -48,7 +63,12 @@ public class ImageController {
     }
 
     /**
-     * Deletes an image nested under an event.
+     * Deletes an image nested under an event using {@link AdminDb}.
+     *
+     * @param eventId parent event id
+     * @param imageId document id inside {@code images/}
+     * @param successListener invoked with {@code imageId} on success
+     * @param failureListener optional failure callback
      */
     public void deleteImage(@NonNull String eventId,
                             @NonNull String imageId,
@@ -63,6 +83,9 @@ public class ImageController {
         }
     }
 
+    /**
+     * Applies optional listeners to a {@link Task}.
+     */
     private <T> void attach(Task<T> task,
                             @Nullable OnSuccessListener<T> successListener,
                             @Nullable OnFailureListener failureListener) {

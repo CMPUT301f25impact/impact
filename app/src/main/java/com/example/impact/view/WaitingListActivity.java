@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Displays a live list of entrants waiting for a specific event.
+ * Displays a live list of entrants waiting for a specific event by listening to
+ * {@link OrganizerDb#listenToWaitingList(String, com.google.firebase.firestore.EventListener)}.
  */
 public class WaitingListActivity extends AppCompatActivity {
 

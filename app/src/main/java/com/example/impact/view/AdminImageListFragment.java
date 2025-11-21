@@ -20,7 +20,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This is the list fragment that renders images in the admin dashboard
+ * Displays every image stored under {@code events/{eventId}/images/} by aggregating through {@link AdminDb}.
+ * All deletions also route through {@link AdminDb#deleteEventImage(String, String)}.
  */
 public class AdminImageListFragment extends Fragment
         implements AdminImageAdapter.DeleteListener {
@@ -47,7 +48,7 @@ public class AdminImageListFragment extends Fragment
     }
 
     /**
-     * Loads images using ImageController
+     * Loads images using {@link AdminDb#listAllImagesAcrossEvents()}.
      */
     private void loadImages() {
         AdminDb.listAllImagesAcrossEvents()
@@ -56,7 +57,8 @@ public class AdminImageListFragment extends Fragment
     }
 
     /**
-     * Callback when images are successfully loaded
+     * Callback when images are successfully loaded.
+     *
      * @param images loaded images
      */
     private void onImagesLoaded(List<Image> images) {

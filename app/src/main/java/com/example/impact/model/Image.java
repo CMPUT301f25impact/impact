@@ -12,7 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.io.Serializable;
 
 /**
- * Image model class for storing image information
+ * Represents an image document stored under {@code events/{eventId}/images/{imageId}}.
  */
 public class Image implements Serializable {
 
@@ -134,6 +134,12 @@ public class Image implements Serializable {
         }
     }
 
+    /**
+     * Static helper used by adapters to decode a base64 payload without instantiating {@link Image}.
+     *
+     * @param base64 base64-encoded bitmap string
+     * @return decoded bitmap or {@code null} when decoding fails
+     */
     public static Bitmap decodeBase64ToBitmapStatic(String base64) {
         try {
             if (base64 == null || base64.isEmpty()) return null;
@@ -143,7 +149,8 @@ public class Image implements Serializable {
     }
 
     /**
-     * Populates an image from a Firestore snapshot.
+     * Populates an image from a Firestore snapshot ensuring both {@link #imageId} and {@link #eventId}
+     * are set based on the document reference path.
      *
      * @param snapshot Firestore document
      * @return mapped Image instance

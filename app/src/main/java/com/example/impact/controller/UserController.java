@@ -25,12 +25,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Coordinates Firestore persistence for user profile information.
+ * Coordinates user-related operations between the UI and {@link EntrantDb}/{@link AdminDb}.
+ * <p>
+ * The controller validates inputs and delegates Firestore access to the role utilities.
  */
 public class UserController {
 
     /**
-     * Builds a controller using the shared Firestore instance.
+     * Default constructor retained for API completeness (no direct Firestore usage remains).
      */
     public UserController() { }
 
@@ -40,7 +42,7 @@ public class UserController {
     public UserController(@NonNull FirebaseFirestore unused) { }
 
     /**
-     * Persists the provided user profile to Firestore.
+     * Persists the provided user profile to Firestore via {@link EntrantDb#saveProfile(User)}.
      *
      * @param user         user profile to save
      * @param successListener optional success callback
@@ -55,7 +57,7 @@ public class UserController {
     }
 
     /**
-     * Updates an existing user profile in Firestore using merge semantics.
+     * Updates an existing user profile in Firestore using merge semantics through {@link EntrantDb#updateProfile(User)}.
      *
      * @param user        updated user model
      * @param successListener optional success callback
@@ -70,7 +72,7 @@ public class UserController {
     }
 
     /**
-     * Fetches the user profile and forwards it to the provided callback.
+     * Fetches the user profile and forwards it to the provided callback using {@link EntrantDb#fetchProfile(String)}.
      *
      * @param userId       Firestore document id
      * @param successListener invoked with the mapped entrant (may be {@code null})
@@ -84,11 +86,11 @@ public class UserController {
     }
 
     /**
-     * Removes the user profile document from Firestore.
+     * Removes the user profile document from Firestore via {@link AdminDb} (admins) or {@link EntrantDb} (self-service).
      *
      * @param userId       Firestore document id
      * @param successListener optional success callback
-     * @param failureListener optional failure callback
+     *     @param failureListener optional failure callback
      */
     public void deleteProfile(@NonNull String userId,
                               @Nullable OnSuccessListener<Void> successListener,
@@ -134,7 +136,7 @@ public class UserController {
     }
 
     /**
-     * Retrieves the entrant's waiting list history sorted by timestamp descending.
+     * Retrieves the entrant's waiting list history sorted by timestamp descending using {@link EntrantDb#getEventHistory(String)}.
      *
      * @param entrantId       id of the entrant whose history is needed
      * @param successListener invoked with the mapped history list
@@ -188,6 +190,12 @@ public class UserController {
         return mapHistory(entries);
     }
 
+    /**
+     * Converts an eager list of waiting-list entries into displayable history items sorted by timestamp.
+     *
+     * @param entries waiting-list entries to transform
+     * @return sorted history items
+     */
     List<EntrantHistoryItem> mapHistory(List<WaitingListEntry> entries) {
         List<EntrantHistoryItem> history = new ArrayList<>();
         for (WaitingListEntry entry : entries) {
@@ -299,6 +307,9 @@ public class UserController {
      * @param successListener  optional success callback
      * @param failureListener  optional failure callback
      */
+    /**
+     * Attaches optional listeners to the supplied {@link Task}.
+     */
     private <T> void attachListeners(Task<T> task,
                                  @Nullable OnSuccessListener<T> successListener,
                                  @Nullable OnFailureListener failureListener) {
@@ -310,3 +321,9 @@ public class UserController {
         }
     }
 }
+    /**
+     * Converts waiting-list entries into {@link EntrantHistoryItem} instances.
+     *
+     * @param entries waiting-list entries
+     * @return sorted history items
+     */

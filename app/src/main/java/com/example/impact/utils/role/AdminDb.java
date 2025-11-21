@@ -19,7 +19,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Firestore helpers dedicated to administrator operations.
+ * Aggregates all administrator-facing Firestore operations.
+ * <p>
+ * All methods in this class target top-level collections (such as {@code events/} and {@code users/})
+ * or traverse nested subcollections under {@code events/{eventId}} in order to gather global data
+ * like event lists, profile lists, or event-scoped images. Controllers and activities should prefer
+ * these helpers over building Firestore paths manually.
  */
 public final class AdminDb {
 
@@ -29,6 +34,11 @@ public final class AdminDb {
         // no-op
     }
 
+    /**
+     * Retrieves every event document in the {@code events/} collection.
+     *
+     * @return task that resolves with a list of {@link Event} models (never {@code null})
+     */
     public static Task<List<Event>> listAllEvents() {
         TaskCompletionSource<List<Event>> tcs = new TaskCompletionSource<>();
         FirebaseUtils.getAllDocuments("events", Event.class,
@@ -37,6 +47,11 @@ public final class AdminDb {
         return tcs.getTask();
     }
 
+    /**
+     * Retrieves every user profile stored in the {@code users/} collection.
+     *
+     * @return task that resolves with a list of {@link User} instances
+     */
     public static Task<List<User>> listAllProfiles() {
         TaskCompletionSource<List<User>> tcs = new TaskCompletionSource<>();
         FirebaseUtils.getAllDocuments("users", User.class,
@@ -45,6 +60,12 @@ public final class AdminDb {
         return tcs.getTask();
     }
 
+    /**
+     * Deletes an event document at {@code events/{eventId}}.
+     *
+     * @param eventId Firestore identifier of the event to remove
+     * @return task that completes when the delete succeeds
+     */
     public static Task<Void> deleteEvent(@NonNull String eventId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         FirebaseUtils.deleteDocument("events", eventId,
@@ -53,6 +74,12 @@ public final class AdminDb {
         return tcs.getTask();
     }
 
+    /**
+     * Deletes a user profile document at {@code users/{userId}}.
+     *
+     * @param userId Firestore identifier of the user to remove
+     * @return task that completes when the delete succeeds
+     */
     public static Task<Void> deleteUser(@NonNull String userId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         FirebaseUtils.deleteDocument("users", userId,
@@ -61,6 +88,11 @@ public final class AdminDb {
         return tcs.getTask();
     }
 
+    /**
+     * Retrieves every image stored under the nested {@code events/{eventId}/images/} subcollections.
+     *
+     * @return task that resolves with a flattened list of {@link Image} objects
+     */
     public static Task<List<Image>> listAllImagesAcrossEvents() {
         TaskCompletionSource<List<Image>> tcs = new TaskCompletionSource<>();
         db.collection("events")
@@ -96,6 +128,13 @@ public final class AdminDb {
         return tcs.getTask();
     }
 
+    /**
+     * Deletes a single image document under {@code events/{eventId}/images/{imageId}}.
+     *
+     * @param eventId event that owns the image
+     * @param imageId specific image document identifier
+     * @return task that completes once the image is removed
+     */
     public static Task<Void> deleteEventImage(@NonNull String eventId, @NonNull String imageId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("events")
@@ -108,6 +147,13 @@ public final class AdminDb {
         return tcs.getTask();
     }
 
+    /**
+     * Clears the {@code deviceId} field on any user documents bound to the provided device.
+     * Used by admin-driven logouts to ensure the next app launch prompts for credentials.
+     *
+     * @param deviceId Android device identifier to remove
+     * @return task that completes after all matching documents have been updated
+     */
     public static Task<Void> clearDeviceBinding(@NonNull String deviceId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("users")

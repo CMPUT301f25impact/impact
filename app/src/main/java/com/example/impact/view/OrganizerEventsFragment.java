@@ -28,8 +28,9 @@ import com.google.firebase.firestore.ListenerRegistration;
 import java.util.List;
 
 /**
- * Fragment displaying all events created by the logged-in organizer.
- * Provides a button to create new events and allows viewing entrants for each event.
+ * Fragment displaying all events created by the logged-in organizer. Real-time data is streamed
+ * through {@link OrganizerDb#listenToEventsByEmail(String, com.google.firebase.firestore.EventListener)}
+ * so no direct Firestore paths are constructed inside the UI layer.
  */
 public class OrganizerEventsFragment extends Fragment implements EventAdapter.OnEventClickListener {
 

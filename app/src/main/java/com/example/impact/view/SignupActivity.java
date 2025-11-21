@@ -18,7 +18,7 @@ import com.example.impact.R;
 import com.example.impact.utils.role.EntrantDb;
 
 /**
- * Collects minimal credentials and creates entrant accounts in Firestore.
+ * Collects minimal credentials and creates entrant accounts in Firestore using {@link EntrantDb}.
  */
 public class SignupActivity extends AppCompatActivity {
 
@@ -48,7 +48,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     /**
-     * Validates fields and checks for duplicate emails.
+     * Validates fields and checks for duplicate emails via {@link EntrantDb#emailExists(String)}.
      */
     private void attemptSignup() {
         String email = emailInput.getText().toString().trim();
@@ -82,7 +82,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     /**
-     * Persists a new entrant record in Firestore.
+     * Persists a new entrant record in Firestore using {@link EntrantDb#registerEntrantAccount(String, String, String)}.
      */
     private void createUser(String email, String password, String deviceId) {
         EntrantDb.registerEntrantAccount(email, password, deviceId)

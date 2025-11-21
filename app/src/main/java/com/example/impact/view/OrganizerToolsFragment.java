@@ -30,7 +30,9 @@ import java.io.InputStream;
 import java.util.Date;
 
 /**
- * Provides organizers with a simple form to create events and preview QR codes.
+ * Provides organizers with a simple form to create events and preview QR codes. The fragment relies
+ * on {@link EventController} and {@link ImageController}, which route all Firestore work through the
+ * organizer role utilities.
  */
 public class OrganizerToolsFragment extends Fragment {
 

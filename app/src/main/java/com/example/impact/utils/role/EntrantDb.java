@@ -25,7 +25,11 @@ import java.util.Map;
 import java.util.Date;
 
 /**
- * Helpers for entrant-centric Firestore operations.
+ * Collection of Firestore helpers that power all entrant-facing behavior.
+ * <p>
+ * Every method in this class reads or mutates the {@code events/{eventId}} subtree or the
+ * top-level {@code users/} collection on behalf of the currently authenticated entrant.
+ * Controllers and fragments should use these helpers instead of constructing Firestore paths.
  */
 public final class EntrantDb {
 
@@ -35,6 +39,11 @@ public final class EntrantDb {
         // utility
     }
 
+    /**
+     * Loads every event document in {@code events/}.
+     *
+     * @return task delivering the mapped {@link Event} list
+     */
     public static Task<List<Event>> listAllEvents() {
         TaskCompletionSource<List<Event>> tcs = new TaskCompletionSource<>();
         db.collection("events")
@@ -44,6 +53,14 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Loads events from {@code events/} applying optional tag and date filters.
+     *
+     * @param tags interests to match against the {@code tags} field
+     * @param startDate inclusive lower bound for {@code startDate}
+     * @param endDate inclusive upper bound for {@code startDate}
+     * @return task containing the filtered events
+     */
     public static Task<List<Event>> listFilteredEvents(List<String> tags,
                                                        Date startDate,
                                                        Date endDate) {
@@ -67,6 +84,13 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Retrieves an image document stored under {@code events/{eventId}/images/{imageId}}.
+     *
+     * @param eventId parent event identifier
+     * @param imageId document id within the {@code images} subcollection
+     * @return task resolving with the decoded {@link Image}
+     */
     public static Task<Image> fetchEventImage(@NonNull String eventId, @NonNull String imageId) {
         TaskCompletionSource<Image> tcs = new TaskCompletionSource<>();
         db.collection("events")
@@ -79,6 +103,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Creates or replaces a profile in {@code users/{userId}} for a brand-new entrant.
+     *
+     * @param user model to persist
+     * @return task that completes when the document is written
+     */
     public static Task<Void> saveProfile(@NonNull User user) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -89,6 +119,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Applies partial updates to {@code users/{userId}} for an existing entrant.
+     *
+     * @param user model containing the merged updates
+     * @return task that completes on success
+     */
     public static Task<Void> updateProfile(@NonNull User user) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -99,6 +135,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Retrieves and maps {@code users/{userId}} into the appropriate {@link User} subtype.
+     *
+     * @param userId profile identifier
+     * @return task yielding the mapped {@link User}
+     */
     public static Task<User> fetchProfile(@NonNull String userId) {
         TaskCompletionSource<User> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -109,6 +151,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Removes {@code users/{userId}} from Firestore.
+     *
+     * @param userId identifier to delete
+     * @return task that completes when deletion succeeds
+     */
     public static Task<Void> deleteProfile(@NonNull String userId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -119,6 +167,13 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Creates/overwrites {@code events/{eventId}/waitingList/{entrantId}} linking the entrant to the event.
+     *
+     * @param eventId event to join
+     * @param entrantId entrant user id
+     * @return task that completes when the entry is created
+     */
     public static Task<Void> joinWaitingList(@NonNull String eventId, @NonNull String entrantId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("events")
@@ -143,6 +198,13 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Deletes {@code events/{eventId}/waitingList/{entrantId}} to leave the queue.
+     *
+     * @param eventId event being left
+     * @param entrantId entrant user id
+     * @return task that completes when the entry is deleted
+     */
     public static Task<Void> leaveWaitingList(@NonNull String eventId, @NonNull String entrantId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("events")
@@ -155,6 +217,13 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Loads a single waiting-list entry for the entrant/event pair.
+     *
+     * @param eventId event identifier
+     * @param entrantId entrant identifier
+     * @return task yielding the mapped {@link WaitingListEntry}
+     */
     public static Task<WaitingListEntry> fetchWaitingListEntry(@NonNull String eventId,
                                                                @NonNull String entrantId) {
         TaskCompletionSource<WaitingListEntry> tcs = new TaskCompletionSource<>();
@@ -168,6 +237,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Retrieves every waiting-list record across events for the entrant via {@code collectionGroup("waitingList")}.
+     *
+     * @param entrantId entrant identifier
+     * @return task containing the waiting-list history
+     */
     public static Task<List<WaitingListEntry>> getEventHistory(@NonNull String entrantId) {
         TaskCompletionSource<List<WaitingListEntry>> tcs = new TaskCompletionSource<>();
         db.collectionGroup("waitingList")
@@ -178,6 +253,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Loads {@code events/{eventId}} and maps it to an {@link Event}.
+     *
+     * @param eventId document identifier
+     * @return task with the mapped event
+     */
     public static Task<Event> fetchEventDetails(@NonNull String eventId) {
         TaskCompletionSource<Event> tcs = new TaskCompletionSource<>();
         db.collection("events")
@@ -188,6 +269,13 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Removes {@code deviceId} references from any user documents associated with the device
+     * so that future launches require explicit login.
+     *
+     * @param deviceId Android device identifier
+     * @return task completing after all matches are updated
+     */
     public static Task<Void> clearDeviceBinding(@NonNull String deviceId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -203,6 +291,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Looks up a user document by the {@code email} field.
+     *
+     * @param email entrant email address
+     * @return task resolving with the first matching {@link DocumentSnapshot} or {@code null}
+     */
     public static Task<DocumentSnapshot> findUserByEmail(@NonNull String email) {
         TaskCompletionSource<DocumentSnapshot> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -214,6 +308,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Looks up a user document by the {@code deviceId} field.
+     *
+     * @param deviceId Android device identifier
+     * @return task resolving with the first matching document or {@code null}
+     */
     public static Task<DocumentSnapshot> findUserByDeviceId(@NonNull String deviceId) {
         TaskCompletionSource<DocumentSnapshot> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -225,6 +325,12 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Checks whether a user already exists with the provided email.
+     *
+     * @param email email address to test
+     * @return task resolving with {@code true} when a document exists
+     */
     public static Task<Boolean> emailExists(@NonNull String email) {
         TaskCompletionSource<Boolean> tcs = new TaskCompletionSource<>();
         db.collection("users")
@@ -236,6 +342,14 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Creates a new entrant profile document with the supplied credentials/device binding.
+     *
+     * @param email email used for login
+     * @param password plaintext password stored temporarily for the prototype
+     * @param deviceId device identifier bound to the session
+     * @return task resolving with the created document id
+     */
     public static Task<String> registerEntrantAccount(@NonNull String email,
                                                       @NonNull String password,
                                                       @NonNull String deviceId) {
@@ -254,6 +368,13 @@ public final class EntrantDb {
         return tcs.getTask();
     }
 
+    /**
+     * Updates the {@code deviceId} field on {@code users/{userId}}.
+     *
+     * @param userId user document id
+     * @param deviceId nullable device identifier (use {@code null} to clear the binding)
+     * @return task that completes when the field is updated
+     */
     public static Task<Void> updateDeviceBinding(@NonNull String userId, @Nullable String deviceId) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
         db.collection("users")

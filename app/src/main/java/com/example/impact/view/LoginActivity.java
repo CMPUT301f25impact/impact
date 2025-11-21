@@ -23,7 +23,7 @@ import com.example.impact.utils.role.EntrantDb;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 /**
- * Handles Firestore-backed user login and role-based routing.
+ * Handles Firestore-backed user login and role-based routing. All user queries/updates flow through {@link EntrantDb}.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Validates input and performs a Firestore query for the user record.
+     * Validates input and performs a Firestore query via {@link EntrantDb#findUserByEmail(String)}.
      */
     private void attemptLogin() {
         String email = emailInput.getText().toString().trim();
@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates device bindings and routes users to their dashboards.
+     * Updates device bindings (via {@link EntrantDb#updateDeviceBinding(String, String)}) and routes users to their dashboards.
      */
     private void handleSuccessfulLogin(DocumentSnapshot userDoc) {
         User user = UserController.mapSnapshotToUser(userDoc);
@@ -111,6 +111,9 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Starts the activity that matches the provided role.
+     *
+     * @param role role string (admin/organizer/entrant)
+     * @param user mapped user model
      */
     private void navigateToRole(@Nullable String role, @NonNull User user) {
         Intent intent;

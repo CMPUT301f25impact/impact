@@ -11,7 +11,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
- * Handles operations for joining or leaving event waiting lists.
+ * Handles operations for joining or leaving event waiting lists by delegating to {@link EntrantDb}.
+ * No Firestore paths are constructed here; this class merely enforces validation and attaches listeners.
  */
 public class WaitingListController {
 
@@ -20,7 +21,7 @@ public class WaitingListController {
     public WaitingListController(@NonNull FirebaseFirestore unused) { }
 
     /**
-     * Adds the entrant to the waiting list for the specified event.
+     * Adds the entrant to the waiting list for the specified event through {@link EntrantDb#joinWaitingList(String, String)}.
      *
      * @param eventId         event identifier
      * @param eventName       friendly name stored with the entry
@@ -40,7 +41,7 @@ public class WaitingListController {
     }
 
     /**
-     * Removes the entrant from the waiting list.
+     * Removes the entrant from the waiting list via {@link EntrantDb#leaveWaitingList(String, String)}.
      *
      * @param eventId         event identifier
      * @param entrantId       entrant identifier
@@ -58,7 +59,7 @@ public class WaitingListController {
     }
 
     /**
-     * Checks whether an entrant already joined the waiting list.
+     * Checks whether an entrant already joined the waiting list using {@link EntrantDb#fetchWaitingListEntry(String, String)}.
      *
      * @param eventId         event identifier
      * @param entrantId       entrant identifier

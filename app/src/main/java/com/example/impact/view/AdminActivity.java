@@ -21,8 +21,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
- * The primary admin dashboard activity.
- * When logged in as an admin, you will be taken here
+ * Hosts the admin dashboard tabs and routes logout/device-binding cleanup through {@link AdminDb}.
+ * All session context (current user id, role) is sourced from {@link AppSession}.
  */
 public class AdminActivity extends AppCompatActivity {
 
@@ -73,8 +73,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes tabs in view pager.
-     * Should be executed on view creation
+     * Configures the tab layout + view pager to display Events, Images, and Profiles pages.
      */
     private void initializeTabs() {
         new TabLayoutMediator(tabLayout, viewPager, (tab, pos) -> {
@@ -85,7 +84,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     /**
-     * Clears admin session and returns to login.
+     * Clears the admin's device binding via {@link AdminDb#clearDeviceBinding(String)} and returns to login.
      */
     private void performLogout() {
         String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);

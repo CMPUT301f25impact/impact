@@ -22,12 +22,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Handles event retrieval and filtering logic between Firestore and the UI.
+ * Coordinates event reads/writes between the UI layer and the role utilities.
+ * <p>
+ * All Firestore access is performed through {@link EntrantDb}, {@link OrganizerDb}, or {@link AdminDb};
+ * the controller simply orchestrates which helper to call for the current user role.
  */
 public class EventController {
 
     /**
-     * Loads all available events.
+     * Loads all events through the appropriate role utility (admins see every event, entrants use the entrant view).
      *
      * @param successListener invoked with the mapped events list
      * @param failureListener invoked when the Firestore read fails
@@ -44,7 +47,7 @@ public class EventController {
     }
 
     /**
-     * Performs a filtered fetch constrained by tags and date range.
+     * Performs a filtered fetch constrained by tags and date range via {@link EntrantDb#listFilteredEvents(List, Date, Date)}.
      *
      * @param tags            list of interests to match against event tags
      * @param startDate       inclusive lower bound for event start date
@@ -62,11 +65,11 @@ public class EventController {
     }
 
     /**
-     * Fetches a single event by organizer.
+     * Fetches all events that belong to the provided organizer email.
      *
-     * @param organizerId Firestore id of the organizer
-     * @param success     invoked with the organizer's events
-     * @param failure     invoked when the read fails
+     * @param organizerEmail organizer address stored on event documents
+     * @param success        invoked with the organizer's events
+     * @param failure        invoked when the read fails
      */
     public void fetchEventsByOrganizer(@NonNull String organizerEmail,
                                        @Nullable OnSuccessListener<List<Event>> success,
@@ -76,7 +79,7 @@ public class EventController {
     }
 
     /**
-     * Subscribes to real-time updates for events owned by an organizer email.
+     * Subscribes to real-time updates for events owned by the supplied organizer email via {@link OrganizerDb}.
      *
      * @param email organizer email address
      * @param listener callback invoked with snapshot updates
@@ -91,9 +94,7 @@ public class EventController {
 
 
     /**
-     * Creates an event document. The Event object should have:
-     * name, description, startDate, endDate, (optional) capacity, organizerId.
-     * Returns the new document id via successListener.
+     * Creates an event document through {@link OrganizerDb#createEvent(Event)}.
      *
      * @param event           event model to persist
      * @param successListener invoked with the generated document id
@@ -107,7 +108,7 @@ public class EventController {
     }
 
     /**
-     * Updates the posterUrl field for the event document.
+     * Updates the {@code posterUrl} field on {@code events/{eventId}} via {@link OrganizerDb#updateEvent(String, Map)}.
      */
     public void updatePosterUrl(@NonNull String eventId,
                                 @NonNull String posterImageId,
@@ -120,7 +121,7 @@ public class EventController {
     }
 
     /**
-     * Stores a QR code download URL in the event doc.
+     * Stores the QR payload string on the event document via {@link OrganizerDb}.
      *
      * @param eventId         id of the event document
      * @param payload         data to store under {@code qrPayload}
@@ -138,7 +139,8 @@ public class EventController {
     }
 
     /**
-     * Deletes event with provided ID
+     * Deletes {@code events/{eventId}} using {@link AdminDb#deleteEvent(String)}.
+     *
      * @param eventId event ID
      * @param successListener executed on success
      * @param failureListener executed on failure
@@ -157,7 +159,7 @@ public class EventController {
 
 
     /**
-     * Maps Firestore documents into {@link Event} instances.
+     * Maps a {@link QuerySnapshot} into strongly typed {@link Event} objects, ensuring the id field is set.
      *
      * @param snapshot query result
      * @return mapped events list
@@ -171,6 +173,9 @@ public class EventController {
         return events;
     }
 
+    /**
+     * Convenience helper to apply optional success/failure listeners to a {@link Task}.
+     */
     private <T> void attach(Task<T> task,
                             @Nullable OnSuccessListener<T> successListener,
                             @Nullable OnFailureListener failureListener) {

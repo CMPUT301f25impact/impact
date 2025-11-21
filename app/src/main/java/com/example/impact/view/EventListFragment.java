@@ -34,6 +34,7 @@ import java.util.Locale;
 
 /**
  * Displays a list of events and exposes filtering for entrant interests and availability.
+ * All queries are issued through {@link EventController}, which routes reads to {@link com.example.impact.utils.role.EntrantDb}.
  */
 public class EventListFragment extends Fragment implements EventAdapter.OnEventClickListener {
     public static final String EXTRA_ENTRANT_ID = "entrant_id";

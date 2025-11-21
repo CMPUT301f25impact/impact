@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Card-based adapter for showing organizer events with a CTA to view entrants.
+ * Card-based adapter for showing organizer events with a CTA to view entrants. Poster thumbnails are
+ * loaded via {@link ImageController}, which delegates to the organizer/entrant role utilities.
  */
 public class EventCardAdapter extends RecyclerView.Adapter<EventCardAdapter.VH> {
 

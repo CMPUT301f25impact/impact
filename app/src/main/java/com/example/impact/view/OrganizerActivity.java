@@ -21,7 +21,8 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
- * Hosts the organizer dashboard tabs for managing and creating events.
+ * Hosts the organizer dashboard tabs and routes logout/device-cleanup through {@link OrganizerDb}.
+ * Organizer identity/role information is sourced from {@link AppSession}.
  */
 public class OrganizerActivity extends AppCompatActivity {
 

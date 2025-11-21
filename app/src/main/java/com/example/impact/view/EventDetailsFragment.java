@@ -23,7 +23,8 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Displays event details and lets entrants manage their waiting list status.
+ * Displays event details and lets entrants manage their waiting-list status. All join/leave calls
+ * are routed through {@link WaitingListController}, which in turn delegates to {@link com.example.impact.utils.role.EntrantDb}.
  */
 public class EventDetailsFragment extends Fragment {
     public static final String EXTRA_EVENT = "event";

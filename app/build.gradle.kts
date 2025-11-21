@@ -1,5 +1,7 @@
 import com.android.build.gradle.AppExtension
 import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
+import java.io.File
 
 plugins {
     id("com.android.application")
@@ -64,19 +66,43 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
 }
 
-afterEvaluate {
-    val androidExt = extensions.getByType<AppExtension>()
-    tasks.register<Javadoc>("androidJavadocs") {
-        val debugVariant = androidExt.applicationVariants.first { it.name == "debug" }
-        val javaCompileProvider = debugVariant.javaCompileProvider.get()
+// 1) First create the task globally (empty)
+val generateAndroidJavadocs = tasks.register("generateAndroidJavadocs", Javadoc::class) {
+    description = "Generates Javadocs including Android classes"
+    group = "documentation"
 
-        setSource(androidExt.sourceSets.getByName("main").java.getSourceFiles())
-        classpath = files(
-            javaCompileProvider.classpath,
-            androidExt.bootClasspath
-        )
-        setDestinationDir(rootProject.file("javadocs"))
-        options.encoding = "UTF-8"
-        isFailOnError = false
+    // Output directory (relative to repo root)
+    destinationDir = File(project.rootDir, "javadocs")
+
+    isFailOnError = false
+
+    (options as StandardJavadocDocletOptions).apply {
+        encoding = "UTF-8"
+        charSet = "UTF-8"
+        author(true)
+        use(true)
+        splitIndex(true)
+        links("https://developer.android.com/reference")
     }
+
+    // exclude useless generated stuff
+    exclude("**/R.java", "**/R.class", "**/R\\$*.class", "**/BuildConfig.java")
 }
+
+// 2) Now configure the task with variant info
+android.applicationVariants.all(object : Action<com.android.build.gradle.api.ApplicationVariant> {
+    override fun execute(variant: com.android.build.gradle.api.ApplicationVariant) {
+        tasks.named<Javadoc>("generateAndroidJavadocs").configure {
+
+            // Add Java source dirs
+            val mainSources = android.sourceSets.getByName("main").java.srcDirs
+            source(mainSources)
+
+            // Add Android boot classpath + variant compile classpath
+            val bootCp = android.bootClasspath.map { file(it) }
+            val variantCp = variant.javaCompileProvider.get().classpath
+
+            classpath = files(bootCp, variantCp)
+        }
+    }
+})

@@ -29,8 +29,9 @@ loadScripts(document, 'script');</script>
 <li><a href="../../../../index.html">Overview</a></li>
 <li><a href="package-summary.html">Package</a></li>
 <li class="nav-bar-cell1-rev">Class</li>
+<li><a href="class-use/Image.html">Use</a></li>
 <li><a href="package-tree.html">Tree</a></li>
-<li><a href="../../../../index-all.html">Index</a></li>
+<li><a href="../../../../index-files/index-1.html">Index</a></li>
 <li><a href="../../../../help-doc.html#class">Help</a></li>
 </ul>
 <ul class="sub-nav-list-small">
@@ -84,19 +85,19 @@ loadScripts(document, 'script');</script>
 <div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">com.example.impact.model</a></div>
 <h1 title="Class Image" class="title">Class Image</h1>
 </div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance" title="Inheritance Tree"><a href="https://developer.android.com/reference/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">com.example.impact.model.Image</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="https://developer.android.com/reference/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Image</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
-<div class="block">Image model class for storing image information</div>
+<span class="extends-implements">extends <a href="https://developer.android.com/reference/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+implements <a href="https://developer.android.com/reference/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
+<div class="block">Represents an image document stored under <code>events/{eventId}/images/{imageId}</code>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -120,10 +121,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="col-last even-row-color">
 <div class="block">Required empty constructor for Firestore deserialization.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">Image</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">Image</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Primary constructor.</div>
 </div>
@@ -141,46 +142,58 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>android.graphics.Bitmap</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/android/graphics/Bitmap.html" title="class or interface in android.graphics" class="external-link">Bitmap</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#decodeBase64ToBitmap()" class="member-name-link">decodeBase64ToBitmap</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Attempts to decode stored base64 content to bitmap form.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Image.html" title="class in com.example.impact.model">Image</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromSnapshot(com.google.firebase.firestore.DocumentSnapshot)" class="member-name-link">fromSnapshot</a><wbr>(com.google.firebase.firestore.DocumentSnapshot&nbsp;snapshot)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://developer.android.com/reference/android/graphics/Bitmap.html" title="class or interface in android.graphics" class="external-link">Bitmap</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#decodeBase64ToBitmapStatic(java.lang.String)" class="member-name-link">decodeBase64ToBitmapStatic</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Populates an image from a Firestore snapshot.</div>
+<div class="block">Static helper used by adapters to decode a base64 payload without instantiating <a href="Image.html" title="class in com.example.impact.model"><code>Image</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBase64Content()" class="member-name-link">getBase64Content</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Image.html" title="class in com.example.impact.model">Image</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromSnapshot(com.google.firebase.firestore.DocumentSnapshot)" class="member-name-link">fromSnapshot</a><wbr>(com.google.firebase.firestore.DocumentSnapshot&nbsp;snapshot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Populates an image from a Firestore snapshot ensuring both <code>imageId</code> and <code>eventId</code>
+ are set based on the document reference path.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBase64Content()" class="member-name-link">getBase64Content</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEventId()" class="member-name-link">getEventId</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFileName()" class="member-name-link">getFileName</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getImageId()" class="member-name-link">getImageId</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMimeType()" class="member-name-link">getMimeType</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBase64Content(java.lang.String)" class="member-name-link">setBase64Content</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setBase64Content(java.lang.String)" class="member-name-link">setBase64Content</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFileName(java.lang.String)" class="member-name-link">setFileName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEventId(java.lang.String)" class="member-name-link">setEventId</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setImageId(java.lang.String)" class="member-name-link">setImageId</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFileName(java.lang.String)" class="member-name-link">setFileName</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMimeType(java.lang.String)" class="member-name-link">setMimeType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setImageId(java.lang.String)" class="member-name-link">setImageId</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMimeType(java.lang.String)" class="member-name-link">setMimeType</a><wbr>(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://developer.android.com/reference/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
+<code><a href="https://developer.android.com/reference/java/lang/Object.html#clone--" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#equals-java.lang.Object-" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#finalize--" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#getClass--" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#hashCode--" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#notify--" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#notifyAll--" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#toString--" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#wait--" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#wait-long-" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://developer.android.com/reference/java/lang/Object.html#wait-long-int-" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -202,10 +215,10 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,java.lang.String,java.lang.String)">
 <h3>Image</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Image</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Image</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName,
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</span></div>
 <div class="block">Primary constructor.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -227,7 +240,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="getImageId()">
 <h3>getImageId</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getImageId</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getImageId</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>Firestore document id</dd>
@@ -237,7 +250,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="setImageId(java.lang.String)">
 <h3>setImageId</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setImageId</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setImageId</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;imageId)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>imageId</code> - Firestore document id</dd>
@@ -247,7 +260,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="getBase64Content()">
 <h3>getBase64Content</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getBase64Content</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getBase64Content</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>base64 payload storing the image</dd>
@@ -257,7 +270,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="setBase64Content(java.lang.String)">
 <h3>setBase64Content</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBase64Content</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setBase64Content</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64Content)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>base64Content</code> - updated base64 payload</dd>
@@ -267,7 +280,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="getMimeType()">
 <h3>getMimeType</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getMimeType</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getMimeType</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>MIME type (e.g., <code>image/png</code>)</dd>
@@ -277,7 +290,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="setMimeType(java.lang.String)">
 <h3>setMimeType</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMimeType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMimeType</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>mimeType</code> - MIME type (e.g., <code>image/png</code>)</dd>
@@ -287,7 +300,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="getFileName()">
 <h3>getFileName</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getFileName</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getFileName</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>original file name</dd>
@@ -297,7 +310,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <li>
 <section class="detail" id="setFileName(java.lang.String)">
 <h3>setFileName</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFileName</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setFileName</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>fileName</code> - original file name</dd>
@@ -305,10 +318,32 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 </section>
 </li>
 <li>
+<section class="detail" id="getEventId()">
+<h3>getEventId</h3>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getEventId</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>event identifier this image belongs to</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setEventId(java.lang.String)">
+<h3>setEventId</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setEventId</span><wbr><span class="parameters">(@Nullable
+ <a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier this image belongs to</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="decodeBase64ToBitmap()">
 <h3>decodeBase64ToBitmap</h3>
 <div class="member-signature"><span class="annotations">@Nullable
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">android.graphics.Bitmap</span>&nbsp;<span class="element-name">decodeBase64ToBitmap</span>()</div>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/android/graphics/Bitmap.html" title="class or interface in android.graphics" class="external-link">Bitmap</a></span>&nbsp;<span class="element-name">decodeBase64ToBitmap</span>()</div>
 <div class="block">Attempts to decode stored base64 content to bitmap form.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -317,10 +352,24 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 </section>
 </li>
 <li>
+<section class="detail" id="decodeBase64ToBitmapStatic(java.lang.String)">
+<h3>decodeBase64ToBitmapStatic</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://developer.android.com/reference/android/graphics/Bitmap.html" title="class or interface in android.graphics" class="external-link">Bitmap</a></span>&nbsp;<span class="element-name">decodeBase64ToBitmapStatic</span><wbr><span class="parameters">(<a href="https://developer.android.com/reference/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;base64)</span></div>
+<div class="block">Static helper used by adapters to decode a base64 payload without instantiating <a href="Image.html" title="class in com.example.impact.model"><code>Image</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>base64</code> - base64-encoded bitmap string</dd>
+<dt>Returns:</dt>
+<dd>decoded bitmap or <code>null</code> when decoding fails</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="fromSnapshot(com.google.firebase.firestore.DocumentSnapshot)">
 <h3>fromSnapshot</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Image.html" title="class in com.example.impact.model">Image</a></span>&nbsp;<span class="element-name">fromSnapshot</span><wbr><span class="parameters">(com.google.firebase.firestore.DocumentSnapshot&nbsp;snapshot)</span></div>
-<div class="block">Populates an image from a Firestore snapshot.</div>
+<div class="block">Populates an image from a Firestore snapshot ensuring both <code>imageId</code> and <code>eventId</code>
+ are set based on the document reference path.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>snapshot</code> - Firestore document</dd>

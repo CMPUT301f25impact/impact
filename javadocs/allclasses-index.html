@@ -29,8 +29,9 @@ loadScripts(document, 'script');</script>
 <li><a href="index.html">Overview</a></li>
 <li>Package</li>
 <li>Class</li>
+<li>Use</li>
 <li><a href="overview-tree.html">Tree</a></li>
-<li><a href="index-all.html">Index</a></li>
+<li><a href="index-files/index-1.html">Index</a></li>
 <li><a href="help-doc.html#all-classes">Help</a></li>
 </ul>
 </div>
@@ -57,51 +58,60 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/Admin.html" title="class in com.example.impact.model">Admin</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Placeholder admin account representation.</div>
+<div class="block">Admin user model</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/AdminActivity.html" title="class in com.example.impact.view">AdminActivity</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">The primary admin dashboard activity.</div>
+<div class="block">Hosts the admin dashboard tabs and routes logout/device-binding cleanup through <a href="com/example/impact/utils/role/AdminDb.html" title="class in com.example.impact.utils.role"><code>AdminDb</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminEventAdapter.html" title="class in com.example.impact.view.adapter">AdminEventAdapter</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/role/AdminDb.html" title="class in com.example.impact.utils.role">AdminDb</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Aggregates all administrator-facing Firestore operations.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminEventAdapter.html" title="class in com.example.impact.view.adapter">AdminEventAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Adapter for displaying a list of events in the admin dashboard</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/AdminEventAdapter.DeleteListener.html" title="interface in com.example.impact.view.adapter">AdminEventAdapter.DeleteListener</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/AdminEventAdapter.DeleteListener.html" title="interface in com.example.impact.view.adapter">AdminEventAdapter.DeleteListener</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Triggered when an admin taps the delete button.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/AdminEventListFragment.html" title="class in com.example.impact.view">AdminEventListFragment</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/AdminEventListFragment.html" title="class in com.example.impact.view">AdminEventListFragment</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">This is the list fragment that renders list of events in the admin dashboard.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminImageAdapter.html" title="class in com.example.impact.view.adapter">AdminImageAdapter</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminImageAdapter.html" title="class in com.example.impact.view.adapter">AdminImageAdapter</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Adapter for showing uploaded images to administrators.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/AdminImageAdapter.DeleteListener.html" title="interface in com.example.impact.view.adapter">AdminImageAdapter.DeleteListener</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/AdminImageAdapter.DeleteListener.html" title="interface in com.example.impact.view.adapter">AdminImageAdapter.DeleteListener</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Triggered when an admin taps the delete image button.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/AdminImageListFragment.html" title="class in com.example.impact.view">AdminImageListFragment</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">This is the list fragment that renders images in the admin dashboard</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminPagerAdapter.html" title="class in com.example.impact.view.adapter">AdminPagerAdapter</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/AdminImageListFragment.html" title="class in com.example.impact.view">AdminImageListFragment</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Displays every image stored under <code>events/{eventId}/images/</code> by aggregating through <a href="com/example/impact/utils/role/AdminDb.html" title="class in com.example.impact.utils.role"><code>AdminDb</code></a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminPagerAdapter.html" title="class in com.example.impact.view.adapter">AdminPagerAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Supplies admin dashboard fragments to the ViewPager</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminProfileAdapter.html" title="class in com.example.impact.view.adapter">AdminProfileAdapter</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/AdminProfileAdapter.html" title="class in com.example.impact.view.adapter">AdminProfileAdapter</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Adapter used for rendering entrant profiles in the admin dashboard.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/AdminProfileAdapter.DeleteListener.html" title="interface in com.example.impact.view.adapter">AdminProfileAdapter.DeleteListener</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/AdminProfileAdapter.DeleteListener.html" title="interface in com.example.impact.view.adapter">AdminProfileAdapter.DeleteListener</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Notifies when an admin requests to remove a profile.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/AdminProfileListFragment.html" title="class in com.example.impact.view">AdminProfileListFragment</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/AdminProfileListFragment.html" title="class in com.example.impact.view">AdminProfileListFragment</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Displays entrant profiles for administrators.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/AppSession.html" title="class in com.example.impact.utils">AppSession</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Central in-memory session store that exposes the authenticated <a href="com/example/impact/model/User.html" title="class in com.example.impact.model"><code>User</code></a>,
+ the cached role/identifier, and the shared <code>FirebaseFirestore</code> instance.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/DateUtil.html" title="class in com.example.impact.utils">DateUtil</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -119,144 +129,143 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Launcher screen for entrant-specific tools and shortcuts.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/EntrantController.html" title="class in com.example.impact.controller">EntrantController</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/role/EntrantDb.html" title="class in com.example.impact.utils.role">EntrantDb</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Coordinates Firestore persistence for entrant profile information.</div>
+<div class="block">Collection of Firestore helpers that power all entrant-facing behavior.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/EntrantHistoryItem.html" title="class in com.example.impact.model">EntrantHistoryItem</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Represents a single history record for an entrant.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EntrantProfileActivity.html" title="class in com.example.impact.view">EntrantProfileActivity</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EntrantProfileFragment.html" title="class in com.example.impact.view">EntrantProfileFragment</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Activity that allows entrants to capture and persist their profile details.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/EntrantRow.html" title="class in com.example.impact.view.adapter">EntrantRow</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/EntrantProfileFragment.ProfileInteractionListener.html" title="interface in com.example.impact.view">EntrantProfileFragment.ProfileInteractionListener</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/EntrantRow.html" title="class in com.example.impact.view.adapter">EntrantRow</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Lightweight view model for rendering entrant rows.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EntrantViewFragment.html" title="class in com.example.impact.view">EntrantViewFragment</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EntrantViewFragment.html" title="class in com.example.impact.view">EntrantViewFragment</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Placeholder fragment for previewing entrant-facing screens.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/Event.html" title="class in com.example.impact.model">Event</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Represents an event that entrants can view and join waiting lists for.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/EventAdapter.html" title="class in com.example.impact.view.adapter">EventAdapter</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/Event.html" title="class in com.example.impact.model">Event</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Represents an event stored under the root <code>events/</code> collection.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/EventAdapter.html" title="class in com.example.impact.view.adapter">EventAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Recycler adapter rendering the list of events available to entrants.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/EventAdapter.OnEventClickListener.html" title="interface in com.example.impact.view.adapter">EventAdapter.OnEventClickListener</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/EventAdapter.OnEventClickListener.html" title="interface in com.example.impact.view.adapter">EventAdapter.OnEventClickListener</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Interface to notify listeners when an event is selected.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/EventCardAdapter.html" title="class in com.example.impact.view.adapter">EventCardAdapter</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/EventCardAdapter.html" title="class in com.example.impact.view.adapter">EventCardAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Card-based adapter for showing organizer events with a CTA to view entrants.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/EventCardAdapter.OnViewEntrants.html" title="interface in com.example.impact.view.adapter">EventCardAdapter.OnViewEntrants</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab1">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/view/adapter/EventCardAdapter.OnViewEntrants.html" title="interface in com.example.impact.view.adapter">EventCardAdapter.OnViewEntrants</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">Callback for when the entrants button is pressed.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/EventController.html" title="class in com.example.impact.controller">EventController</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Handles event retrieval and filtering logic between Firestore and the UI.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EventDetailsActivity.html" title="class in com.example.impact.view">EventDetailsActivity</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/EventController.html" title="class in com.example.impact.controller">EventController</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Displays event details and lets entrants manage their waiting list status.</div>
+<div class="block">Coordinates event reads/writes between the UI layer and the role utilities.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EventHistoryActivity.html" title="class in com.example.impact.view">EventHistoryActivity</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EventDetailsFragment.html" title="class in com.example.impact.view">EventDetailsFragment</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Shows the entrant's historical event participation details.</div>
+<div class="block">Displays event details and lets entrants manage their waiting-list status.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/EventHistoryAdapter.html" title="class in com.example.impact.view.adapter">EventHistoryAdapter</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Displays entrant event history entries in a recycler view.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EventListActivity.html" title="class in com.example.impact.view">EventListActivity</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EventHistoryFragment.html" title="class in com.example.impact.view">EventHistoryFragment</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Shows the entrant's historical event participation details.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/EventListFragment.html" title="class in com.example.impact.view">EventListFragment</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Displays a list of events and exposes filtering for entrant interests and availability.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/FirebaseUtil.html" title="class in com.example.impact.utils">FirebaseUtil</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Utility helpers for accessing configured Firebase services.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/FirestoreManager.html" title="class in com.example.impact.controller">FirestoreManager</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/FirebaseUtils.html" title="class in com.example.impact.utils">FirebaseUtils</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Placeholder for future Firestore helpers.</div>
+<div class="block">Utility helpers for accessing configured Firebase services.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/Image.html" title="class in com.example.impact.model">Image</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Image model class for storing image information</div>
+<div class="block">Represents an image document stored under <code>events/{eventId}/images/{imageId}</code>.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/ImageController.html" title="class in com.example.impact.controller">ImageController</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Handle image retrieval and saving to Firestore</div>
+<div class="block">Bridges UI callers to the image helpers provided by <a href="com/example/impact/utils/role/OrganizerDb.html" title="class in com.example.impact.utils.role"><code>OrganizerDb</code></a>, <a href="com/example/impact/utils/role/EntrantDb.html" title="class in com.example.impact.utils.role"><code>EntrantDb</code></a>, and <a href="com/example/impact/utils/role/AdminDb.html" title="class in com.example.impact.utils.role"><code>AdminDb</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/LoginActivity.html" title="class in com.example.impact.view">LoginActivity</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Handles Firestore-backed user login and role-based routing.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/MainActivity.html" title="class in com.example.impact.view">MainActivity</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/ImageUtil.html" title="class in com.example.impact.utils">ImageUtil</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/LoginActivity.html" title="class in com.example.impact.view">LoginActivity</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Temporary launcher to navigate between entrant demo screens.</div>
+<div class="block">Handles Firestore-backed user login and role-based routing.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/Organizer.html" title="class in com.example.impact.model">Organizer</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Placeholder organizer model for future expansion.</div>
+<div class="block">Organizer profile model</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/OrganizerActivity.html" title="class in com.example.impact.view">OrganizerActivity</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Hosts the organizer dashboard tabs for managing and creating events.</div>
+<div class="block">Hosts the organizer dashboard tabs and routes logout/device-cleanup through <a href="com/example/impact/utils/role/OrganizerDb.html" title="class in com.example.impact.utils.role"><code>OrganizerDb</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/OrganizerEventsFragment.html" title="class in com.example.impact.view">OrganizerEventsFragment</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/role/OrganizerDb.html" title="class in com.example.impact.utils.role">OrganizerDb</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Centralizes all organizer-facing Firestore interactions.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/OrganizerEventsFragment.html" title="class in com.example.impact.view">OrganizerEventsFragment</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Fragment displaying all events created by the logged-in organizer.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/OrganizerPagerAdapter.html" title="class in com.example.impact.view.adapter">OrganizerPagerAdapter</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/adapter/OrganizerPagerAdapter.html" title="class in com.example.impact.view.adapter">OrganizerPagerAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Supplies organizer dashboard fragments to the ViewPager.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/OrganizerToolsFragment.html" title="class in com.example.impact.view">OrganizerToolsFragment</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/OrganizerToolsFragment.html" title="class in com.example.impact.view">OrganizerToolsFragment</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Provides organizers with a simple form to create events and preview QR codes.</div>
 </div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/QrUtil.html" title="class in com.example.impact.utils">QrUtil</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/QrUtil.html" title="class in com.example.impact.utils">QrUtil</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Helper for generating QR code bitmaps.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/utils/SessionManager.html" title="class in com.example.impact.utils">SessionManager</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Utility for managing Firestore-backed sessions by clearing the deviceId binding on logout.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/example/impact/utils/SessionManager.LogoutCallback.html" title="interface in com.example.impact.utils">SessionManager.LogoutCallback</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab1">
-<div class="block">Notified once logout cleanup completes.</div>
-</div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/SignupActivity.html" title="class in com.example.impact.view">SignupActivity</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Collects minimal credentials and creates entrant accounts in Firestore.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/SimpleEntrantAdapter.html" title="class in com.example.impact.view">SimpleEntrantAdapter</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/SignupActivity.html" title="class in com.example.impact.view">SignupActivity</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Collects minimal credentials and creates entrant accounts in Firestore using <a href="com/example/impact/utils/role/EntrantDb.html" title="class in com.example.impact.utils.role"><code>EntrantDb</code></a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/SimpleEntrantAdapter.html" title="class in com.example.impact.view">SimpleEntrantAdapter</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Minimal adapter used by admin tools to show entrant records.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/SplashActivity.html" title="class in com.example.impact.view">SplashActivity</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Entry point that auto-logs users based on stored device identifiers.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/WaitingListActivity.html" title="class in com.example.impact.view">WaitingListActivity</a></div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/SplashActivity.html" title="class in com.example.impact.view">SplashActivity</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Displays a live list of entrants waiting for a specific event.</div>
+<div class="block">Entry point that auto-logs users based on stored device identifiers via <a href="com/example/impact/utils/role/EntrantDb.html#findUserByDeviceId(java.lang.String)"><code>EntrantDb.findUserByDeviceId(String)</code></a>.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/WaitingListController.html" title="class in com.example.impact.controller">WaitingListController</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Handles operations for joining or leaving event waiting lists.</div>
-</div>
-<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/WaitingListEntry.html" title="class in com.example.impact.model">WaitingListEntry</a></div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/User.html" title="class in com.example.impact.model">User</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/UserController.html" title="class in com.example.impact.controller">UserController</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Coordinates user-related operations between the UI and <a href="com/example/impact/utils/role/EntrantDb.html" title="class in com.example.impact.utils.role"><code>EntrantDb</code></a>/<a href="com/example/impact/utils/role/AdminDb.html" title="class in com.example.impact.utils.role"><code>AdminDb</code></a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/view/WaitingListActivity.html" title="class in com.example.impact.view">WaitingListActivity</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Displays a live list of entrants waiting for a specific event by listening to
+ <a href="com/example/impact/utils/role/OrganizerDb.html#listenToWaitingList(java.lang.String,com.google.firebase.firestore.EventListener)"><code>OrganizerDb.listenToWaitingList(String, com.google.firebase.firestore.EventListener)</code></a>.</div>
+</div>
+<div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/controller/WaitingListController.html" title="class in com.example.impact.controller">WaitingListController</a></div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Handles operations for joining or leaving event waiting lists by delegating to <a href="com/example/impact/utils/role/EntrantDb.html" title="class in com.example.impact.utils.role"><code>EntrantDb</code></a>.</div>
+</div>
+<div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/example/impact/model/WaitingListEntry.html" title="class in com.example.impact.model">WaitingListEntry</a></div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Represents an entrant's placement on an event waiting list.</div>
 </div>
 </div>

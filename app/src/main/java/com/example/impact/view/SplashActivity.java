@@ -10,7 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.impact.R;
-import com.example.impact.utils.FirebaseUtils;
+import com.example.impact.controller.UserController;
+import com.example.impact.model.User;
+import com.example.impact.utils.AppSession;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -19,14 +21,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
  */
 public class SplashActivity extends AppCompatActivity {
 
-    private FirebaseFirestore firestore;
+    private final FirebaseFirestore firestore = AppSession.db();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        firestore = FirebaseUtils.getFirestore();
         checkSession();
     }
 
@@ -50,7 +51,13 @@ public class SplashActivity extends AppCompatActivity {
                         return;
                     }
                     DocumentSnapshot userDoc = snapshot.getDocuments().get(0);
-                    proceedToRole(userDoc);
+                    User user = UserController.mapSnapshotToUser(userDoc);
+                    if (user == null) {
+                        proceedToLogin(true);
+                        return;
+                    }
+                    AppSession.initialize(user);
+                    proceedToRole(user);
                 })
                 .addOnFailureListener(error -> proceedToLogin(true));
     }
@@ -58,9 +65,13 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * Routes to the dashboard that matches the stored role.
      */
-    private void proceedToRole(DocumentSnapshot userDoc) {
-        String role = userDoc.getString("role");
-        String email = userDoc.getString("email");
+    private void proceedToRole(@Nullable User user) {
+        if (user == null) {
+            proceedToLogin(true);
+            return;
+        }
+        String role = user.getRole();
+        String email = user.getEmail();
         Intent intent;
         if ("admin".equals(role)) {
             intent = new Intent(this, AdminActivity.class);
@@ -69,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             intent = new Intent(this, EntrantActivity.class);
         }
-        intent.putExtra(LoginActivity.EXTRA_USER_ID, userDoc.getId());
+        intent.putExtra(LoginActivity.EXTRA_USER_ID, user.getId());
         if (email != null) {
             intent.putExtra("extra_user_email", email);
         }

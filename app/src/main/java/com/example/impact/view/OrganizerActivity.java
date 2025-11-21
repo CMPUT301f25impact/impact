@@ -2,8 +2,11 @@ package com.example.impact.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,7 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.impact.R;
-import com.example.impact.utils.SessionManager;
+import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.OrganizerPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -27,7 +30,6 @@ public class OrganizerActivity extends AppCompatActivity {
     /** Optional: pass this in an Intent extra to open a tab directly. */
     public static final String EXTRA_INITIAL_TAB = "initial_tab"; // 0 = Events, 1 = Create
 
-    private SessionManager sessionManager;
     private ViewPager2 viewPager;
 
     @Override
@@ -41,8 +43,6 @@ public class OrganizerActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.organizer_dashboard_title);
         }
-
-        sessionManager = new SessionManager(this);
 
         // ViewPager + Tabs
         viewPager = findViewById(R.id.organizerViewPager);
@@ -78,12 +78,35 @@ public class OrganizerActivity extends AppCompatActivity {
      * Clears organizer session then navigates back to login.
      */
     private void performLogout() {
-        sessionManager.clearSession(() -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        });
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (TextUtils.isEmpty(deviceId)) {
+            navigateToLogin();
+            return;
+        }
+
+        AppSession.db().collection("users")
+                .whereEqualTo("deviceId", deviceId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        queryDocumentSnapshots.forEach(documentSnapshot ->
+                                documentSnapshot.getReference().update("deviceId", null));
+                    }
+                    Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show();
+                    navigateToLogin();
+                })
+                .addOnFailureListener(error -> {
+                    Toast.makeText(this, R.string.logout_error, Toast.LENGTH_SHORT).show();
+                    navigateToLogin();
+                });
+    }
+
+    private void navigateToLogin() {
+        AppSession.initialize(null);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     /** Called from OrganizerEventsFragment’s “+ Create New Event” button. */

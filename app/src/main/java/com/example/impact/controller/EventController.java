@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.impact.model.Event;
-import com.example.impact.utils.FirebaseUtils;
+import com.example.impact.utils.AppSession;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.EventListener;
@@ -29,7 +29,7 @@ public class EventController {
      * Builds a controller backed by the shared Firestore instance.
      */
     public EventController() {
-        this(FirebaseUtils.getFirestore());
+        this(AppSession.db());
     }
 
     /**

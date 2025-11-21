@@ -26,9 +26,9 @@ public class ImageController {
      * @param successListener optional callback with the loaded images
      * @param failureListener optional failure callback
      */
-    public void fetchAllImages(@NonNull String eventId,
-                               @Nullable OnSuccessListener<List<Image>> successListener,
-                               @Nullable OnFailureListener failureListener) {
+    public void fetchEventImages(@NonNull String eventId,
+                                 @Nullable OnSuccessListener<List<Image>> successListener,
+                                 @Nullable OnFailureListener failureListener) {
         attach(OrganizerDb.fetchEventImages(eventId), successListener, failureListener);
     }
 
@@ -55,10 +55,10 @@ public class ImageController {
      * @param successListener optional callback with the stored id
      * @param failureListener optional failure callback
      */
-    public void createImage(@NonNull String eventId,
-                            @NonNull Image image,
-                            @Nullable OnSuccessListener<String> successListener,
-                            @Nullable OnFailureListener failureListener) {
+    public void uploadPoster(@NonNull String eventId,
+                             @NonNull Image image,
+                             @Nullable OnSuccessListener<String> successListener,
+                             @Nullable OnFailureListener failureListener) {
         attach(OrganizerDb.uploadPoster(eventId, image), successListener, failureListener);
     }
 
@@ -81,6 +81,17 @@ public class ImageController {
         if (failureListener != null) {
             task.addOnFailureListener(failureListener);
         }
+    }
+
+    /**
+     * Aggregates all images across every event for administrative browsing.
+     *
+     * @param successListener optional callback receiving the flattened image list
+     * @param failureListener optional failure callback
+     */
+    public void fetchAllImagesAcrossEvents(@Nullable OnSuccessListener<List<Image>> successListener,
+                                           @Nullable OnFailureListener failureListener) {
+        attach(AdminDb.listAllImagesAcrossEvents(), successListener, failureListener);
     }
 
     /**

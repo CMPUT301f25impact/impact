@@ -228,7 +228,7 @@ public class OrganizerToolsFragment extends Fragment {
         Image image = pendingPosterImage;
         image.setImageId("poster");
         btnUploadPoster.setEnabled(false);
-        imageController.createImage(eventId, image, imageId -> {
+        imageController.uploadPoster(eventId, image, imageId -> {
             String path = Event.buildImagePath(eventId, imageId);
             controller.updatePosterUrl(eventId, path,
                     v -> { },

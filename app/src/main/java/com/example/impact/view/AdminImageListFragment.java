@@ -11,22 +11,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
+import com.example.impact.controller.ImageController;
 import com.example.impact.model.Image;
 import com.example.impact.utils.DeletionConfirmationUtil;
-import com.example.impact.utils.role.AdminDb;
 import com.example.impact.view.adapter.AdminImageAdapter;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Displays every image stored under {@code events/{eventId}/images/} by aggregating through {@link AdminDb}.
- * All deletions also route through {@link AdminDb#deleteEventImage(String, String)}.
+ * Displays every image stored under {@code events/{eventId}/images/} by aggregating through {@link ImageController}.
+ * UI never touches the role utilities directly—deletions/uploads/reads all route through the controller.
  */
 public class AdminImageListFragment extends Fragment
         implements AdminImageAdapter.DeleteListener {
 
     private AdminImageAdapter adapter;
+    private final ImageController imageController = new ImageController();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,12 @@ public class AdminImageListFragment extends Fragment
     }
 
     /**
-     * Loads images using {@link AdminDb#listAllImagesAcrossEvents()}.
+     * Loads images via {@link ImageController}.
      */
     private void loadImages() {
-        AdminDb.listAllImagesAcrossEvents()
-                .addOnSuccessListener(images -> onImagesLoaded(images != null ? images : java.util.Collections.emptyList()))
-                .addOnFailureListener(error -> Toast.makeText(getContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
+        imageController.fetchAllImagesAcrossEvents(
+                images -> onImagesLoaded(images != null ? images : Collections.emptyList()),
+                error -> Toast.makeText(getContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -91,9 +92,9 @@ public class AdminImageListFragment extends Fragment
                         Toast.makeText(getContext(), R.string.admin_image_list_error_deletion, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    AdminDb.deleteEventImage(eventId, imageId)
-                            .addOnSuccessListener(unused -> onImageDelete(imageFilename))
-                            .addOnFailureListener(error -> Toast.makeText(getContext(), R.string.admin_image_list_error_deletion, Toast.LENGTH_SHORT).show());
+                    imageController.deleteImage(eventId, imageId,
+                            unused -> onImageDelete(imageFilename),
+                            error -> Toast.makeText(getContext(), R.string.admin_image_list_error_deletion, Toast.LENGTH_SHORT).show());
                 });
 
         confirmation.show();

@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.impact.R;
-import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
 import com.example.impact.utils.role.EntrantDb;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -24,7 +23,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * {@link AppSession}, and logout/device binding cleanup is delegated to {@link EntrantDb}.
  */
 public class EntrantActivity extends AppCompatActivity implements EntrantProfileFragment.ProfileInteractionListener {
-    private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";
 
     private String entrantId;
 
@@ -33,14 +31,7 @@ public class EntrantActivity extends AppCompatActivity implements EntrantProfile
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
 
-        User user = AppSession.getUser();
-        entrantId = user != null ? user.getId() : null;
-        if (TextUtils.isEmpty(entrantId)) {
-            entrantId = getIntent().getStringExtra(LoginActivity.EXTRA_USER_ID);
-        }
-        if (TextUtils.isEmpty(entrantId)) {
-            entrantId = PLACEHOLDER_ENTRANT_ID;
-        }
+        entrantId = AppSession.getUserId();
 
         MaterialToolbar toolbar = findViewById(R.id.entrantToolbar);
         BottomNavigationView bottomNav = findViewById(R.id.entrant_bottom_nav_view);

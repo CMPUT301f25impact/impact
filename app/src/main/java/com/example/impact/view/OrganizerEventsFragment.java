@@ -19,7 +19,6 @@ import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.model.Event;
 import com.example.impact.model.Organizer;
-import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
 import com.example.impact.utils.role.OrganizerDb;
 import com.example.impact.view.adapter.EventAdapter;
@@ -71,13 +70,10 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
             organizerEmail = getArguments().getString("organizerEmail");
         }
         if (TextUtils.isEmpty(organizerEmail)) {
-            User currentUser = AppSession.getUser();
-            if (currentUser != null) {
-                organizerEmail = currentUser.getEmail();
-            }
+            organizerEmail = AppSession.getUser().getEmail();
         }
 
-        if (organizerEmail == null) {
+        if (TextUtils.isEmpty(organizerEmail)) {
             Toast.makeText(requireContext(), "Organizer email missing", Toast.LENGTH_SHORT).show();
             return v;
         }

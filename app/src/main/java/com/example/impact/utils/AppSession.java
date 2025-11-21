@@ -44,6 +44,7 @@ public final class AppSession {
      */
     @Nullable
     public static User getUser() {
+        ensureUserAvailable();
         return currentUser;
     }
 
@@ -54,6 +55,13 @@ public final class AppSession {
      */
     @Nullable
     public static String getUserId() {
+        ensureSessionInitialized();
+        if (currentUserId == null && currentUser != null) {
+            currentUserId = currentUser.getId();
+        }
+        if (currentUserId == null) {
+            throw new IllegalStateException("AppSession user id is unavailable. Initialize the session before accessing it.");
+        }
         return currentUserId;
     }
 
@@ -64,6 +72,13 @@ public final class AppSession {
      */
     @Nullable
     public static String getRole() {
+        ensureSessionInitialized();
+        if (role == null && currentUser != null) {
+            role = currentUser.getRole();
+        }
+        if (role == null) {
+            throw new IllegalStateException("AppSession role is unavailable. Initialize the session before accessing it.");
+        }
         return role;
     }
 
@@ -76,5 +91,24 @@ public final class AppSession {
      */
     public static FirebaseFirestore db() {
         return db;
+    }
+
+    /**
+     * Ensures a user object exists before returning it to callers.
+     */
+    private static void ensureUserAvailable() {
+        ensureSessionInitialized();
+        if (currentUser == null) {
+            throw new IllegalStateException("AppSession user is unavailable. Initialize the session before accessing it.");
+        }
+    }
+
+    /**
+     * Guards getters so Activities/Fragments do not need to duplicate null checks.
+     */
+    private static void ensureSessionInitialized() {
+        if (currentUser == null && currentUserId == null && role == null) {
+            throw new IllegalStateException("AppSession has not been initialized.");
+        }
     }
 }

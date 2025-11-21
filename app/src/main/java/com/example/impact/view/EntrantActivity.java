@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.impact.R;
 import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
+import com.example.impact.utils.role.EntrantDb;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -124,14 +125,8 @@ public class EntrantActivity extends AppCompatActivity implements EntrantProfile
             return;
         }
 
-        AppSession.db().collection("users")
-                .whereEqualTo("deviceId", deviceId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        queryDocumentSnapshots.forEach(documentSnapshot ->
-                                documentSnapshot.getReference().update("deviceId", null));
-                    }
+        EntrantDb.clearDeviceBinding(deviceId)
+                .addOnSuccessListener(unused -> {
                     Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show();
                     navigateToLogin();
                 })

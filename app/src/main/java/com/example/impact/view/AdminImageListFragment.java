@@ -11,19 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
-import com.example.impact.controller.ImageController;
 import com.example.impact.model.Image;
-import com.example.impact.utils.AppSession;
 import com.example.impact.utils.DeletionConfirmationUtil;
+import com.example.impact.utils.role.AdminDb;
 import com.example.impact.view.adapter.AdminImageAdapter;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This is the list fragment that renders images in the admin dashboard
@@ -33,14 +27,9 @@ public class AdminImageListFragment extends Fragment
 
     private AdminImageAdapter adapter;
 
-    private ImageController imageController;
-    private FirebaseFirestore firestore;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        imageController = new ImageController();
-        firestore = AppSession.db();
     }
 
     @Override
@@ -61,35 +50,8 @@ public class AdminImageListFragment extends Fragment
      * Loads images using ImageController
      */
     private void loadImages() {
-        firestore.collection("events")
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (snapshot.isEmpty()) {
-                        onImagesLoaded(Collections.emptyList());
-                        return;
-                    }
-                    List<Image> aggregated = Collections.synchronizedList(new ArrayList<>());
-                    AtomicInteger pending = new AtomicInteger(snapshot.size());
-                    AtomicBoolean errorNotified = new AtomicBoolean(false);
-                    for (DocumentSnapshot document : snapshot.getDocuments()) {
-                        String eventId = document.getId();
-                        imageController.fetchAllImages(eventId, images -> {
-                            if (images != null) {
-                                aggregated.addAll(images);
-                            }
-                            if (pending.decrementAndGet() == 0) {
-                                onImagesLoaded(new ArrayList<>(aggregated));
-                            }
-                        }, error -> {
-                            if (errorNotified.compareAndSet(false, true)) {
-                                Toast.makeText(getContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show();
-                            }
-                            if (pending.decrementAndGet() == 0) {
-                                onImagesLoaded(new ArrayList<>(aggregated));
-                            }
-                        });
-                    }
-                })
+        AdminDb.listAllImagesAcrossEvents()
+                .addOnSuccessListener(images -> onImagesLoaded(images != null ? images : java.util.Collections.emptyList()))
                 .addOnFailureListener(error -> Toast.makeText(getContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
     }
 
@@ -127,8 +89,9 @@ public class AdminImageListFragment extends Fragment
                         Toast.makeText(getContext(), R.string.admin_image_list_error_deletion, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    imageController.deleteImage(eventId, imageId, v -> onImageDelete(imageFilename),
-                            error -> Toast.makeText(getContext(), R.string.admin_image_list_error_deletion, Toast.LENGTH_SHORT).show());
+                    AdminDb.deleteEventImage(eventId, imageId)
+                            .addOnSuccessListener(unused -> onImageDelete(imageFilename))
+                            .addOnFailureListener(error -> Toast.makeText(getContext(), R.string.admin_image_list_error_deletion, Toast.LENGTH_SHORT).show());
                 });
 
         confirmation.show();

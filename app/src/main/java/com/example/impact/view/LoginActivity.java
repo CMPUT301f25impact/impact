@@ -19,8 +19,8 @@ import com.example.impact.R;
 import com.example.impact.controller.UserController;
 import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
+import com.example.impact.utils.role.EntrantDb;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Handles Firestore-backed user login and role-based routing.
@@ -34,8 +34,6 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button loginButton;
     private TextView goToSignup;
-
-    private final FirebaseFirestore firestore = AppSession.db();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,17 +66,13 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         setLoadingState(true);
-        firestore.collection("users")
-                .whereEqualTo("email", email)
-                .limit(1)
-                .get()
-                .addOnSuccessListener(snapshot -> {
+        EntrantDb.findUserByEmail(email)
+                .addOnSuccessListener(userDoc -> {
                     setLoadingState(false);
-                    if (snapshot.isEmpty()) {
+                    if (userDoc == null) {
                         Toast.makeText(this, R.string.login_invalid_credentials, Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    DocumentSnapshot userDoc = snapshot.getDocuments().get(0);
                     String storedPassword = userDoc.getString("password");
                     if (storedPassword == null || !storedPassword.equals(password)) {
                         Toast.makeText(this, R.string.login_invalid_credentials, Toast.LENGTH_SHORT).show();
@@ -106,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         if (!TextUtils.isEmpty(deviceId)) {
             String currentDeviceId = userDoc.getString("deviceId");
             if (!deviceId.equals(currentDeviceId)) {
-                userDoc.getReference().update("deviceId", deviceId);
+                EntrantDb.updateDeviceBinding(userDoc.getId(), deviceId);
             }
         }
 

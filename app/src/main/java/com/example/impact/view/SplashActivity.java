@@ -13,15 +13,13 @@ import com.example.impact.R;
 import com.example.impact.controller.UserController;
 import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
+import com.example.impact.utils.role.EntrantDb;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * Entry point that auto-logs users based on stored device identifiers.
  */
 public class SplashActivity extends AppCompatActivity {
-
-    private final FirebaseFirestore firestore = AppSession.db();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,16 +39,12 @@ public class SplashActivity extends AppCompatActivity {
             return;
         }
 
-        firestore.collection("users")
-                .whereEqualTo("deviceId", deviceId)
-                .limit(1)
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (snapshot.isEmpty()) {
+        EntrantDb.findUserByDeviceId(deviceId)
+                .addOnSuccessListener(userDoc -> {
+                    if (userDoc == null) {
                         proceedToLogin(false);
                         return;
                     }
-                    DocumentSnapshot userDoc = snapshot.getDocuments().get(0);
                     User user = UserController.mapSnapshotToUser(userDoc);
                     if (user == null) {
                         proceedToLogin(true);

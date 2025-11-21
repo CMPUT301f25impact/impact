@@ -15,12 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.impact.R;
-import com.example.impact.utils.AppSession;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.example.impact.utils.role.EntrantDb;
 
 /**
  * Collects minimal credentials and creates entrant accounts in Firestore.
@@ -32,8 +27,6 @@ public class SignupActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button signupButton;
     private TextView goToLogin;
-
-    private final FirebaseFirestore firestore = AppSession.db();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,17 +66,14 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         setLoadingState(true);
-        firestore.collection("users")
-                .whereEqualTo("email", email)
-                .limit(1)
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (!snapshot.isEmpty()) {
+        EntrantDb.emailExists(email)
+                .addOnSuccessListener(exists -> {
+                    if (exists != null && exists) {
                         setLoadingState(false);
                         Toast.makeText(this, R.string.signup_email_exists, Toast.LENGTH_SHORT).show();
-                        return;
+                    } else {
+                        createUser(email, password, deviceId);
                     }
-                    createUser(email, password, deviceId);
                 })
                 .addOnFailureListener(error -> {
                     setLoadingState(false);
@@ -95,16 +85,8 @@ public class SignupActivity extends AppCompatActivity {
      * Persists a new entrant record in Firestore.
      */
     private void createUser(String email, String password, String deviceId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("email", email);
-        data.put("password", password);
-        data.put("role", "entrant");
-        data.put("deviceId", deviceId);
-        data.put("createdAt", FieldValue.serverTimestamp());
-
-        firestore.collection("users")
-                .add(data)
-                .addOnSuccessListener(documentReference -> {
+        EntrantDb.registerEntrantAccount(email, password, deviceId)
+                .addOnSuccessListener(documentId -> {
                     setLoadingState(false);
                     Toast.makeText(this, R.string.signup_success_message, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, LoginActivity.class);

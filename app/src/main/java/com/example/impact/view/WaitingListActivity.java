@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
-import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.EntrantRow;
-import com.google.firebase.firestore.*;
+import com.example.impact.utils.role.OrganizerDb;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,30 +48,23 @@ public class WaitingListActivity extends AppCompatActivity {
      * Subscribes to waiting list updates for the provided event id.
      */
     private void loadWaitingListRealtime(String eventId) {
-        reg = AppSession.db()
-                .collection("events").document(eventId)
-                .collection("waitingList")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .addSnapshotListener((snap, e) -> {
-                    if (e != null || snap == null) return;
+        reg = OrganizerDb.listenToWaitingList(eventId, (snap, e) -> {
+            if (e != null || snap == null) return;
 
-                    List<EntrantRow> rows = new ArrayList<>();
-                    for (DocumentSnapshot d : snap.getDocuments()) {
-                        // Fields you actually save via WaitingListController
-                        String entrantId = d.getString("entrantId");
-                        String status = d.getString("status");
-                        com.google.firebase.Timestamp ts = d.getTimestamp("timestamp");
+            List<EntrantRow> rows = new ArrayList<>();
+            for (DocumentSnapshot d : snap.getDocuments()) {
+                String entrantId = d.getString("entrantId");
+                String status = d.getString("status");
+                com.google.firebase.Timestamp ts = d.getTimestamp("timestamp");
 
-                        String joined = (ts != null) ? ts.toDate().toString() : "-";
-
-                        // If you want names/emails, you’ll need an extra fetch from /profiles/{entrantId}
-                        rows.add(new EntrantRow(
-                                entrantId,           // show id for now
-                                status != null ? status : "pending",
-                                joined));
-                    }
-                    adapter.submit(rows);
-                });
+                String joined = (ts != null) ? ts.toDate().toString() : "-";
+                rows.add(new EntrantRow(
+                        entrantId,
+                        status != null ? status : "pending",
+                        joined));
+            }
+            adapter.submit(rows);
+        });
     }
 
     @Override

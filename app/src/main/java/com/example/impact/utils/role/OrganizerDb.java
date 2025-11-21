@@ -12,7 +12,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -79,6 +82,21 @@ public final class OrganizerDb {
         return tcs.getTask();
     }
 
+    public static Task<List<Image>> fetchEventImages(@NonNull String eventId) {
+        TaskCompletionSource<List<Image>> tcs = new TaskCompletionSource<>();
+        eventImages(eventId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Image> images = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        images.add(Image.fromSnapshot(doc));
+                    }
+                    tcs.setResult(images);
+                })
+                .addOnFailureListener(tcs::setException);
+        return tcs.getTask();
+    }
+
     public static Task<Void> sendNotificationToChosen(@NonNull String eventId,
                                                       @NonNull Map<String, Object> payload) {
         TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
@@ -111,6 +129,55 @@ public final class OrganizerDb {
         return tcs.getTask();
     }
 
+    public static Task<List<Event>> fetchEventsByEmail(@NonNull String organizerEmail) {
+        TaskCompletionSource<List<Event>> tcs = new TaskCompletionSource<>();
+        db.collection("events")
+                .whereEqualTo("organizerEmail", organizerEmail)
+                .get()
+                .addOnSuccessListener(snapshot -> tcs.setResult(mapEvents(snapshot)))
+                .addOnFailureListener(tcs::setException);
+        return tcs.getTask();
+    }
+
+    public static ListenerRegistration listenToEventsByEmail(@NonNull String organizerEmail,
+                                                             @NonNull EventListener<QuerySnapshot> listener) {
+        return db.collection("events")
+                .whereEqualTo("organizerEmail", organizerEmail)
+                .addSnapshotListener(listener);
+    }
+
+    public static ListenerRegistration listenToWaitingList(@NonNull String eventId,
+                                                           @NonNull EventListener<QuerySnapshot> listener) {
+        return db.collection("events")
+                .document(eventId)
+                .collection("waitingList")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .addSnapshotListener(listener);
+    }
+
+    public static Task<Void> deleteEvent(@NonNull String eventId) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+        FirebaseUtils.deleteDocument("events", eventId,
+                unused -> tcs.setResult(null),
+                tcs::setException);
+        return tcs.getTask();
+    }
+
+    public static Task<Void> clearDeviceBinding(@NonNull String deviceId) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+        db.collection("users")
+                .whereEqualTo("deviceId", deviceId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        doc.getReference().update("deviceId", null);
+                    }
+                    tcs.setResult(null);
+                })
+                .addOnFailureListener(tcs::setException);
+        return tcs.getTask();
+    }
+
     private static com.google.firebase.firestore.CollectionReference eventImages(String eventId) {
         return db.collection("events").document(eventId).collection("images");
     }
@@ -124,5 +191,16 @@ public final class OrganizerDb {
             entries.add(WaitingListEntry.fromSnapshot(doc));
         }
         return entries;
+    }
+
+    private static List<Event> mapEvents(@Nullable QuerySnapshot snapshot) {
+        List<Event> events = new ArrayList<>();
+        if (snapshot == null) {
+            return events;
+        }
+        for (DocumentSnapshot doc : snapshot.getDocuments()) {
+            events.add(Event.fromSnapshot(doc));
+        }
+        return events;
     }
 }

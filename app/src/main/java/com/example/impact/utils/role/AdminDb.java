@@ -107,4 +107,19 @@ public final class AdminDb {
                 .addOnFailureListener(tcs::setException);
         return tcs.getTask();
     }
+
+    public static Task<Void> clearDeviceBinding(@NonNull String deviceId) {
+        TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+        db.collection("users")
+                .whereEqualTo("deviceId", deviceId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        doc.getReference().update("deviceId", null);
+                    }
+                    tcs.setResult(null);
+                })
+                .addOnFailureListener(tcs::setException);
+        return tcs.getTask();
+    }
 }

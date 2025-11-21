@@ -21,8 +21,8 @@ import com.example.impact.model.Event;
 import com.example.impact.model.Organizer;
 import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
+import com.example.impact.utils.role.OrganizerDb;
 import com.example.impact.view.adapter.EventAdapter;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.List;
@@ -84,30 +84,12 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         adapter = new EventAdapter(this, Organizer.ROLE_KEY);
         rv.setAdapter(adapter);
 
-        FirebaseFirestore db = AppSession.db();
-
-        // Step 1: verify that this email belongs to an organizer
-        db.collection("users")
-                .whereEqualTo("email", organizerEmail)
-                .whereEqualTo("role", "organizer")
-                .limit(1)
-                .get()
-                .addOnSuccessListener(users -> {
-                    if (!users.isEmpty()) {
-                        // Step 2: load events for this organizer
-                        reg = db.collection("events")
-                                .whereEqualTo("organizerEmail", organizerEmail)
-                                .addSnapshotListener((snap, err) -> {
-                                    if (err != null || snap == null) return;
-                                    List<Event> events = controller.mapEvents(snap);
-                                    adapter.setEvents(events);
-                                });
-                    } else {
-                        Toast.makeText(requireContext(), "Not an organizer account", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(requireContext(), "Error verifying organizer", Toast.LENGTH_SHORT).show());
+        reg = OrganizerDb.listenToEventsByEmail(organizerEmail,
+                (snap, err) -> {
+                    if (err != null || snap == null) return;
+                    List<Event> events = controller.mapEvents(snap);
+                    adapter.setEvents(events);
+                });
 
         return v;
     }

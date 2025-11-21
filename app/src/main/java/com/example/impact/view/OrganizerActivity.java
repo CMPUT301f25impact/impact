@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.impact.R;
 import com.example.impact.utils.AppSession;
+import com.example.impact.utils.role.OrganizerDb;
 import com.example.impact.view.adapter.OrganizerPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -84,14 +85,8 @@ public class OrganizerActivity extends AppCompatActivity {
             return;
         }
 
-        AppSession.db().collection("users")
-                .whereEqualTo("deviceId", deviceId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        queryDocumentSnapshots.forEach(documentSnapshot ->
-                                documentSnapshot.getReference().update("deviceId", null));
-                    }
+        OrganizerDb.clearDeviceBinding(deviceId)
+                .addOnSuccessListener(unused -> {
                     Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show();
                     navigateToLogin();
                 })

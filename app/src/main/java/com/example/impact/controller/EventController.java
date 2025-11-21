@@ -5,41 +5,26 @@ import androidx.annotation.Nullable;
 
 import com.example.impact.model.Event;
 import com.example.impact.utils.AppSession;
+import com.example.impact.utils.role.AdminDb;
+import com.example.impact.utils.role.EntrantDb;
+import com.example.impact.utils.role.OrganizerDb;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles event retrieval and filtering logic between Firestore and the UI.
  */
 public class EventController {
-    private static final String COLLECTION_EVENTS = "events";
-
-    private final FirebaseFirestore firestore;
-
-    /**
-     * Builds a controller backed by the shared Firestore instance.
-     */
-    public EventController() {
-        this(AppSession.db());
-    }
-
-    /**
-     * Builds a controller with an injected Firestore instance (useful for tests).
-     *
-     * @param firestore Firestore dependency
-     */
-    public EventController(@NonNull FirebaseFirestore firestore) {
-        this.firestore = firestore;
-    }
 
     /**
      * Loads all available events.
@@ -49,14 +34,13 @@ public class EventController {
      */
     public void fetchAvailableEvents(@Nullable OnSuccessListener<List<Event>> successListener,
                                      @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .get()
-                .addOnSuccessListener(snapshot -> dispatchEvents(successListener, snapshot))
-                .addOnFailureListener(error -> {
-                    if (failureListener != null) {
-                        failureListener.onFailure(error);
-                    }
-                });
+        Task<List<Event>> task;
+        if ("admin".equals(AppSession.getRole())) {
+            task = AdminDb.listAllEvents();
+        } else {
+            task = EntrantDb.listAllEvents();
+        }
+        attach(task, successListener, failureListener);
     }
 
     /**
@@ -73,29 +57,8 @@ public class EventController {
                                     @Nullable Date endDate,
                                     @Nullable OnSuccessListener<List<Event>> successListener,
                                     @Nullable OnFailureListener failureListener) {
-        Query query = firestore.collection(COLLECTION_EVENTS);
-
-        if (startDate != null && endDate != null) {
-            query = query
-                    .whereGreaterThanOrEqualTo("startDate", startDate)
-                    .whereLessThanOrEqualTo("startDate", endDate);
-        } else if (startDate != null) {
-            query = query.whereGreaterThanOrEqualTo("startDate", startDate);
-        } else if (endDate != null) {
-            query = query.whereLessThanOrEqualTo("startDate", endDate);
-        }
-
-        if (tags != null && !tags.isEmpty()) {
-            query = query.whereArrayContainsAny("tags", tags);
-        }
-
-        query.get()
-                .addOnSuccessListener(snapshot -> dispatchEvents(successListener, snapshot))
-                .addOnFailureListener(error -> {
-                    if (failureListener != null) {
-                        failureListener.onFailure(error);
-                    }
-                });
+        Task<List<Event>> task = EntrantDb.listFilteredEvents(tags, startDate, endDate);
+        attach(task, successListener, failureListener);
     }
 
     /**
@@ -105,17 +68,11 @@ public class EventController {
      * @param success     invoked with the organizer's events
      * @param failure     invoked when the read fails
      */
-    public void fetchEventsByOrganizer(@NonNull String organizerId,
+    public void fetchEventsByOrganizer(@NonNull String organizerEmail,
                                        @Nullable OnSuccessListener<List<Event>> success,
                                        @Nullable OnFailureListener failure) {
-        firestore.collection(COLLECTION_EVENTS)
-                .whereEqualTo("organizerId", organizerId)
-                .get()
-                .addOnSuccessListener(snap -> {
-                    List<Event> events = mapEvents(snap);
-                    if (success != null) success.onSuccess(events);
-                })
-                .addOnFailureListener(e -> { if (failure != null) failure.onFailure(e); });
+        Task<List<Event>> task = OrganizerDb.fetchEventsByEmail(organizerEmail);
+        attach(task, success, failure);
     }
 
     /**
@@ -129,9 +86,7 @@ public class EventController {
             @NonNull String email,
             @NonNull EventListener<QuerySnapshot> listener) {
 
-        return firestore.collection("events")
-                .whereEqualTo("organizerEmail", email)
-                .addSnapshotListener(listener);
+        return OrganizerDb.listenToEventsByEmail(email, listener);
     }
 
 
@@ -147,14 +102,8 @@ public class EventController {
     public void createEvent(@NonNull Event event,
                             @Nullable OnSuccessListener<String> successListener,
                             @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .add(event)
-                .addOnSuccessListener(ref -> {
-                    if (successListener != null) successListener.onSuccess(ref.getId());
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
+        Task<String> task = OrganizerDb.createEvent(event);
+        attach(task, successListener, failureListener);
     }
 
     /**
@@ -164,15 +113,10 @@ public class EventController {
                                 @NonNull String posterImageId,
                                 @Nullable OnSuccessListener<Void> successListener,
                                 @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .document(eventId)
-                .update("posterUrl", posterImageId)
-                .addOnSuccessListener(v -> {
-                    if (successListener != null) successListener.onSuccess(v);
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("posterUrl", posterImageId);
+        Task<Void> task = OrganizerDb.updateEvent(eventId, updates);
+        attach(task, successListener, failureListener);
     }
 
     /**
@@ -187,15 +131,10 @@ public class EventController {
                                 @NonNull String payload,
                                 @Nullable OnSuccessListener<Void> successListener,
                                 @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .document(eventId)
-                .update("qrPayload", payload)
-                .addOnSuccessListener(v -> {
-                    if (successListener != null) successListener.onSuccess(v);
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("qrPayload", payload);
+        Task<Void> task = OrganizerDb.updateEvent(eventId, updates);
+        attach(task, successListener, failureListener);
     }
 
     /**
@@ -207,33 +146,15 @@ public class EventController {
     public void deleteEvent(@NonNull String eventId,
                             @Nullable OnSuccessListener<String> successListener,
                             @Nullable OnFailureListener failureListener) {
-        firestore.collection(COLLECTION_EVENTS)
-                .document(eventId)
-                .delete()
-                .addOnSuccessListener(v -> {
-                    if (successListener != null) successListener.onSuccess(eventId);
-                })
-                .addOnFailureListener(err -> {
-                    if (failureListener != null) failureListener.onFailure(err);
-                });
-    }
-
-
-    /**
-     * Converts a snapshot to models and forwards them to the optional listener.
-     *
-     * @param successListener optional callback for the mapped events
-     * @param snapshot        Firestore query result
-     * @return mapped list (never {@code null})
-     */
-    List<Event> dispatchEvents(@Nullable OnSuccessListener<List<Event>> successListener,
-                               QuerySnapshot snapshot) {
-        List<Event> events = mapEvents(snapshot);
+        Task<Void> task = AdminDb.deleteEvent(eventId);
         if (successListener != null) {
-            successListener.onSuccess(events);
+            task.addOnSuccessListener(unused -> successListener.onSuccess(eventId));
         }
-        return events;
+        if (failureListener != null) {
+            task.addOnFailureListener(failureListener);
+        }
     }
+
 
     /**
      * Maps Firestore documents into {@link Event} instances.
@@ -248,6 +169,17 @@ public class EventController {
         }
         snapshot.getDocuments().forEach(document -> events.add(Event.fromSnapshot(document)));
         return events;
+    }
+
+    private <T> void attach(Task<T> task,
+                            @Nullable OnSuccessListener<T> successListener,
+                            @Nullable OnFailureListener failureListener) {
+        if (successListener != null) {
+            task.addOnSuccessListener(successListener);
+        }
+        if (failureListener != null) {
+            task.addOnFailureListener(failureListener);
+        }
     }
 
 }

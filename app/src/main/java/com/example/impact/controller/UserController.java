@@ -10,13 +10,14 @@ import com.example.impact.model.Organizer;
 import com.example.impact.model.User;
 import com.example.impact.model.WaitingListEntry;
 import com.example.impact.utils.AppSession;
+import com.example.impact.utils.role.AdminDb;
+import com.example.impact.utils.role.EntrantDb;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,26 +28,16 @@ import java.util.Map;
  * Coordinates Firestore persistence for user profile information.
  */
 public class UserController {
-    private static final String COLLECTION_USERS = "users";
-    private static final String COLLECTION_GROUP_WAITING_LIST_ENTRANTS = "waitingList";
-
-    private final FirebaseFirestore firestore;
 
     /**
      * Builds a controller using the shared Firestore instance.
      */
-    public UserController() {
-        this(AppSession.db());
-    }
+    public UserController() { }
 
     /**
-     * Builds a controller with an injected Firestore instance to ease testing.
-     *
-     * @param firestore Firestore reference, must not be {@code null}
+     * Legacy constructor retained for unit tests; Firestore is unused.
      */
-    public UserController(@NonNull FirebaseFirestore firestore) {
-        this.firestore = firestore;
-    }
+    public UserController(@NonNull FirebaseFirestore unused) { }
 
     /**
      * Persists the provided user profile to Firestore.
@@ -60,12 +51,7 @@ public class UserController {
                                        @Nullable OnSuccessListener<Void> successListener,
                                        @Nullable OnFailureListener failureListener) {
         validateUser(user);
-        Map<String, Object> data = buildUserData(user);
-
-        Task<Void> task = firestore.collection(COLLECTION_USERS)
-                .document(user.getId())
-                .set(data);
-        attachListeners(task, successListener, failureListener);
+        attachListeners(EntrantDb.saveProfile(user), successListener, failureListener);
     }
 
     /**
@@ -80,12 +66,7 @@ public class UserController {
                               @Nullable OnSuccessListener<Void> successListener,
                               @Nullable OnFailureListener failureListener) {
         validateUser(user);
-        Map<String, Object> data = buildUserData(user);
-
-        Task<Void> task = firestore.collection(COLLECTION_USERS)
-                .document(user.getId())
-                .set(data, SetOptions.merge());
-        attachListeners(task, successListener, failureListener);
+        attachListeners(EntrantDb.updateProfile(user), successListener, failureListener);
     }
 
     /**
@@ -98,16 +79,8 @@ public class UserController {
     public void fetchProfile(@NonNull String userId,
                              @Nullable OnSuccessListener<User> successListener,
                              @Nullable OnFailureListener failureListener) {
-        Task<DocumentSnapshot> task = firestore.collection(COLLECTION_USERS)
-                .document(userId)
-                .get();
-
-        if (successListener != null) {
-            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapSnapshotToUser(snapshot)));
-        }
-        if (failureListener != null) {
-            task.addOnFailureListener(failureListener);
-        }
+        Task<User> task = EntrantDb.fetchProfile(userId);
+        attachListeners(task, successListener, failureListener);
     }
 
     /**
@@ -120,9 +93,12 @@ public class UserController {
     public void deleteProfile(@NonNull String userId,
                               @Nullable OnSuccessListener<Void> successListener,
                               @Nullable OnFailureListener failureListener) {
-        Task<Void> task = firestore.collection(COLLECTION_USERS)
-                .document(userId)
-                .delete();
+        Task<Void> task;
+        if ("admin".equals(AppSession.getRole())) {
+            task = AdminDb.deleteUser(userId);
+        } else {
+            task = EntrantDb.deleteProfile(userId);
+        }
         attachListeners(task, successListener, failureListener);
     }
 
@@ -137,12 +113,20 @@ public class UserController {
             List<String> roles,
             @Nullable OnSuccessListener<List<User>> successListener,
                                  @Nullable OnFailureListener failureListener) {
-        Task<QuerySnapshot> task = firestore.collection(COLLECTION_USERS)
-                .whereIn("role", roles)
-                .get();
-
+        Task<List<User>> task = AdminDb.listAllProfiles();
         if (successListener != null) {
-            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapUsers(snapshot)));
+            task.addOnSuccessListener(users -> {
+                List<User> filtered = users;
+                if (roles != null && !roles.isEmpty() && users != null) {
+                    filtered = new ArrayList<>();
+                    for (User user : users) {
+                        if (roles.contains(user.getRole())) {
+                            filtered.add(user);
+                        }
+                    }
+                }
+                successListener.onSuccess(filtered);
+            });
         }
         if (failureListener != null) {
             task.addOnFailureListener(failureListener);
@@ -159,12 +143,9 @@ public class UserController {
     public void getEntrantHistory(@NonNull String entrantId,
                                   @Nullable OnSuccessListener<List<EntrantHistoryItem>> successListener,
                                   @Nullable OnFailureListener failureListener) {
-        Task<QuerySnapshot> task = firestore.collectionGroup(COLLECTION_GROUP_WAITING_LIST_ENTRANTS)
-                .whereEqualTo("entrantId", entrantId)
-                .get();
-
+        Task<List<WaitingListEntry>> task = EntrantDb.getEventHistory(entrantId);
         if (successListener != null) {
-            task.addOnSuccessListener(snapshot -> successListener.onSuccess(mapHistory(snapshot)));
+            task.addOnSuccessListener(entries -> successListener.onSuccess(mapHistory(entries)));
         }
         if (failureListener != null) {
             task.addOnFailureListener(failureListener);
@@ -198,9 +179,18 @@ public class UserController {
      * @return sorted history items
      */
     List<EntrantHistoryItem> mapHistory(QuerySnapshot snapshot) {
+        List<WaitingListEntry> entries = new ArrayList<>();
+        if (snapshot != null) {
+            for (DocumentSnapshot document : snapshot.getDocuments()) {
+                entries.add(WaitingListEntry.fromSnapshot(document));
+            }
+        }
+        return mapHistory(entries);
+    }
+
+    List<EntrantHistoryItem> mapHistory(List<WaitingListEntry> entries) {
         List<EntrantHistoryItem> history = new ArrayList<>();
-        for (DocumentSnapshot document : snapshot.getDocuments()) {
-            WaitingListEntry entry = WaitingListEntry.fromSnapshot(document);
+        for (WaitingListEntry entry : entries) {
             history.add(new EntrantHistoryItem(
                     entry.getEventId(),
                     entry.getEventName(),
@@ -309,8 +299,8 @@ public class UserController {
      * @param successListener  optional success callback
      * @param failureListener  optional failure callback
      */
-    private void attachListeners(Task<Void> task,
-                                 @Nullable OnSuccessListener<Void> successListener,
+    private <T> void attachListeners(Task<T> task,
+                                 @Nullable OnSuccessListener<T> successListener,
                                  @Nullable OnFailureListener failureListener) {
         if (successListener != null) {
             task.addOnSuccessListener(successListener);

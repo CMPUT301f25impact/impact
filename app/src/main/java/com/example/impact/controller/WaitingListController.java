@@ -4,28 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.impact.model.WaitingListEntry;
-import com.example.impact.utils.AppSession;
 import com.example.impact.utils.role.EntrantDb;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Handles operations for joining or leaving event waiting lists.
  */
 public class WaitingListController {
-
-    private static final String COLLECTION_EVENTS = "events";
-    private static final String SUB_COLLECTION_WAITING_LIST = "waitingList";
-    private static final String SUB_COLLECTION_CHOSEN = "chosen";
-    private static final String SUB_COLLECTION_CANCELLED = "cancelled";
 
     public WaitingListController() { }
 
@@ -83,39 +71,6 @@ public class WaitingListController {
                                       @Nullable OnFailureListener failureListener) {
         Task<WaitingListEntry> task = EntrantDb.fetchWaitingListEntry(eventId, entrantId);
         attachListeners(task, successListener, failureListener);
-    }
-
-    /**
-     * Converts a document snapshot into a {@link WaitingListEntry}.
-     *
-     * @param snapshot Firestore document snapshot
-     * @return mapped entry or {@code null} if not found
-     */
-    WaitingListEntry mapSnapshot(DocumentSnapshot snapshot) {
-        if (snapshot == null || !snapshot.exists()) {
-            return null;
-        }
-        return WaitingListEntry.fromSnapshot(snapshot);
-    }
-
-    /**
-     * Builds the Firestore payload for a waiting-list entry.
-     *
-     * @param eventId   associated event id
-     * @param eventName associated event name
-     * @param entrantId entrant id stored inside the subcollection
-     * @return map ready to persist
-     */
-    Map<String, Object> buildWaitingListData(String eventId,
-                                             String eventName,
-                                             String entrantId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("eventId", eventId);
-        data.put("eventName", eventName);
-        data.put("entrantId", entrantId);
-        data.put("status", "pending");
-        data.put("timestamp", FieldValue.serverTimestamp());
-        return data;
     }
 
     /**

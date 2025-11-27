@@ -36,6 +36,7 @@ public class OrganizerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer);
+        AppSession.setStartupIntent(getIntent());
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.organizerToolbar);
@@ -46,7 +47,7 @@ public class OrganizerActivity extends AppCompatActivity {
 
         // ViewPager + Tabs
         viewPager = findViewById(R.id.organizerViewPager);
-        String organizerEmail = getIntent().getStringExtra("extra_user_email");
+        String organizerEmail = AppSession.getEmail();
         viewPager.setAdapter(new OrganizerPagerAdapter(this, organizerEmail));
 
         TabLayout tabLayout = findViewById(R.id.organizerTabLayout);

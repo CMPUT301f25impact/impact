@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.impact.R;
-import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -30,12 +29,9 @@ public class EntrantActivity extends AppCompatActivity implements EntrantProfile
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
+        AppSession.setStartupIntent(getIntent());
 
-        User user = AppSession.getUser();
-        entrantId = user != null ? user.getId() : null;
-        if (TextUtils.isEmpty(entrantId)) {
-            entrantId = getIntent().getStringExtra(LoginActivity.EXTRA_USER_ID);
-        }
+        entrantId = AppSession.getUserId();
         if (TextUtils.isEmpty(entrantId)) {
             entrantId = PLACEHOLDER_ENTRANT_ID;
         }

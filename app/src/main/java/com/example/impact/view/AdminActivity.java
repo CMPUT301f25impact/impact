@@ -37,10 +37,8 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
+        AppSession.setStartupIntent(getIntent());
         adminId = AppSession.getUserId();
-        if (adminId == null) {
-            adminId = getIntent().getStringExtra(LoginActivity.EXTRA_USER_ID);
-        }
 
         MaterialToolbar toolbar = findViewById(R.id.adminToolbar);
         tabLayout = findViewById(R.id.adminDashboardTabs);

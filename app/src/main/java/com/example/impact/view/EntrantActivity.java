@@ -2,16 +2,18 @@ package com.example.impact.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.impact.R;
-import com.example.impact.utils.SessionManager;
+import com.example.impact.utils.AppSession;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,19 +24,17 @@ public class EntrantActivity extends AppCompatActivity implements EntrantProfile
     private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";
 
     private String entrantId;
-    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entrant);
+        AppSession.setStartupIntent(getIntent());
 
-        entrantId = getIntent().getStringExtra(LoginActivity.EXTRA_USER_ID);
+        entrantId = AppSession.getUserId();
         if (TextUtils.isEmpty(entrantId)) {
             entrantId = PLACEHOLDER_ENTRANT_ID;
         }
-
-        sessionManager = new SessionManager(this);
 
         MaterialToolbar toolbar = findViewById(R.id.entrantToolbar);
         BottomNavigationView bottomNav = findViewById(R.id.entrant_bottom_nav_view);
@@ -114,12 +114,35 @@ public class EntrantActivity extends AppCompatActivity implements EntrantProfile
      * Clears session data then routes back to the login screen.
      */
     private void performLogout() {
-        sessionManager.clearSession(() -> {
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
-        });
+        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        if (TextUtils.isEmpty(deviceId)) {
+            navigateToLogin();
+            return;
+        }
+
+        AppSession.db().collection("users")
+                .whereEqualTo("deviceId", deviceId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        queryDocumentSnapshots.forEach(documentSnapshot ->
+                                documentSnapshot.getReference().update("deviceId", null));
+                    }
+                    Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show();
+                    navigateToLogin();
+                })
+                .addOnFailureListener(error -> {
+                    Toast.makeText(this, R.string.logout_error, Toast.LENGTH_SHORT).show();
+                    navigateToLogin();
+                });
+    }
+
+    private void navigateToLogin() {
+        AppSession.initialize(null);
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     /**

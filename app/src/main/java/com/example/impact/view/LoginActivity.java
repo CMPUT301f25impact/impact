@@ -11,11 +11,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.impact.R;
-import com.example.impact.utils.FirebaseUtils;
+import com.example.impact.controller.UserController;
+import com.example.impact.model.User;
+import com.example.impact.utils.AppSession;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,14 +35,13 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView goToSignup;
 
-    private FirebaseFirestore firestore;
+    private final FirebaseFirestore firestore = AppSession.db();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        firestore = FirebaseUtils.getFirestore();
+        AppSession.setStartupIntent(getIntent());
 
         emailInput = findViewById(R.id.editTextLoginEmail);
         passwordInput = findViewById(R.id.editTextLoginPassword);
@@ -95,10 +97,12 @@ public class LoginActivity extends AppCompatActivity {
      * Updates device bindings and routes users to their dashboards.
      */
     private void handleSuccessfulLogin(DocumentSnapshot userDoc) {
-        String role = userDoc.getString("role");
-        if (role == null) {
-            role = "entrant";
+        User user = UserController.mapSnapshotToUser(userDoc);
+        if (user == null) {
+            Toast.makeText(this, R.string.login_error_generic, Toast.LENGTH_SHORT).show();
+            return;
         }
+        String role = user.getRole();
         String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         if (!TextUtils.isEmpty(deviceId)) {
             String currentDeviceId = userDoc.getString("deviceId");
@@ -107,14 +111,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
+        AppSession.initialize(user);
         Toast.makeText(this, R.string.login_success_message, Toast.LENGTH_SHORT).show();
-        navigateToRole(role, userDoc.getId(), userDoc.getString("email"));
+        navigateToRole(role, user);
     }
 
     /**
      * Starts the activity that matches the provided role.
      */
-    private void navigateToRole(String role, String userId, @Nullable String email) {
+    private void navigateToRole(@Nullable String role, @NonNull User user) {
         Intent intent;
         switch (role != null ? role : "") {
             case "admin":
@@ -127,9 +132,9 @@ public class LoginActivity extends AppCompatActivity {
                 intent = new Intent(this, EntrantActivity.class);
                 break;
         }
-        intent.putExtra(EXTRA_USER_ID, userId);
-        if (email != null) {
-            intent.putExtra("extra_user_email", email);
+        intent.putExtra(EXTRA_USER_ID, user.getId());
+        if (user.getEmail() != null) {
+            intent.putExtra("extra_user_email", user.getEmail());
         }
         startActivity(intent);
         finish();

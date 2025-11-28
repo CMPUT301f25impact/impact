@@ -9,7 +9,7 @@ import com.example.impact.model.EntrantHistoryItem;
 import com.example.impact.model.Organizer;
 import com.example.impact.model.User;
 import com.example.impact.model.WaitingListEntry;
-import com.example.impact.utils.FirebaseUtils;
+import com.example.impact.utils.AppSession;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -36,7 +36,7 @@ public class UserController {
      * Builds a controller using the shared Firestore instance.
      */
     public UserController() {
-        this(FirebaseUtils.getFirestore());
+        this(AppSession.db());
     }
 
     /**
@@ -229,7 +229,7 @@ public class UserController {
      * @param snapshot Firestore document snapshot
      * @return entrant instance or {@code null} when snapshot missing
      */
-    static User mapSnapshotToUser(@Nullable DocumentSnapshot snapshot) {
+    public static User mapSnapshotToUser(@Nullable DocumentSnapshot snapshot) {
         if (snapshot == null || !snapshot.exists()) {
             return null;
         }

@@ -2,6 +2,7 @@ package com.example.impact.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.model.Event;
 import com.example.impact.model.Organizer;
+import com.example.impact.model.User;
+import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.EventAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -66,6 +69,12 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         if (getArguments() != null) {
             organizerEmail = getArguments().getString("organizerEmail");
         }
+        if (TextUtils.isEmpty(organizerEmail)) {
+            User currentUser = AppSession.getUser();
+            if (currentUser != null) {
+                organizerEmail = currentUser.getEmail();
+            }
+        }
 
         if (organizerEmail == null) {
             Toast.makeText(requireContext(), "Organizer email missing", Toast.LENGTH_SHORT).show();
@@ -75,7 +84,7 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         adapter = new EventAdapter(this, Organizer.ROLE_KEY);
         rv.setAdapter(adapter);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = AppSession.db();
 
         // Step 1: verify that this email belongs to an organizer
         db.collection("users")

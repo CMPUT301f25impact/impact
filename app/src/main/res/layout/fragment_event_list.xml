@@ -35,6 +35,13 @@
         android:text="@string/event_list_empty_state"
         android:visibility="gone" />
 
+    <Button
+        android:id="@+id/buttonScanQr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/event_list_scan_qr_button" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewEvents"
         android:layout_width="match_parent"

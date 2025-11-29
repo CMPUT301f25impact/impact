@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.impact.R;
@@ -29,6 +30,7 @@ public class EntrantProfileFragment extends Fragment {
     private EditText nameInput;
     private EditText emailInput;
     private EditText phoneInput;
+    private SwitchCompat notificationToggle;
     private Button saveButton;
     private Button updateButton;
     private Button deleteButton;
@@ -78,6 +80,12 @@ public class EntrantProfileFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_entrant_profile, container, false);
     }
 
+    /**
+     * Initializes the screen widgets and kicks off the profile load.
+     *
+     * @param view root view inflated in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * @param savedInstanceState previous state bundle, may be {@code null}
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -91,6 +99,7 @@ public class EntrantProfileFragment extends Fragment {
         nameInput = view.findViewById(R.id.editTextEntrantName);
         emailInput = view.findViewById(R.id.editTextEntrantEmail);
         phoneInput = view.findViewById(R.id.editTextEntrantPhone);
+        notificationToggle = view.findViewById(R.id.switchEntrantNotifications);
         saveButton = view.findViewById(R.id.buttonSaveProfile);
         updateButton = view.findViewById(R.id.buttonUpdateProfile);
         deleteButton = view.findViewById(R.id.buttonDeleteProfile);
@@ -114,7 +123,7 @@ public class EntrantProfileFragment extends Fragment {
     }
 
     /**
-     * Loads any previously saved profile and toggles buttons accordingly.
+     * Loads any previously saved profile and toggles buttons accordingly, including the notification preference.
      */
     private void loadProfile() {
         userController.fetchProfile(entrantId, entrant -> {
@@ -123,8 +132,14 @@ public class EntrantProfileFragment extends Fragment {
                 nameInput.setText(entrant.getName());
                 emailInput.setText(entrant.getEmail());
                 phoneInput.setText(entrant.getPhone());
+                if (notificationToggle != null) {
+                    notificationToggle.setChecked(entrant.isNotificationsEnabled());
+                }
             } else {
                 hasExistingProfile = false;
+                if (notificationToggle != null) {
+                    notificationToggle.setChecked(true);
+                }
             }
             setButtonsEnabled(hasExistingProfile);
         }, error -> Toast.makeText(requireContext(), R.string.entrant_profile_error_load, Toast.LENGTH_SHORT).show());
@@ -189,18 +204,22 @@ public class EntrantProfileFragment extends Fragment {
     }
 
     /**
-     * Creates an in-memory entrant model from the text fields.
+     * Creates an in-memory entrant model from the text fields and notification toggle.
+     *
+     * @return entrant populated with current UI values
      */
     private Entrant buildEntrantFromInputs() {
         String phoneValue = phoneInput.getText().toString().trim();
         phoneValue = phoneValue.isEmpty() ? null : phoneValue;
 
-        return new Entrant(
+        Entrant entrant = new Entrant(
                 entrantId,
                 nameInput.getText().toString().trim(),
                 emailInput.getText().toString().trim(),
                 phoneValue
         );
+        entrant.setNotificationsEnabled(notificationToggle != null && notificationToggle.isChecked());
+        return entrant;
     }
 
     /**

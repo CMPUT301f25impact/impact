@@ -11,6 +11,7 @@ public abstract class User implements Serializable {
     private String name;
     @Nullable
     private String phone;
+    private boolean notificationsEnabled = true;
 
     public User() {
         // Default constructor for Firestore
@@ -62,6 +63,24 @@ public abstract class User implements Serializable {
 
     public void setPhone(@Nullable String phone) {
         this.phone = phone;
+    }
+
+    /**
+     * Indicates whether the user wishes to receive notifications.
+     *
+     * @return {@code true} when notifications are enabled
+     */
+    public boolean isNotificationsEnabled() {
+        return notificationsEnabled;
+    }
+
+    /**
+     * Sets the notification preference for the user profile.
+     *
+     * @param notificationsEnabled {@code true} to opt in to notifications
+     */
+    public void setNotificationsEnabled(boolean notificationsEnabled) {
+        this.notificationsEnabled = notificationsEnabled;
     }
 
     public abstract String getRole();

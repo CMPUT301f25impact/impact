@@ -98,7 +98,8 @@ public class WaitingListController {
     }
 
     /**
-     * Records a decline for a selected entrant and promotes the next eligible entrant.
+     * Records a decline for a selected entrant, marking their entry as {@code "not selected"},
+     * and promotes the next eligible entrant when possible.
      *
      * @param eventId         event identifier
      * @param entrantId       entrant identifier

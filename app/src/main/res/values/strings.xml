@@ -35,12 +35,15 @@
     <string name="event_details_join_button">Join Waiting List</string>
     <string name="event_details_leave_button">Leave Waiting List</string>
     <string name="event_details_accept_button">Accept Invitation</string>
+    <string name="event_details_decline_button">Decline Invitation</string>
     <string name="event_details_join_success">Joined waiting list</string>
     <string name="event_details_leave_success">Left waiting list</string>
     <string name="event_details_join_error">Could not join waiting list</string>
     <string name="event_details_leave_error">Could not leave waiting list</string>
     <string name="event_details_accept_success">Invitation accepted</string>
     <string name="event_details_accept_error">Unable to accept invitation</string>
+    <string name="event_details_decline_success">Invitation declined</string>
+    <string name="event_details_decline_error">Unable to decline invitation</string>
     <string name="event_details_error_missing_data">Missing event information</string>
     <string name="event_details_status_label">Status: %1$s</string>
     <string name="event_status_selected">selected</string>

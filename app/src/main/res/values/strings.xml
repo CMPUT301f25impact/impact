@@ -44,6 +44,7 @@
     <string name="event_details_accept_error">Unable to accept invitation</string>
     <string name="event_details_decline_success">Invitation declined</string>
     <string name="event_details_decline_error">Unable to decline invitation</string>
+    <string name="event_details_waiting_list_count">Total entrants: %1$d</string>
     <string name="event_details_error_missing_data">Missing event information</string>
     <string name="event_details_status_label">Status: %1$s</string>
     <string name="event_status_selected">selected</string>

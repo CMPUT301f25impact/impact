@@ -179,6 +179,32 @@ public class WaitingListController {
     }
 
     /**
+     * Retrieves the number of entrants currently on the waiting list for the event.
+     *
+     * @param eventId         event identifier
+     * @param successListener invoked with the count (never {@code null})
+     * @param failureListener invoked when the read fails
+     */
+    public void fetchWaitingListCount(@NonNull String eventId,
+                                      @Nullable OnSuccessListener<Integer> successListener,
+                                      @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_WAITING_LISTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_ENTRANTS)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (successListener != null) {
+                        successListener.onSuccess(snapshot != null ? snapshot.size() : 0);
+                    }
+                })
+                .addOnFailureListener(error -> {
+                    if (failureListener != null) {
+                        failureListener.onFailure(error);
+                    }
+                });
+    }
+
+    /**
      * Converts a document snapshot into a {@link WaitingListEntry}.
      *
      * @param snapshot Firestore document snapshot

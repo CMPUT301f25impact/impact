@@ -39,6 +39,7 @@ public class EventDetailsFragment extends Fragment {
     private Button leaveButton;
     private Button acceptButton;
     private Button declineButton;
+    private TextView countText;
     private TextView statusText;
     private String currentStatus;
 
@@ -87,6 +88,7 @@ public class EventDetailsFragment extends Fragment {
         TextView dateText = view.findViewById(R.id.textViewEventDetailDate);
         TextView descriptionText = view.findViewById(R.id.textViewEventDetailDescription);
         statusText = view.findViewById(R.id.textViewEventDetailStatus);
+        countText = view.findViewById(R.id.textViewEventDetailCount);
         joinButton = view.findViewById(R.id.buttonJoinWaitingList);
         leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
         acceptButton = view.findViewById(R.id.buttonAcceptInvitation);
@@ -104,6 +106,7 @@ public class EventDetailsFragment extends Fragment {
         declineButton.setOnClickListener(v -> declineSelection());
 
         resolveCurrentStatus();
+        loadWaitingListCount();
     }
 
     @Override
@@ -148,6 +151,17 @@ public class EventDetailsFragment extends Fragment {
                 updateStatusLabel();
                 setButtonsForJoinedState(false);
                 updateInvitationButtons();
+            }
+        }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * Loads the current number of entrants on the waiting list.
+     */
+    private void loadWaitingListCount() {
+        waitingListController.fetchWaitingListCount(event.getId(), count -> {
+            if (countText != null) {
+                countText.setText(getString(R.string.event_details_waiting_list_count, count));
             }
         }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }

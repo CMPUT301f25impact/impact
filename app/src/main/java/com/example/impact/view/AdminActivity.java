@@ -66,6 +66,11 @@ public class AdminActivity extends BaseDashboardActivity {
         return getInitialToolbarTitle();
     }
 
+    @Override
+    public int getActivityTitle() {
+        return R.string.admin_dashboard_title;
+    }
+
 //    /**
 //     * Callback for when a user deletes their profile while signed in
 //     */

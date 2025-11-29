@@ -62,6 +62,11 @@ public class EntrantActivity extends BaseDashboardActivity
     }
 
     @Override
+    public int getActivityTitle() {
+        return R.string.entrant_dashboard_title;
+    }
+
+    @Override
     public int getSelectedToolBarTitle(@NonNull int itemId) {
         if (itemId == R.id.entrant_nav_events) {
             return R.string.entrant_nav_events_tab;

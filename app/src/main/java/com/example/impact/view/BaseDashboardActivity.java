@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,8 @@ public abstract class BaseDashboardActivity extends AppCompatActivity {
     protected MaterialToolbar toolbar;
     protected BottomNavigationView bottomNav;
 
+    protected TextView activityTitleView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +40,10 @@ public abstract class BaseDashboardActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.dashboard_toolbar);
         bottomNav = findViewById(R.id.dashboard_bottom_nav_view);
+        activityTitleView = findViewById(R.id.dashboard_activity_title);
 
         setSupportActionBar(toolbar);
+        setupActivityTitle();
         setupToolbar();
         setupBottomNavigation();
 
@@ -50,6 +55,43 @@ public abstract class BaseDashboardActivity extends AppCompatActivity {
                         .replace(R.id.dashboard_fragment_container, initialFragment)
                         .commit();
             }
+        }
+    }
+
+    /**
+     * @return The activity-level title to display above the toolbar, or 0 to hide
+     */
+    protected abstract int getActivityTitle();
+
+    /**
+     * Configure the activity title at the top
+     */
+    private void setupActivityTitle() {
+        int titleResId = getActivityTitle();
+        if (titleResId != 0) {
+            activityTitleView.setText(titleResId);
+            activityTitleView.setVisibility(View.VISIBLE);
+        } else {
+            activityTitleView.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Helper method to update activity title
+     */
+    protected void setActivityTitle(String title) {
+        if (activityTitleView != null) {
+            activityTitleView.setText(title);
+            activityTitleView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Helper method to hide activity title
+     */
+    protected void hideActivityTitle() {
+        if (activityTitleView != null) {
+            activityTitleView.setVisibility(View.GONE);
         }
     }
 

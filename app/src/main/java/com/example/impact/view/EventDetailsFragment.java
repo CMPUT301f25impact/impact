@@ -40,6 +40,7 @@ public class EventDetailsFragment extends Fragment {
     private Button acceptButton;
     private Button declineButton;
     private TextView countText;
+    private TextView criteriaText;
     private TextView statusText;
     private String currentStatus;
 
@@ -89,6 +90,7 @@ public class EventDetailsFragment extends Fragment {
         TextView descriptionText = view.findViewById(R.id.textViewEventDetailDescription);
         statusText = view.findViewById(R.id.textViewEventDetailStatus);
         countText = view.findViewById(R.id.textViewEventDetailCount);
+        criteriaText = view.findViewById(R.id.textViewLotteryCriteria);
         joinButton = view.findViewById(R.id.buttonJoinWaitingList);
         leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
         acceptButton = view.findViewById(R.id.buttonAcceptInvitation);

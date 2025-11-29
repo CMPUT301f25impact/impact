@@ -38,6 +38,7 @@ public class EventDetailsFragment extends Fragment {
     private Button joinButton;
     private Button leaveButton;
     private TextView statusText;
+    private TextView maxEntrantsText;
     private String currentStatus;
 
     /**
@@ -84,6 +85,7 @@ public class EventDetailsFragment extends Fragment {
         TextView nameText = view.findViewById(R.id.textViewEventDetailName);
         TextView dateText = view.findViewById(R.id.textViewEventDetailDate);
         TextView descriptionText = view.findViewById(R.id.textViewEventDetailDescription);
+        maxEntrantsText = view.findViewById(R.id.textViewEventDetailMaxEntrants);
         statusText = view.findViewById(R.id.textViewEventDetailStatus);
         joinButton = view.findViewById(R.id.buttonJoinWaitingList);
         leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
@@ -91,6 +93,7 @@ public class EventDetailsFragment extends Fragment {
         nameText.setText(event.getName());
         dateText.setText(formatDateRange(event));
         descriptionText.setText(event.getDescription());
+        updateMaxEntrantsLabel();
         currentStatus = getString(R.string.event_status_pending);
         updateStatusLabel();
 
@@ -153,7 +156,13 @@ public class EventDetailsFragment extends Fragment {
             updateStatusLabel();
             setButtonsForJoinedState(true);
             Toast.makeText(requireContext(), R.string.event_details_join_success, Toast.LENGTH_SHORT).show();
-        }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
+        }, error -> {
+            if (error != null && WaitingListController.ERROR_WAITING_LIST_LIMIT_REACHED.equals(error.getMessage())) {
+                Toast.makeText(requireContext(), R.string.error_event_limit_reached, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -181,6 +190,15 @@ public class EventDetailsFragment extends Fragment {
      */
     private void updateStatusLabel() {
         statusText.setText(getString(R.string.event_details_status_label, currentStatus));
+    }
+
+    private void updateMaxEntrantsLabel() {
+        if (event.getMaxEntrants() != null) {
+            maxEntrantsText.setVisibility(View.VISIBLE);
+            maxEntrantsText.setText(getString(R.string.event_detail_max_entrants_label, event.getMaxEntrants()));
+        } else if (maxEntrantsText != null) {
+            maxEntrantsText.setVisibility(View.GONE);
+        }
     }
 
     /**

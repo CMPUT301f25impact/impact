@@ -23,6 +23,12 @@
             android:inputType="number"
             android:layout_width="match_parent" android:layout_height="wrap_content"/>
 
+        <EditText
+            android:id="@+id/etMaxEntrants"
+            android:hint="@string/event_field_max_entrants"
+            android:inputType="number"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
         <Button
             android:id="@+id/btnPickStart"
             android:text="Select Registration Start"

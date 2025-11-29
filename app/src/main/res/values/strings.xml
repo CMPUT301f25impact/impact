@@ -37,6 +37,9 @@
     <string name="event_details_leave_success">Left waiting list</string>
     <string name="event_details_join_error">Could not join waiting list</string>
     <string name="event_details_leave_error">Could not leave waiting list</string>
+    <string name="event_field_max_entrants">Waiting list limit (optional)</string>
+    <string name="error_event_limit_reached">Waiting list is full</string>
+    <string name="event_detail_max_entrants_label">Waiting list limit: %1$d</string>
     <string name="event_details_error_missing_data">Missing event information</string>
     <string name="event_details_status_label">Status: %1$s</string>
     <string name="event_status_selected">selected</string>
@@ -49,6 +52,7 @@
     <string name="main_seed_demo_success">Demo events created</string>
     <string name="main_seed_demo_failure">Unable to create demo events</string>
     <string name="organizer_dashboard_title">Organizer Dashboard</string>
+    <string name="organizer_nav_events_tab">Events</string>
     <string name="organizer_nav_create_event_tab">New Event</string>
     <string name="organizer_nav_notifications_tab">Notifications</string>
     <string name="organizer_tools_placeholder">Organizer Tools Page Placeholder</string>

@@ -21,6 +21,8 @@ import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.controller.ImageController;
 import com.example.impact.model.Event;
+import com.example.impact.model.User;
+import com.example.impact.utils.AppSession;
 import com.example.impact.utils.ImageUtil;
 import com.example.impact.utils.QrUtil;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -34,7 +36,7 @@ import java.util.Date;
  */
 public class OrganizerCreateEventFragment extends Fragment {
 
-    private EditText etName, etDesc, etCapacity;
+    private EditText etName, etDesc, etCapacity, etMaxEntrants;
     private Button btnStart, btnEnd, btnCreate, btnUploadPoster;
     private ImageView imgQr;
     private Date startDate, endDate;
@@ -70,6 +72,7 @@ public class OrganizerCreateEventFragment extends Fragment {
         etName = v.findViewById(R.id.etEventName);
         etDesc = v.findViewById(R.id.etEventDescription);
         etCapacity = v.findViewById(R.id.etCapacity);
+        etMaxEntrants = v.findViewById(R.id.etMaxEntrants);
         btnStart = v.findViewById(R.id.btnPickStart);
         btnEnd = v.findViewById(R.id.btnPickEnd);
         imgQr = v.findViewById(R.id.imgQrPreview);
@@ -79,6 +82,13 @@ public class OrganizerCreateEventFragment extends Fragment {
 
         if (getArguments() != null) {
             organizerEmail = getArguments().getString("organizerEmail");
+        }
+
+        if (organizerEmail == null) {
+            User currentUser = AppSession.getUser();
+            if (currentUser != null) {
+                organizerEmail = currentUser.getEmail();
+            }
         }
 
         if (organizerEmail == null) {
@@ -189,6 +199,21 @@ public class OrganizerCreateEventFragment extends Fragment {
             if (!TextUtils.isEmpty(cap)) capacity = Integer.parseInt(cap);
         } catch (NumberFormatException ignored) { }
 
+        Integer maxEntrants = null;
+        try {
+            String limitInput = etMaxEntrants.getText().toString().trim();
+            if (!TextUtils.isEmpty(limitInput)) {
+                maxEntrants = Integer.parseInt(limitInput);
+                if (maxEntrants <= 0) {
+                    toast("Waiting list limit must be positive");
+                    return;
+                }
+            }
+        } catch (NumberFormatException ignored) {
+            toast("Waiting list limit must be positive");
+            return;
+        }
+
         Event e = new Event();
         e.setName(name);
         e.setDescription(etDesc.getText().toString().trim());
@@ -196,6 +221,7 @@ public class OrganizerCreateEventFragment extends Fragment {
         e.setEndDate(endDate);     // US 02.01.04
         e.setOrganizerEmail(organizerEmail);
         e.setCapacity(capacity);
+        e.setMaxEntrants(maxEntrants);
 
         if (uploadedImageId != null) {
             e.setPosterUrl(uploadedImageId);   // ensure Event has a posterUrl field

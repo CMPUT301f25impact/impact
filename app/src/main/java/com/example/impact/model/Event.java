@@ -26,6 +26,8 @@ public class Event implements Serializable {
     private String qrCodeUrl;
     private String organizerEmail;
     private Integer capacity;
+    @Nullable
+    private Integer maxEntrants;
 
     /**
      * Required empty constructor for Firestore deserialization.
@@ -206,6 +208,21 @@ public class Event implements Serializable {
      */
     public void setCapacity(@Nullable Integer capacity) {
         this.capacity = capacity;
+    }
+
+    /**
+     * @return optional waiting list limit
+     */
+    @Nullable
+    public Integer getMaxEntrants() {
+        return maxEntrants;
+    }
+
+    /**
+     * @param maxEntrants optional waiting list limit
+     */
+    public void setMaxEntrants(@Nullable Integer maxEntrants) {
+        this.maxEntrants = maxEntrants;
     }
 
     /**

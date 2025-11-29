@@ -31,6 +31,14 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <TextView
+            android:id="@+id/textViewEventDetailMaxEntrants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <TextView
             android:id="@+id/textViewEventDetailStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -19,8 +19,13 @@ import java.util.Map;
  * Handles operations for joining or leaving event waiting lists.
  */
 public class WaitingListController {
+    static final String COLLECTION_EVENTS = "events";
     private static final String COLLECTION_WAITING_LISTS = "waitingLists";
     private static final String SUB_COLLECTION_ENTRANTS = "entrants";
+    /**
+     * Error code used when the waiting list limit prevents joining.
+     */
+    public static final String ERROR_WAITING_LIST_LIMIT_REACHED = "waiting_list_limit_reached";
 
     private final FirebaseFirestore firestore;
 
@@ -55,15 +60,47 @@ public class WaitingListController {
                                 @Nullable OnSuccessListener<Void> successListener,
                                 @Nullable OnFailureListener failureListener) {
         validateIds(eventId, entrantId);
-
-        Map<String, Object> data = buildWaitingListData(eventId, eventName, entrantId);
-        Task<Void> task = firestore.collection(COLLECTION_WAITING_LISTS)
+        firestore.collection(COLLECTION_EVENTS)
                 .document(eventId)
-                .collection(SUB_COLLECTION_ENTRANTS)
-                .document(entrantId)
-                .set(data);
+                .get()
+                .addOnSuccessListener(eventSnapshot -> {
+                    Long limit = eventSnapshot != null ? eventSnapshot.getLong("maxEntrants") : null;
+                    if (limit == null || limit <= 0) {
+                        writeWaitingListEntry(eventId, eventName, entrantId, successListener, failureListener);
+                        return;
+                    }
+                    final int limitValue = limit.intValue();
 
-        attachListeners(task, successListener, failureListener);
+                    firestore.collection(COLLECTION_WAITING_LISTS)
+                            .document(eventId)
+                            .collection(SUB_COLLECTION_ENTRANTS)
+                            .get()
+                            .addOnSuccessListener(snapshot -> {
+                                boolean alreadyJoined = false;
+                                for (DocumentSnapshot entrantSnapshot : snapshot.getDocuments()) {
+                                    if (entrantId.equals(entrantSnapshot.getId())) {
+                                        alreadyJoined = true;
+                                        break;
+                                    }
+                                }
+
+                                if (alreadyJoined || snapshot.size() < limitValue) {
+                                    writeWaitingListEntry(eventId, eventName, entrantId, successListener, failureListener);
+                                } else if (failureListener != null) {
+                                    failureListener.onFailure(new IllegalStateException(ERROR_WAITING_LIST_LIMIT_REACHED));
+                                }
+                            })
+                            .addOnFailureListener(error -> {
+                                if (failureListener != null) {
+                                    failureListener.onFailure(error);
+                                }
+                            });
+                })
+                .addOnFailureListener(error -> {
+                    if (failureListener != null) {
+                        failureListener.onFailure(error);
+                    }
+                });
     }
 
     /**
@@ -149,6 +186,21 @@ public class WaitingListController {
         data.put("status", "pending");
         data.put("timestamp", FieldValue.serverTimestamp());
         return data;
+    }
+
+    private void writeWaitingListEntry(@NonNull String eventId,
+                                       @NonNull String eventName,
+                                       @NonNull String entrantId,
+                                       @Nullable OnSuccessListener<Void> successListener,
+                                       @Nullable OnFailureListener failureListener) {
+        Map<String, Object> data = buildWaitingListData(eventId, eventName, entrantId);
+        Task<Void> task = firestore.collection(COLLECTION_WAITING_LISTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_ENTRANTS)
+                .document(entrantId)
+                .set(data);
+
+        attachListeners(task, successListener, failureListener);
     }
 
     /**

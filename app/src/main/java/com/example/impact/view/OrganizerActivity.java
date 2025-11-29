@@ -26,12 +26,12 @@ public class OrganizerActivity extends BaseDashboardActivity {
 
     @Override
     protected Fragment getInitialFragment() {
-        return OrganizerEventListFragment.newInstance(organizerId);
+        return OrganizerFragmentFactory.createFragment(R.id.organizer_nav_events, organizerId);
     }
 
     @Override
     protected int getInitialToolbarTitle() {
-        return R.string.admin_nav_events_tab; // This is not a mistake I am just lazy
+        return R.string.organizer_nav_events_tab;
     }
 
     @Override
@@ -41,21 +41,13 @@ public class OrganizerActivity extends BaseDashboardActivity {
 
     @Override
     public Fragment getSelectedFragment(@NonNull int itemId) {
-        if (itemId == R.id.admin_nav_events) {
-            return OrganizerEventListFragment.newInstance(organizerId);
-        } else if (itemId == R.id.organizer_nav_create_event) {
-            return OrganizerCreateEventFragment.newInstance(organizerId);
-        } else if (itemId == R.id.organizer_nav_notifications) {
-//            return OrganizerNotificationsFragment.newInstance(organizerId); // This doesn't exist yet but it will
-            return OrganizerEventListFragment.newInstance(organizerId); // For now just return event view
-        }
-        return null;
+        return OrganizerFragmentFactory.createFragment(itemId, organizerId);
     }
 
     @Override
     public int getSelectedToolBarTitle(@NonNull int itemId) {
-        if (itemId == R.id.admin_nav_events) {
-            return R.string.admin_nav_events_tab; // This is not a mistake I am just lazy
+        if (itemId == R.id.organizer_nav_events) {
+            return R.string.organizer_nav_events_tab;
         } else if (itemId == R.id.organizer_nav_create_event) {
             return R.string.organizer_nav_create_event_tab;
         } else if (itemId == R.id.organizer_nav_notifications) {

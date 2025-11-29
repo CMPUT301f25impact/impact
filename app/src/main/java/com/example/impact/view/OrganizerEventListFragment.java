@@ -1,12 +1,10 @@
 package com.example.impact.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +20,7 @@ import com.example.impact.model.Organizer;
 import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.EventAdapter;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 
@@ -35,7 +34,7 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
 
     private final EventController controller = new EventController();
     private EventAdapter adapter;
-    private String organizerEmail = "";
+    private String organizerId;
     private ListenerRegistration reg;
 
     public static final String EXTRA_ORGANIZER_ID = "organizer_id";
@@ -49,57 +48,57 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         return fragment;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // No need to call reg here — listener starts in onCreateView
-    }
-
     /**
      * Inflates the organizer events list and wires up real-time listeners.
      */
-    @Nullable
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            organizerId = getArguments().getString(EXTRA_ORGANIZER_ID);
+        }
+
+        // Fallback/Session check logic should also be here
+        if (TextUtils.isEmpty(organizerId)) {
+            User currentUser = AppSession.getUser();
+            if (currentUser != null) {
+                organizerId = currentUser.getEmail();
+            }
+        }
+
+        if (organizerId == null) {
+            Toast.makeText(requireContext(), "Organizer ID missing", Toast.LENGTH_SHORT).show();
+            getParentFragmentManager().popBackStack();
+            return;
+        }
+
+        System.out.println(organizerId);
+        adapter = new EventAdapter(this, Organizer.ROLE_KEY);
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_organizer_events, container, false);
 
-        // --- Create Event Button ---
-//        Button btnCreate = v.findViewById(R.id.btnCreateNewEvent);
-//        btnCreate.setOnClickListener(view -> {
-//            if (requireActivity() instanceof OrganizerActivity) {
-//                ((OrganizerActivity) requireActivity()).goToCreateTab();
-//            }
-//        });
-
-        // --- RecyclerView Setup ---
         RecyclerView rv = v.findViewById(R.id.recyclerEvents);
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        if (getArguments() != null) {
-            organizerEmail = getArguments().getString("organizerEmail");
-        }
-        if (TextUtils.isEmpty(organizerEmail)) {
-            User currentUser = AppSession.getUser();
-            if (currentUser != null) {
-                organizerEmail = currentUser.getEmail();
-            }
-        }
-
-        if (organizerEmail == null) {
-            Toast.makeText(requireContext(), "Organizer email missing", Toast.LENGTH_SHORT).show();
-            return v;
-        }
-
-        adapter = new EventAdapter(this, Organizer.ROLE_KEY);
         rv.setAdapter(adapter);
 
+        return v;
+    }
+
+    /**
+     * Loads events and sets ListenerRegistration
+     */
+    private void loadEvents() {
         FirebaseFirestore db = AppSession.db();
 
         // Step 1: verify that this email belongs to an organizer
         db.collection("users")
-                .whereEqualTo("email", organizerEmail)
+                .whereEqualTo(FieldPath.documentId(), organizerId)
                 .whereEqualTo("role", "organizer")
                 .limit(1)
                 .get()
@@ -107,7 +106,7 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
                     if (!users.isEmpty()) {
                         // Step 2: load events for this organizer
                         reg = db.collection("events")
-                                .whereEqualTo("organizerEmail", organizerEmail)
+                                .whereEqualTo("organizerId", organizerId)
                                 .addSnapshotListener((snap, err) -> {
                                     if (err != null || snap == null) return;
                                     List<Event> events = controller.mapEvents(snap);
@@ -119,8 +118,14 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(requireContext(), "Error verifying organizer", Toast.LENGTH_SHORT).show());
+    }
 
-        return v;
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (reg == null && organizerId != null) {
+            loadEvents();
+        }
     }
 
     /**
@@ -140,9 +145,11 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
      */
     @Override
     public void onEventClicked(@NonNull Event event) {
-        Intent intent = new Intent(requireContext(), WaitingListActivity.class);
-        intent.putExtra("eventId", event.getId());
-        startActivity(intent);
+        WaitingListFragment fragment = WaitingListFragment.newInstance(event);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.dashboard_fragment_container, fragment)
+                .addToBackStack(null) // This is crucial for back button support
+                .commit();
     }
 
     /**
@@ -150,8 +157,10 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
      */
     @Override
     public void onViewEntrantsClicked(@NonNull Event event) {
-        Intent intent = new Intent(requireContext(), WaitingListActivity.class);
-        intent.putExtra("eventId", event.getId());
-        startActivity(intent);
+        WaitingListFragment fragment = WaitingListFragment.newInstance(event);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.dashboard_fragment_container, fragment)
+                .addToBackStack(null) // This is crucial for back button support
+                .commit();
     }
 }

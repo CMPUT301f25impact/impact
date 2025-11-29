@@ -1,11 +1,10 @@
-package com.example.impact.view;
+package com.example.impact.view.adapter;
 
 import android.view.*;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.impact.R;
-import com.example.impact.view.adapter.EntrantRow;
 
 import java.util.ArrayList;
 import java.util.List;

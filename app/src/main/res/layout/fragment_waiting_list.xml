@@ -8,10 +8,10 @@
         android:padding="12dp" />
 
     <TextView
-        android:id="@+id/emptyView"
+        android:id="@+id/waiting_list_no_data_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No entrants yet."
+        android:text="@string/waiting_list_no_entrants"
         android:gravity="center"
         android:padding="16dp"
         android:visibility="gone"/>

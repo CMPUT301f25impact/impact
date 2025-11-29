@@ -49,6 +49,8 @@
     <string name="main_seed_demo_success">Demo events created</string>
     <string name="main_seed_demo_failure">Unable to create demo events</string>
     <string name="organizer_dashboard_title">Organizer Dashboard</string>
+    <string name="organizer_nav_create_event_tab">New Event</string>
+    <string name="organizer_nav_notifications_tab">Notifications</string>
     <string name="organizer_tools_placeholder">Organizer Tools Page Placeholder</string>
     <string name="entrant_view_placeholder">Entrant View Page Placeholder</string>
     <string name="login_email_hint">Email</string>

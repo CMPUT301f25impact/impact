@@ -158,6 +158,32 @@ public class EventController {
     }
 
     /**
+     * Fetches an event document by id and forwards it to the provided callback.
+     *
+     * @param eventId          Firestore document id
+     * @param successListener  invoked with the mapped event (may be {@code null} when missing)
+     * @param failureListener  invoked when the read fails
+     */
+    public void fetchEventById(@NonNull String eventId,
+                               @Nullable OnSuccessListener<Event> successListener,
+                               @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (successListener != null) {
+                        Event event = (snapshot != null && snapshot.exists()) ? Event.fromSnapshot(snapshot) : null;
+                        successListener.onSuccess(event);
+                    }
+                })
+                .addOnFailureListener(error -> {
+                    if (failureListener != null) {
+                        failureListener.onFailure(error);
+                    }
+                });
+    }
+
+    /**
      * Updates the posterUrl field for the event document.
      */
     public void updatePosterUrl(@NonNull String eventId,

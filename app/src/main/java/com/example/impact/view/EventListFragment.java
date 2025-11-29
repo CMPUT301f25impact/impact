@@ -1,5 +1,6 @@
 package com.example.impact.view;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -44,6 +47,7 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
     private EventAdapter eventAdapter;
     private TextView emptyStateView;
     private String entrantId;
+    private ActivityResultLauncher<Intent> qrScannerLauncher;
 
     private List<String> selectedTags;
     @Nullable
@@ -87,6 +91,15 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
         }
 
         eventController = new EventController();
+        qrScannerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                        return;
+                    }
+                    String eventId = result.getData().getStringExtra(QrScannerActivity.EXTRA_EVENT_ID);
+                    handleScannedEventId(eventId);
+                });
     }
 
     @Nullable
@@ -108,6 +121,7 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
 
         Button filterButton = view.findViewById(R.id.buttonFilterEvents);
         Button clearFilterButton = view.findViewById(R.id.buttonClearFilter);
+        Button scanQrButton = view.findViewById(R.id.buttonScanQr);
 
         filterButton.setOnClickListener(v -> showFilterDialog());
         clearFilterButton.setOnClickListener(v -> {
@@ -116,6 +130,7 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
             selectedEndDate = null;
             loadEvents();
         });
+        scanQrButton.setOnClickListener(v -> launchQrScanner());
 
         loadEvents();
     }
@@ -201,6 +216,36 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
                 })
                 .setNegativeButton(R.string.event_filter_cancel, (dialog, which) -> dialog.dismiss())
                 .show();
+    }
+
+    /**
+     * Launches the QR scanner so entrants can scan promotional codes.
+     */
+    private void launchQrScanner() {
+        if (qrScannerLauncher == null) {
+            return;
+        }
+        Intent intent = new Intent(requireContext(), QrScannerActivity.class);
+        qrScannerLauncher.launch(intent);
+    }
+
+    /**
+     * Handles the scanned event id and navigates to details when valid.
+     *
+     * @param eventId decoded QR payload (may be {@code null})
+     */
+    private void handleScannedEventId(@Nullable String eventId) {
+        if (eventId == null || eventId.trim().isEmpty()) {
+            Toast.makeText(requireContext(), R.string.event_qr_invalid, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        eventController.fetchEventById(eventId.trim(), event -> {
+            if (event == null) {
+                Toast.makeText(requireContext(), R.string.event_qr_not_found, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            onEventClicked(event);
+        }, error -> Toast.makeText(requireContext(), R.string.event_qr_fetch_error, Toast.LENGTH_SHORT).show());
     }
 
     /**

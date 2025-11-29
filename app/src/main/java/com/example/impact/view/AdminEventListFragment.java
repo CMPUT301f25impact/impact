@@ -28,6 +28,17 @@ public class AdminEventListFragment extends Fragment
 
     private EventController eventController;
 
+    public static final String EXTRA_ADMIN_ID = "admin_id";
+
+    // Use a static factory method to create the fragment and set arguments
+    public static AdminEventListFragment newInstance(String adminId) {
+        AdminEventListFragment fragment = new AdminEventListFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ADMIN_ID, adminId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/admin_nav_events"
+        android:icon="@drawable/outline_article_30"
+        android:title="@string/admin_nav_events_tab" />
+    <item
+        android:id="@+id/admin_nav_images"
+        android:icon="@drawable/outline_article_30"
+        android:title="@string/admin_nav_images_tab" />
+    <item
+        android:id="@+id/admin_nav_profiles"
+        android:icon="@drawable/outline_account_circle_30"
+        android:title="@string/admin_nav_profiles_tab" />
+</menu>

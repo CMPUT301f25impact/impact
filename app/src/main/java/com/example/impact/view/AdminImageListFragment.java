@@ -28,6 +28,17 @@ public class AdminImageListFragment extends Fragment
 
     private ImageController imageController;
 
+    public static final String EXTRA_ADMIN_ID = "admin_id";
+
+    // Use a static factory method to create the fragment and set arguments
+    public static AdminImageListFragment newInstance(String adminId) {
+        AdminImageListFragment fragment = new AdminImageListFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ADMIN_ID, adminId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

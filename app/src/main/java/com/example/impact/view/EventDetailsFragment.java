@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.impact.R;
+import com.example.impact.controller.EventController;
 import com.example.impact.controller.WaitingListController;
 import com.example.impact.model.Event;
 import com.google.android.gms.common.annotation.NonNullApi;
@@ -32,6 +33,7 @@ public class EventDetailsFragment extends Fragment {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
 
     private WaitingListController waitingListController;
+    private EventController eventController;
     private Event event;
     private String entrantId;
 
@@ -39,9 +41,12 @@ public class EventDetailsFragment extends Fragment {
     private Button leaveButton;
     private Button acceptButton;
     private Button declineButton;
+    private Button registerButton;
     private TextView countText;
     private TextView statusText;
     private String currentStatus;
+    private boolean hasWaitingListEntry;
+    private boolean isRegistered;
 
     /**
      * Factory method to create a new instance of this fragment
@@ -83,6 +88,7 @@ public class EventDetailsFragment extends Fragment {
         }
 
         waitingListController = new WaitingListController();
+        eventController = new EventController();
 
         TextView nameText = view.findViewById(R.id.textViewEventDetailName);
         TextView dateText = view.findViewById(R.id.textViewEventDetailDate);
@@ -97,6 +103,7 @@ public class EventDetailsFragment extends Fragment {
         leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
         acceptButton = view.findViewById(R.id.buttonAcceptInvitation);
         declineButton = view.findViewById(R.id.buttonDeclineInvitation);
+        registerButton = view.findViewById(R.id.buttonRegisterEvent);
 
         nameText.setText(event.getName());
         dateText.setText(formatDateRange(event));
@@ -108,9 +115,11 @@ public class EventDetailsFragment extends Fragment {
         leaveButton.setOnClickListener(v -> leaveWaitingList());
         acceptButton.setOnClickListener(v -> acceptSelection());
         declineButton.setOnClickListener(v -> declineSelection());
+        registerButton.setOnClickListener(v -> registerForEvent());
 
         resolveCurrentStatus();
         loadWaitingListCount();
+        loadRegistrationStatus();
     }
 
     @Override
@@ -146,11 +155,13 @@ public class EventDetailsFragment extends Fragment {
     private void resolveCurrentStatus() {
         waitingListController.fetchWaitingListEntry(event.getId(), entrantId, entry -> {
             if (entry != null) {
+                hasWaitingListEntry = true;
                 currentStatus = entry.getStatus() != null ? entry.getStatus() : getString(R.string.event_status_pending);
                 updateStatusLabel();
                 setButtonsForJoinedState(true);
                 updateInvitationButtons();
             } else {
+                hasWaitingListEntry = false;
                 currentStatus = getString(R.string.event_status_pending);
                 updateStatusLabel();
                 setButtonsForJoinedState(false);
@@ -171,10 +182,29 @@ public class EventDetailsFragment extends Fragment {
     }
 
     /**
+     * Determines whether the entrant already registered for the event.
+     */
+    private void loadRegistrationStatus() {
+        if (eventController == null) {
+            return;
+        }
+        eventController.fetchRegistrationStatus(event.getId(), entrantId, registered -> {
+            isRegistered = registered != null && registered;
+            if (isRegistered) {
+                currentStatus = getString(R.string.event_status_registered);
+                updateStatusLabel();
+                setButtonsForJoinedState(false);
+            }
+            updateInvitationButtons();
+        }, error -> updateInvitationButtons());
+    }
+
+    /**
      * Calls the controller to join the waiting list.
      */
     private void joinWaitingList() {
         waitingListController.joinWaitingList(event.getId(), event.getName(), entrantId, unused -> {
+            hasWaitingListEntry = true;
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();
             setButtonsForJoinedState(true);
@@ -188,6 +218,7 @@ public class EventDetailsFragment extends Fragment {
      */
     private void leaveWaitingList() {
         waitingListController.leaveWaitingList(event.getId(), entrantId, unused -> {
+            hasWaitingListEntry = false;
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();
             setButtonsForJoinedState(false);
@@ -201,12 +232,29 @@ public class EventDetailsFragment extends Fragment {
      */
     private void declineSelection() {
         waitingListController.declineSelection(event.getId(), entrantId, unused -> {
+            hasWaitingListEntry = false;
             currentStatus = getString(R.string.event_status_not_selected);
             updateStatusLabel();
             setButtonsForJoinedState(false);
             updateInvitationButtons();
             Toast.makeText(requireContext(), R.string.event_details_decline_success, Toast.LENGTH_SHORT).show();
         }, error -> Toast.makeText(requireContext(), R.string.event_details_decline_error, Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * Registers the entrant for the event using the event controller.
+     */
+    private void registerForEvent() {
+        if (eventController == null) {
+            return;
+        }
+        eventController.registerEntrantForEvent(event.getId(), entrantId, unused -> {
+            isRegistered = true;
+            currentStatus = getString(R.string.event_status_registered);
+            updateStatusLabel();
+            updateInvitationButtons();
+            Toast.makeText(requireContext(), R.string.event_details_register_success, Toast.LENGTH_SHORT).show();
+        }, error -> Toast.makeText(requireContext(), R.string.event_details_register_error, Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -248,15 +296,19 @@ public class EventDetailsFragment extends Fragment {
      * Enables or disables the accept invitation button based on the entrant status.
      */
     private void updateInvitationButtons() {
-        if (acceptButton == null || declineButton == null) {
-            return;
+        if (acceptButton != null && declineButton != null) {
+            boolean isSelected = getString(R.string.event_status_selected).equalsIgnoreCase(currentStatus);
+            acceptButton.setEnabled(isSelected);
+            declineButton.setEnabled(isSelected);
+            int visibility = isSelected ? View.VISIBLE : View.GONE;
+            acceptButton.setVisibility(visibility);
+            declineButton.setVisibility(visibility);
         }
-        boolean isSelected = getString(R.string.event_status_selected).equalsIgnoreCase(currentStatus);
-        acceptButton.setEnabled(isSelected);
-        declineButton.setEnabled(isSelected);
-        int visibility = isSelected ? View.VISIBLE : View.GONE;
-        acceptButton.setVisibility(visibility);
-        declineButton.setVisibility(visibility);
+        if (registerButton != null) {
+            boolean canRegister = !hasWaitingListEntry && !isRegistered;
+            registerButton.setVisibility(canRegister ? View.VISIBLE : View.GONE);
+            registerButton.setEnabled(canRegister);
+        }
     }
 
     /**

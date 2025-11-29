@@ -7,7 +7,11 @@ import com.example.impact.model.Event;
 import com.example.impact.utils.AppSession;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -15,13 +19,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Handles event retrieval and filtering logic between Firestore and the UI.
  */
 public class EventController {
     private static final String COLLECTION_EVENTS = "events";
+    private static final String SUB_COLLECTION_REGISTRATIONS = "registeredEntrants";
 
     private final FirebaseFirestore firestore;
 
@@ -184,6 +191,60 @@ public class EventController {
     }
 
     /**
+     * Registers an entrant for the target event by storing their id within the event registrations subcollection.
+     *
+     * @param eventId         id of the event document
+     * @param entrantId       id of the entrant joining the event
+     * @param successListener optional success callback
+     * @param failureListener optional failure callback
+     */
+    public void registerEntrantForEvent(@NonNull String eventId,
+                                        @NonNull String entrantId,
+                                        @Nullable OnSuccessListener<Void> successListener,
+                                        @Nullable OnFailureListener failureListener) {
+        validateIds(eventId, entrantId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("entrantId", entrantId);
+        data.put("timestamp", FieldValue.serverTimestamp());
+
+        Task<Void> task = firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_REGISTRATIONS)
+                .document(entrantId)
+                .set(data);
+        attachListeners(task, successListener, failureListener);
+    }
+
+    /**
+     * Determines whether the entrant already registered for the given event.
+     *
+     * @param eventId         event identifier
+     * @param entrantId       entrant identifier
+     * @param successListener invoked with {@code true} when a registration document exists
+     * @param failureListener invoked when the read fails
+     */
+    public void fetchRegistrationStatus(@NonNull String eventId,
+                                        @NonNull String entrantId,
+                                        @Nullable OnSuccessListener<Boolean> successListener,
+                                        @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_REGISTRATIONS)
+                .document(entrantId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (successListener != null) {
+                        successListener.onSuccess(snapshot != null && snapshot.exists());
+                    }
+                })
+                .addOnFailureListener(error -> {
+                    if (failureListener != null) {
+                        failureListener.onFailure(error);
+                    }
+                });
+    }
+
+    /**
      * Updates the posterUrl field for the event document.
      */
     public void updatePosterUrl(@NonNull String eventId,
@@ -276,4 +337,24 @@ public class EventController {
         return events;
     }
 
+    private void validateIds(@NonNull String eventId, @NonNull String entrantId) {
+        if (isNullOrBlank(eventId) || isNullOrBlank(entrantId)) {
+            throw new IllegalArgumentException("Event id and entrant id are required");
+        }
+    }
+
+    private boolean isNullOrBlank(@Nullable String value) {
+        return value == null || value.trim().isEmpty();
+    }
+
+    private void attachListeners(Task<Void> task,
+                                 @Nullable OnSuccessListener<Void> successListener,
+                                 @Nullable OnFailureListener failureListener) {
+        if (successListener != null) {
+            task.addOnSuccessListener(successListener);
+        }
+        if (failureListener != null) {
+            task.addOnFailureListener(failureListener);
+        }
+    }
 }

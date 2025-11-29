@@ -47,6 +47,9 @@
     <string name="event_details_decline_error">Unable to decline invitation</string>
     <string name="event_details_waiting_list_count">Total entrants: %1$d</string>
     <string name="event_details_lottery_criteria">Lottery rules:\n• Earliest pending entrants are selected when spots open.\n• Selected entrants must accept or decline.\n• Declining promotes the next pending entrant.</string>
+    <string name="event_details_register_button">Register</string>
+    <string name="event_details_register_success">Registration confirmed</string>
+    <string name="event_details_register_error">Unable to complete registration</string>
     <string name="event_qr_invalid">Invalid QR code</string>
     <string name="event_qr_not_found">Event not found</string>
     <string name="event_qr_fetch_error">Unable to load event details</string>
@@ -56,6 +59,7 @@
     <string name="event_status_selected">selected</string>
     <string name="event_status_not_selected">not selected</string>
     <string name="event_status_pending">pending</string>
+    <string name="event_status_registered">registered</string>
     <string name="event_status_accepted">accepted</string>
     <string name="event_history_title">Event History</string>
     <string name="event_history_empty_state">No events in your history yet.</string>

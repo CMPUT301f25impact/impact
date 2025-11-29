@@ -41,7 +41,7 @@ public class OrganizerActivity extends BaseDashboardActivity {
 
     @Override
     public Fragment getSelectedFragment(@NonNull int itemId) {
-        if (itemId == R.id.admin_nav_events) {
+        if (itemId == R.id.organizer_nav_events) {
             return OrganizerEventListFragment.newInstance(organizerId);
         } else if (itemId == R.id.organizer_nav_create_event) {
             return OrganizerCreateEventFragment.newInstance(organizerId);
@@ -54,7 +54,7 @@ public class OrganizerActivity extends BaseDashboardActivity {
 
     @Override
     public int getSelectedToolBarTitle(@NonNull int itemId) {
-        if (itemId == R.id.admin_nav_events) {
+        if (itemId == R.id.organizer_nav_events) {
             return R.string.admin_nav_events_tab; // This is not a mistake I am just lazy
         } else if (itemId == R.id.organizer_nav_create_event) {
             return R.string.organizer_nav_create_event_tab;

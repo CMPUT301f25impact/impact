@@ -70,7 +70,7 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         if (TextUtils.isEmpty(organizerId)) {
             User currentUser = AppSession.getUser();
             if (currentUser != null) {
-                organizerId = currentUser.getEmail();
+                organizerId = currentUser.getId();
             }
         }
 
@@ -80,7 +80,6 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
             return;
         }
 
-        System.out.println(organizerId);
         adapter = new EventAdapter(this, Organizer.ROLE_KEY);
     }
 

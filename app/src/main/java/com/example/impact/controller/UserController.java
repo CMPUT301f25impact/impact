@@ -281,7 +281,7 @@ public class UserController {
     }
 
     /**
-     * Builds the Firestore payload for a given user.
+     * Builds the Firestore payload for a given user, including optional phone and notification preference fields.
      *
      * @param user model to serialize
      * @return map of primitive data ready for Firestore
@@ -295,6 +295,7 @@ public class UserController {
 
         String phone = user.getPhone();
         data.put("phone", !isNullOrBlank(phone) ? phone : null);
+        data.put("notificationsEnabled", user.isNotificationsEnabled());
         return data;
     }
 

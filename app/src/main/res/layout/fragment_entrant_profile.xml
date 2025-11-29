@@ -35,6 +35,14 @@
             android:importantForAutofill="yes"
             android:inputType="phone" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchEntrantNotifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:checked="true"
+            android:text="@string/entrant_profile_notifications_label" />
+
         <Button
             android:id="@+id/buttonSaveProfile"
             android:layout_width="match_parent"

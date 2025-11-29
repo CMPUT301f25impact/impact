@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import com.example.impact.R;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Verifies organizer tab selections map to the proper fragments.
  */
+@RunWith(RobolectricTestRunner.class)
 public class OrganizerFragmentFactoryTest {
 
     @Test

@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class OrganizerEventListFragment extends Fragment implements EventAdapter.OnEventClickListener {
 
-    private final EventController controller = new EventController();
+    private EventController controller;
     private EventAdapter adapter;
     private String organizerEmail = "";
     private ListenerRegistration reg;
@@ -110,7 +110,7 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
                                 .whereEqualTo("organizerEmail", organizerEmail)
                                 .addSnapshotListener((snap, err) -> {
                                     if (err != null || snap == null) return;
-                                    List<Event> events = controller.mapEvents(snap);
+                                    List<Event> events = getController().mapEvents(snap);
                                     adapter.setEvents(events);
                                 });
                     } else {
@@ -153,5 +153,12 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         Intent intent = new Intent(requireContext(), WaitingListActivity.class);
         intent.putExtra("eventId", event.getId());
         startActivity(intent);
+    }
+
+    private EventController getController() {
+        if (controller == null) {
+            controller = new EventController();
+        }
+        return controller;
     }
 }

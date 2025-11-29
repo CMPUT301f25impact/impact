@@ -30,6 +30,17 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
     private AdminProfileAdapter adapter;
     private UserController userController;
 
+    public static final String EXTRA_ADMIN_ID = "admin_id";
+
+    // Use a static factory method to create the fragment and set arguments
+    public static AdminProfileListFragment newInstance(String adminId) {
+        AdminProfileListFragment fragment = new AdminProfileListFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ADMIN_ID, adminId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -49,6 +49,8 @@
     <string name="main_seed_demo_success">Demo events created</string>
     <string name="main_seed_demo_failure">Unable to create demo events</string>
     <string name="organizer_dashboard_title">Organizer Dashboard</string>
+    <string name="organizer_nav_create_event_tab">New Event</string>
+    <string name="organizer_nav_notifications_tab">Notifications</string>
     <string name="organizer_tools_placeholder">Organizer Tools Page Placeholder</string>
     <string name="entrant_view_placeholder">Entrant View Page Placeholder</string>
     <string name="login_email_hint">Email</string>
@@ -71,6 +73,9 @@
     <string name="logout_error">Unable to sign out completely</string>
     <string name="admin_dashboard_placeholder">Admin Dashboard Placeholder</string>
     <string name="admin_dashboard_title">Admin Dashboard</string>
+    <string name="admin_nav_events_tab">Events</string>
+    <string name="admin_nav_images_tab">Images</string>
+    <string name="admin_nav_profiles_tab">Profiles</string>
     <string name="admin_event_list_delete_button">Delete Event</string>
     <string name="admin_event_list_error_deletion">Unable to delete event</string>
     <string name="admin_event_list_deletion">Deleted event %1$s</string>

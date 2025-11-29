@@ -24,8 +24,6 @@ import com.example.impact.model.Event;
 import com.example.impact.utils.ImageUtil;
 import com.example.impact.utils.QrUtil;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.zxing.WriterException;
 
 import java.io.InputStream;
@@ -34,7 +32,7 @@ import java.util.Date;
 /**
  * Provides organizers with a simple form to create events and preview QR codes.
  */
-public class OrganizerToolsFragment extends Fragment {
+public class OrganizerCreateEventFragment extends Fragment {
 
     private EditText etName, etDesc, etCapacity;
     private Button btnStart, btnEnd, btnCreate, btnUploadPoster;
@@ -49,7 +47,18 @@ public class OrganizerToolsFragment extends Fragment {
     private final ActivityResultLauncher<String> pickImageLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);
 
-    String organizerEmail = null;
+    String organizerEmail = null; // Fix this to use the AppSession
+
+    public static final String EXTRA_ORGANIZER_ID = "organizer_id";
+
+    // Use a static factory method to create the fragment and set arguments
+    public static OrganizerCreateEventFragment newInstance(String organizerId) {
+        OrganizerCreateEventFragment fragment = new OrganizerCreateEventFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ORGANIZER_ID, organizerId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @SuppressLint({"CutPasteId", "MissingInflatedId"})
     @Nullable

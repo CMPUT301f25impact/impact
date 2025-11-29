@@ -31,12 +31,23 @@ import java.util.List;
  * Fragment displaying all events created by the logged-in organizer.
  * Provides a button to create new events and allows viewing entrants for each event.
  */
-public class OrganizerEventsFragment extends Fragment implements EventAdapter.OnEventClickListener {
+public class OrganizerEventListFragment extends Fragment implements EventAdapter.OnEventClickListener {
 
     private final EventController controller = new EventController();
     private EventAdapter adapter;
     private String organizerEmail = "";
     private ListenerRegistration reg;
+
+    public static final String EXTRA_ORGANIZER_ID = "organizer_id";
+
+    // Use a static factory method to create the fragment and set arguments
+    public static OrganizerEventListFragment newInstance(String organizerId) {
+        OrganizerEventListFragment fragment = new OrganizerEventListFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ORGANIZER_ID, organizerId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onStart() {
@@ -55,12 +66,12 @@ public class OrganizerEventsFragment extends Fragment implements EventAdapter.On
         View v = inflater.inflate(R.layout.fragment_organizer_events, container, false);
 
         // --- Create Event Button ---
-        Button btnCreate = v.findViewById(R.id.btnCreateNewEvent);
-        btnCreate.setOnClickListener(view -> {
-            if (requireActivity() instanceof OrganizerActivity) {
-                ((OrganizerActivity) requireActivity()).goToCreateTab();
-            }
-        });
+//        Button btnCreate = v.findViewById(R.id.btnCreateNewEvent);
+//        btnCreate.setOnClickListener(view -> {
+//            if (requireActivity() instanceof OrganizerActivity) {
+//                ((OrganizerActivity) requireActivity()).goToCreateTab();
+//            }
+//        });
 
         // --- RecyclerView Setup ---
         RecyclerView rv = v.findViewById(R.id.recyclerEvents);

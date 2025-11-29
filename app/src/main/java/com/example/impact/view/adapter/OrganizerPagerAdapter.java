@@ -7,9 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.impact.view.EntrantViewFragment;
-import com.example.impact.view.OrganizerEventsFragment;
-import com.example.impact.view.OrganizerToolsFragment;
+import com.example.impact.view.OrganizerCreateEventFragment;
+import com.example.impact.view.OrganizerEventListFragment;
 
 /**
  * Supplies organizer dashboard fragments to the ViewPager.
@@ -38,9 +37,9 @@ public class OrganizerPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         Fragment fragment;
         if (position == 0) {
-            fragment = new OrganizerEventsFragment();
+            fragment = new OrganizerEventListFragment();
         } else {
-            fragment = new OrganizerToolsFragment();
+            fragment = new OrganizerCreateEventFragment();
         }  // <-- create form
 
         Bundle args = new Bundle();

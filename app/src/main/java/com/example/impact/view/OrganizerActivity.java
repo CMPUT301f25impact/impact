@@ -1,122 +1,79 @@
 package com.example.impact.view;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
+import androidx.fragment.app.Fragment;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.annotation.NonNull;
 
 import com.example.impact.R;
 import com.example.impact.utils.AppSession;
-import com.example.impact.view.adapter.OrganizerPagerAdapter;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
- * Hosts the organizer dashboard tabs for managing and creating events.
+ * Launcher screen for entrant-specific tools and shortcuts.
+ * Now extends BaseDashboardActivity for consistent UI/UX.
  */
-public class OrganizerActivity extends AppCompatActivity {
+public class OrganizerActivity extends BaseDashboardActivity {
 
-    private static final String EVENTS_TITLE = "Events";
-    private static final String CREATE_TITLE = "Create";
-
-    /** Optional: pass this in an Intent extra to open a tab directly. */
-    public static final String EXTRA_INITIAL_TAB = "initial_tab"; // 0 = Events, 1 = Create
-
-    private ViewPager2 viewPager;
+    //    private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";
+    private String organizerId;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(android.os.Bundle savedInstanceState) {
+        // Initialize entrantId before calling super.onCreate()
+         organizerId = AppSession.getUserId();
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_organizer);
-        AppSession.setStartupIntent(getIntent());
-
-        // Toolbar
-        Toolbar toolbar = findViewById(R.id.organizerToolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.organizer_dashboard_title);
-        }
-
-        // ViewPager + Tabs
-        viewPager = findViewById(R.id.organizerViewPager);
-        String organizerEmail = AppSession.getEmail();
-        viewPager.setAdapter(new OrganizerPagerAdapter(this, organizerEmail));
-
-        TabLayout tabLayout = findViewById(R.id.organizerTabLayout);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
-                tab.setText(position == 0 ? EVENTS_TITLE : CREATE_TITLE)
-        ).attach();
-
-        // Optional: open a specific tab if provided
-        int initialTab = getIntent().getIntExtra(EXTRA_INITIAL_TAB, 0);
-        viewPager.setCurrentItem(initialTab, false);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_session, menu);
-        return true;
+    protected Fragment getInitialFragment() {
+        return OrganizerEventListFragment.newInstance(organizerId);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_logout) {
-            performLogout();
-            return true;
+    protected int getInitialToolbarTitle() {
+        return R.string.admin_nav_events_tab; // This is not a mistake I am just lazy
+    }
+
+    @Override
+    protected int getBottomNavigationMenuResource() {
+        return R.menu.organizer_nav_menu;
+    }
+
+    @Override
+    public Fragment getSelectedFragment(@NonNull int itemId) {
+        if (itemId == R.id.admin_nav_events) {
+            return OrganizerEventListFragment.newInstance(organizerId);
+        } else if (itemId == R.id.organizer_nav_create_event) {
+            return OrganizerCreateEventFragment.newInstance(organizerId);
+        } else if (itemId == R.id.organizer_nav_notifications) {
+//            return OrganizerNotificationsFragment.newInstance(organizerId); // This doesn't exist yet but it will
+            return OrganizerEventListFragment.newInstance(organizerId); // For now just return event view
         }
-        return super.onOptionsItemSelected(item);
+        return null;
     }
 
-    /**
-     * Clears organizer session then navigates back to login.
-     */
-    private void performLogout() {
-        String deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        if (TextUtils.isEmpty(deviceId)) {
-            navigateToLogin();
-            return;
+    @Override
+    public int getSelectedToolBarTitle(@NonNull int itemId) {
+        if (itemId == R.id.admin_nav_events) {
+            return R.string.admin_nav_events_tab; // This is not a mistake I am just lazy
+        } else if (itemId == R.id.organizer_nav_create_event) {
+            return R.string.organizer_nav_create_event_tab;
+        } else if (itemId == R.id.organizer_nav_notifications) {
+            return R.string.organizer_nav_notifications_tab;
         }
-
-        AppSession.db().collection("users")
-                .whereEqualTo("deviceId", deviceId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        queryDocumentSnapshots.forEach(documentSnapshot ->
-                                documentSnapshot.getReference().update("deviceId", null));
-                    }
-                    Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show();
-                    navigateToLogin();
-                })
-                .addOnFailureListener(error -> {
-                    Toast.makeText(this, R.string.logout_error, Toast.LENGTH_SHORT).show();
-                    navigateToLogin();
-                });
+        return getInitialToolbarTitle();
     }
 
-    private void navigateToLogin() {
-        AppSession.initialize(null);
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+    @Override
+    public int getActivityTitle() {
+        return R.string.organizer_dashboard_title;
     }
 
-    /** Called from OrganizerEventsFragment’s “+ Create New Event” button. */
-    public void goToCreateTab() {
-        if (viewPager != null) viewPager.setCurrentItem(1, true);
-    }
-
-    /** If you ever need to jump back to Events from Create. */
-    public void goToEventsTab() {
-        if (viewPager != null) viewPager.setCurrentItem(0, true);
-    }
+//    /**
+//     * Callback for when a user deletes their profile while signed in
+//     */
+//    @Override
+//    public void onProfileDeleted() {
+//        performLogout();
+//    }
 }

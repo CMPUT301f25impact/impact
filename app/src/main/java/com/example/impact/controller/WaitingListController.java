@@ -27,6 +27,7 @@ public class WaitingListController {
 
     private static final String STATUS_PENDING = "pending";
     private static final String STATUS_SELECTED = "selected";
+    private static final String STATUS_ACCEPTED = "accepted";
     private static final String STATUS_NOT_SELECTED = "not selected";
 
     private final FirebaseFirestore firestore;
@@ -122,6 +123,29 @@ public class WaitingListController {
                         failureListener.onFailure(error);
                     }
                 });
+    }
+
+    /**
+     * Marks a selected entrant as having accepted their invitation.
+     *
+     * @param eventId         event identifier
+     * @param entrantId       entrant identifier
+     * @param successListener invoked when the write succeeds
+     * @param failureListener invoked when the write fails
+     */
+    public void acceptSelection(@NonNull String eventId,
+                                @NonNull String entrantId,
+                                @Nullable OnSuccessListener<Void> successListener,
+                                @Nullable OnFailureListener failureListener) {
+        validateIds(eventId, entrantId);
+
+        Task<Void> task = firestore.collection(COLLECTION_WAITING_LISTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_ENTRANTS)
+                .document(entrantId)
+                .update("status", STATUS_ACCEPTED);
+
+        attachListeners(task, successListener, failureListener);
     }
 
     /**

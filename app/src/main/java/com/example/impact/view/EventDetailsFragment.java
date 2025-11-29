@@ -37,6 +37,7 @@ public class EventDetailsFragment extends Fragment {
 
     private Button joinButton;
     private Button leaveButton;
+    private Button acceptButton;
     private TextView statusText;
     private String currentStatus;
 
@@ -87,6 +88,7 @@ public class EventDetailsFragment extends Fragment {
         statusText = view.findViewById(R.id.textViewEventDetailStatus);
         joinButton = view.findViewById(R.id.buttonJoinWaitingList);
         leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
+        acceptButton = view.findViewById(R.id.buttonAcceptInvitation);
 
         nameText.setText(event.getName());
         dateText.setText(formatDateRange(event));
@@ -96,6 +98,7 @@ public class EventDetailsFragment extends Fragment {
 
         joinButton.setOnClickListener(v -> joinWaitingList());
         leaveButton.setOnClickListener(v -> leaveWaitingList());
+        acceptButton.setOnClickListener(v -> acceptSelection());
 
         resolveCurrentStatus();
     }
@@ -136,10 +139,12 @@ public class EventDetailsFragment extends Fragment {
                 currentStatus = entry.getStatus() != null ? entry.getStatus() : getString(R.string.event_status_pending);
                 updateStatusLabel();
                 setButtonsForJoinedState(true);
+                updateAcceptButtonState();
             } else {
                 currentStatus = getString(R.string.event_status_pending);
                 updateStatusLabel();
                 setButtonsForJoinedState(false);
+                updateAcceptButtonState();
             }
         }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
@@ -152,6 +157,7 @@ public class EventDetailsFragment extends Fragment {
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();
             setButtonsForJoinedState(true);
+            updateAcceptButtonState();
             Toast.makeText(requireContext(), R.string.event_details_join_success, Toast.LENGTH_SHORT).show();
         }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
@@ -168,6 +174,7 @@ public class EventDetailsFragment extends Fragment {
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();
             setButtonsForJoinedState(false);
+            updateAcceptButtonState();
             Toast.makeText(requireContext(), R.string.event_details_leave_success, Toast.LENGTH_SHORT).show();
         }, error -> Toast.makeText(requireContext(), R.string.event_details_leave_error, Toast.LENGTH_SHORT).show());
     }
@@ -180,6 +187,7 @@ public class EventDetailsFragment extends Fragment {
             currentStatus = getString(R.string.event_status_not_selected);
             updateStatusLabel();
             setButtonsForJoinedState(false);
+            updateAcceptButtonState();
             Toast.makeText(requireContext(), R.string.event_details_leave_success, Toast.LENGTH_SHORT).show();
         }, error -> Toast.makeText(requireContext(), R.string.event_details_leave_error, Toast.LENGTH_SHORT).show());
     }
@@ -190,6 +198,7 @@ public class EventDetailsFragment extends Fragment {
     private void setButtonsForJoinedState(boolean joined) {
         joinButton.setEnabled(!joined);
         leaveButton.setEnabled(joined);
+        updateAcceptButtonState();
     }
 
     /**
@@ -197,6 +206,7 @@ public class EventDetailsFragment extends Fragment {
      */
     private void updateStatusLabel() {
         statusText.setText(getString(R.string.event_details_status_label, currentStatus));
+        updateAcceptButtonState();
     }
 
     /**
@@ -215,5 +225,28 @@ public class EventDetailsFragment extends Fragment {
             return dateFormat.format(end);
         }
         return "";
+    }
+
+    /**
+     * Enables or disables the accept invitation button based on the entrant status.
+     */
+    private void updateAcceptButtonState() {
+        if (acceptButton == null) {
+            return;
+        }
+        boolean isSelected = getString(R.string.event_status_selected).equalsIgnoreCase(currentStatus);
+        acceptButton.setEnabled(isSelected);
+        acceptButton.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Persists the entrant’s acceptance for their invitation.
+     */
+    private void acceptSelection() {
+        waitingListController.acceptSelection(event.getId(), entrantId, unused -> {
+            currentStatus = getString(R.string.event_status_accepted);
+            updateStatusLabel();
+            Toast.makeText(requireContext(), R.string.event_details_accept_success, Toast.LENGTH_SHORT).show();
+        }, error -> Toast.makeText(requireContext(), R.string.event_details_accept_error, Toast.LENGTH_SHORT).show());
     }
 }

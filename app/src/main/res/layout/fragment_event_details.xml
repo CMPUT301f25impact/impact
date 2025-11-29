@@ -81,13 +81,5 @@
             android:layout_marginTop="12dp"
             android:text="@string/event_details_decline_button"
             android:visibility="gone" />
-
-        <Button
-            android:id="@+id/buttonRegisterEvent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/event_details_register_button"
-            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

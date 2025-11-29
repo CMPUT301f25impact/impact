@@ -78,7 +78,7 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
         EventDetailsFragment detailsFragment = EventDetailsFragment.newInstance(event, entrantId);
 
         getParentFragmentManager().beginTransaction()
-                .replace(R.id.entrant_fragment_container, detailsFragment)
+                .replace(R.id.dashboard_fragment_container, detailsFragment)
                 .addToBackStack(null) // This is crucial for back button support
                 .commit();
     }

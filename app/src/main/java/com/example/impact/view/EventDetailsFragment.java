@@ -157,11 +157,27 @@ public class EventDetailsFragment extends Fragment {
     }
 
     /**
-     * Removes the entrant from the waiting list.
+     * Removes the entrant from the waiting list or records a decline when they were selected.
      */
     private void leaveWaitingList() {
+        if (getString(R.string.event_status_selected).equalsIgnoreCase(currentStatus)) {
+            declineSelection();
+            return;
+        }
         waitingListController.leaveWaitingList(event.getId(), entrantId, unused -> {
             currentStatus = getString(R.string.event_status_pending);
+            updateStatusLabel();
+            setButtonsForJoinedState(false);
+            Toast.makeText(requireContext(), R.string.event_details_leave_success, Toast.LENGTH_SHORT).show();
+        }, error -> Toast.makeText(requireContext(), R.string.event_details_leave_error, Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * Marks the invitation as declined and lets the controller promote a replacement entrant.
+     */
+    private void declineSelection() {
+        waitingListController.declineSelection(event.getId(), entrantId, unused -> {
+            currentStatus = getString(R.string.event_status_not_selected);
             updateStatusLabel();
             setButtonsForJoinedState(false);
             Toast.makeText(requireContext(), R.string.event_details_leave_success, Toast.LENGTH_SHORT).show();

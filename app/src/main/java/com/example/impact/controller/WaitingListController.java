@@ -228,8 +228,13 @@ public class WaitingListController {
                 .get()
                 .addOnSuccessListener(snapshot -> {
                     List<WaitingListEntry> waitingList = mapWaitingList(snapshot);
-                    if (successListener != null) successListener.onSuccess(waitingList);
-
+                    if (successListener != null) {
+                        successListener.onSuccess(waitingList);
+                    }
+                });
+// close failureListener here if needed
+    }
+    /**
      * Randomly selects pending entrants and marks them as selected.
      *
      * @param eventId         event identifier

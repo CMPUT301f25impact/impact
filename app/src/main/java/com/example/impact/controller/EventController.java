@@ -120,18 +120,18 @@ public class EventController {
     }
 
     /**
-     * Subscribes to real-time updates for events owned by an organizer email.
+     * Subscribes to real-time updates for events owned by an organizer id.
      *
-     * @param email organizer email address
+     * @param organizerId organizer uid
      * @param listener callback invoked with snapshot updates
      * @return listener registration to dispose of updates
      */
     public ListenerRegistration listenEventsByOrganizer(
-            @NonNull String email,
+            @NonNull String organizerId,
             @NonNull EventListener<QuerySnapshot> listener) {
 
         return firestore.collection("events")
-                .whereEqualTo("organizerEmail", email)
+                .whereEqualTo("organizerId", organizerId)
                 .addSnapshotListener(listener);
     }
 

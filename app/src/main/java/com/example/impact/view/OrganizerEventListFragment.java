@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,11 +18,11 @@ import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.model.Event;
 import com.example.impact.model.Organizer;
-import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.EventAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.example.impact.controller.ImageController;
 
 import java.util.List;
 
@@ -34,10 +33,16 @@ import java.util.List;
 public class OrganizerEventListFragment extends Fragment implements EventAdapter.OnEventClickListener {
 
     private final EventController controller = new EventController();
+    private final ImageController imageController = new ImageController();
     private EventAdapter adapter;
-    private String organizerEmail = "";
+    private String organizerId = "";
     private ListenerRegistration reg;
-
+    private com.example.impact.model.Event eventBeingUpdatedPoster;
+    private final androidx.activity.result.ActivityResultLauncher<String> posterPickerLauncher =
+            registerForActivityResult(
+                    new androidx.activity.result.contract.ActivityResultContracts.GetContent(),
+                    this::onPosterPicked
+            );
     public static final String EXTRA_ORGANIZER_ID = "organizer_id";
 
     // Use a static factory method to create the fragment and set arguments
@@ -78,17 +83,14 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         if (getArguments() != null) {
-            organizerEmail = getArguments().getString("organizerEmail");
+            organizerId = getArguments().getString(EXTRA_ORGANIZER_ID);
         }
-        if (TextUtils.isEmpty(organizerEmail)) {
-            User currentUser = AppSession.getUser();
-            if (currentUser != null) {
-                organizerEmail = currentUser.getEmail();
-            }
+        if (TextUtils.isEmpty(organizerId)) {
+            organizerId = AppSession.getUserId();
         }
 
-        if (organizerEmail == null) {
-            Toast.makeText(requireContext(), "Organizer email missing", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(organizerId)) {
+            Toast.makeText(requireContext(), "Organizer id missing", Toast.LENGTH_SHORT).show();
             return v;
         }
 
@@ -97,17 +99,15 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
 
         FirebaseFirestore db = AppSession.db();
 
-        // Step 1: verify that this email belongs to an organizer
+        // Step 1: verify that this id belongs to an organizer
         db.collection("users")
-                .whereEqualTo("email", organizerEmail)
-                .whereEqualTo("role", "organizer")
-                .limit(1)
+                .document(organizerId)
                 .get()
-                .addOnSuccessListener(users -> {
-                    if (!users.isEmpty()) {
+                .addOnSuccessListener(userDoc -> {
+                    if (userDoc.exists() && Organizer.ROLE_KEY.equals(userDoc.getString("role"))) {
                         // Step 2: load events for this organizer
                         reg = db.collection("events")
-                                .whereEqualTo("organizerEmail", organizerEmail)
+                                .whereEqualTo("organizerId", organizerId)
                                 .addSnapshotListener((snap, err) -> {
                                     if (err != null || snap == null) return;
                                     List<Event> events = controller.mapEvents(snap);
@@ -122,6 +122,104 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
 
         return v;
     }
+
+    /**
+     * Called when the organizer picks a new poster image from the gallery.
+     */
+    private void onPosterPicked(@Nullable android.net.Uri uri) {
+        if (uri == null) {
+            eventBeingUpdatedPoster = null;
+            return;
+        }
+        if (eventBeingUpdatedPoster == null) {
+            Toast.makeText(requireContext(), "No event selected for poster update", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            // Decode bitmap from URI
+            java.io.InputStream is = requireContext().getContentResolver().openInputStream(uri);
+            android.graphics.Bitmap bmp = android.graphics.BitmapFactory.decodeStream(is);
+            if (bmp == null) {
+                Toast.makeText(requireContext(), "Unable to read image", Toast.LENGTH_SHORT).show();
+                eventBeingUpdatedPoster = null;
+                return;
+            }
+
+            // Convert to base64
+            String base64 = com.example.impact.utils.ImageUtil.bitmapToBase64(bmp);
+
+            // Infer filename + mime type
+            String fileName = queryFileName(uri);
+            String mime = requireContext().getContentResolver().getType(uri);
+            if (mime == null) mime = "image/jpeg";
+
+            com.example.impact.model.Image imageModel = new com.example.impact.model.Image();
+            imageModel.setFileName(fileName != null ? fileName : "poster.jpg");
+            imageModel.setMimeType(mime);
+            imageModel.setBase64Content(base64);
+
+            Toast.makeText(requireContext(), "Uploading new poster…", Toast.LENGTH_SHORT).show();
+
+            // 1) Upload image to "images" collection
+            imageController.createImage(imageModel, imageId -> {
+                // 2) Update event.posterUrl to point at the new imageId
+                controller.updatePosterUrl(
+                        eventBeingUpdatedPoster.getId(),
+                        imageId,
+                        v -> {
+                            Toast.makeText(requireContext(), "Poster updated", Toast.LENGTH_SHORT).show();
+                            eventBeingUpdatedPoster = null;
+                            // No need to manually refresh list: the snapshot listener will fire
+                        },
+                        err -> {
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Poster saved, but event update failed: " +
+                                            (err != null ? err.getMessage() : "unknown"),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            eventBeingUpdatedPoster = null;
+                        }
+                );
+            }, err -> {
+                Toast.makeText(
+                        requireContext(),
+                        "Poster upload failed: " + (err != null ? err.getMessage() : "unknown"),
+                        Toast.LENGTH_SHORT
+                ).show();
+                eventBeingUpdatedPoster = null;
+            });
+
+        } catch (Exception ex) {
+            Toast.makeText(requireContext(), "Failed to read image: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+            eventBeingUpdatedPoster = null;
+        }
+    }
+
+    /**
+     * Helper to get a sensible file name from a content Uri.
+     */
+    @Nullable
+    private String queryFileName(@NonNull android.net.Uri uri) {
+        String result = null;
+        if ("content".equals(uri.getScheme())) {
+            try (android.database.Cursor cursor = requireContext().getContentResolver()
+                    .query(uri, new String[]{android.provider.OpenableColumns.DISPLAY_NAME}, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(0);
+                }
+            } catch (Exception ignored) {}
+        }
+        if (result == null) {
+            String path = uri.getPath();
+            if (path == null) return null;
+            int cut = path.lastIndexOf('/');
+            if (cut != -1) result = path.substring(cut + 1);
+        }
+        return result;
+    }
+
 
     /**
      * Stops the snapshot listener when leaving the screen.
@@ -140,9 +238,9 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
      */
     @Override
     public void onEventClicked(@NonNull Event event) {
-        Intent intent = new Intent(requireContext(), WaitingListActivity.class);
-        intent.putExtra("eventId", event.getId());
-        startActivity(intent);
+        eventBeingUpdatedPoster = event;
+        Toast.makeText(requireContext(), "Choose a new poster image…", Toast.LENGTH_SHORT).show();
+        posterPickerLauncher.launch("image/*");
     }
 
     /**
@@ -152,6 +250,11 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
     public void onViewEntrantsClicked(@NonNull Event event) {
         Intent intent = new Intent(requireContext(), WaitingListActivity.class);
         intent.putExtra("eventId", event.getId());
+        Integer capacity = event.getCapacity();
+        if (capacity != null) {
+            intent.putExtra("eventCapacity", capacity);
+        }
+        intent.putExtra("lotteryDone", event.isLotteryDone());
         startActivity(intent);
     }
 }

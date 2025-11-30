@@ -21,6 +21,7 @@ import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.controller.ImageController;
 import com.example.impact.model.Event;
+import com.example.impact.utils.AppSession;
 import com.example.impact.utils.ImageUtil;
 import com.example.impact.utils.QrUtil;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -47,7 +48,7 @@ public class OrganizerCreateEventFragment extends Fragment {
     private final ActivityResultLauncher<String> pickImageLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onImagePicked);
 
-    String organizerEmail = null; // Fix this to use the AppSession
+    String organizerId = null;
 
     public static final String EXTRA_ORGANIZER_ID = "organizer_id";
 
@@ -78,11 +79,14 @@ public class OrganizerCreateEventFragment extends Fragment {
         imgPosterPreview = v.findViewById(R.id.imgPosterPreview);
 
         if (getArguments() != null) {
-            organizerEmail = getArguments().getString("organizerEmail");
+            organizerId = getArguments().getString(EXTRA_ORGANIZER_ID);
+        }
+        if (TextUtils.isEmpty(organizerId)) {
+            organizerId = AppSession.getUserId();
         }
 
-        if (organizerEmail == null) {
-            Toast.makeText(requireContext(), "Organizer email missing", Toast.LENGTH_SHORT).show();
+        if (organizerId == null) {
+            Toast.makeText(requireContext(), "Organizer id missing", Toast.LENGTH_SHORT).show();
             btnCreate.setEnabled(false);
         } else {
             btnCreate.setEnabled(true);
@@ -194,7 +198,7 @@ public class OrganizerCreateEventFragment extends Fragment {
         e.setDescription(etDesc.getText().toString().trim());
         e.setStartDate(startDate); // US 02.01.04
         e.setEndDate(endDate);     // US 02.01.04
-        e.setOrganizerEmail(organizerEmail);
+        e.setOrganizerId(organizerId);
         e.setCapacity(capacity);
 
         if (uploadedImageId != null) {

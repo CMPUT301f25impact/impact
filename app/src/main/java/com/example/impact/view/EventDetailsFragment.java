@@ -41,6 +41,8 @@ public class EventDetailsFragment extends Fragment {
     private TextView countText;
     private TextView statusText;
     private String currentStatus;
+    private String joinButtonDefaultText;
+
 
     /**
      * Factory method to create a new instance of this fragment
@@ -93,6 +95,7 @@ public class EventDetailsFragment extends Fragment {
             criteriaText.setText(R.string.event_details_lottery_criteria);
         }
         joinButton = view.findViewById(R.id.buttonJoinWaitingList);
+        joinButtonDefaultText = joinButton.getText().toString();
         leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
         acceptButton = view.findViewById(R.id.buttonAcceptInvitation);
         declineButton = view.findViewById(R.id.buttonDeclineInvitation);
@@ -174,6 +177,16 @@ public class EventDetailsFragment extends Fragment {
      * Calls the controller to join the waiting list.
      */
     private void joinWaitingList() {
+        if (event == null || !isRegistrationOpen(event)) {
+            Toast.makeText(requireContext(),
+                    R.string.event_details_registration_closed,
+                    Toast.LENGTH_SHORT
+            ).show();
+            // Refresh the button state to reflect this
+            setButtonsForJoinedState(false);
+            return;
+        }
+
         waitingListController.joinWaitingList(event.getId(), event.getName(), entrantId, unused -> {
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();
@@ -201,7 +214,7 @@ public class EventDetailsFragment extends Fragment {
      */
     private void declineSelection() {
         waitingListController.declineSelection(event.getId(), entrantId, unused -> {
-            currentStatus = getString(R.string.event_status_not_selected);
+            currentStatus = getString(R.string.event_status_cancelled);
             updateStatusLabel();
             setButtonsForJoinedState(false);
             updateInvitationButtons();
@@ -214,8 +227,25 @@ public class EventDetailsFragment extends Fragment {
      * Enables/disables CTA buttons based on membership.
      */
     private void setButtonsForJoinedState(boolean joined) {
-        joinButton.setEnabled(!joined);
+        boolean open = event != null && isRegistrationOpen(event);
+
+        // Join button is only enabled if registration is open AND user is not already joined
+        joinButton.setEnabled(!joined && open);
+        joinButton.setAlpha(joinButton.isEnabled() ? 1.0f : 0.5f);
+
+        if (!open) {
+            // Registration window is closed
+            joinButton.setText(getString(R.string.event_details_registration_closed));
+        } else {
+            // Registration is open, show original text
+            if (joinButtonDefaultText != null) {
+                joinButton.setText(joinButtonDefaultText);
+            }
+        }
+
+        // Leave button still makes sense even after close (user can leave the list)
         leaveButton.setEnabled(joined);
+
         updateInvitationButtons();
     }
 
@@ -268,5 +298,22 @@ public class EventDetailsFragment extends Fragment {
             updateStatusLabel();
             Toast.makeText(requireContext(), R.string.event_details_accept_success, Toast.LENGTH_SHORT).show();
         }, error -> Toast.makeText(requireContext(), R.string.event_details_accept_error, Toast.LENGTH_SHORT).show());
+    }
+
+    private boolean isRegistrationOpen(@NonNull Event event) {
+        Date now = new Date();
+        Date start = event.getStartDate();
+        Date end = event.getEndDate();
+
+        // If there is a start date and we're before it → too early
+        if (start != null && now.before(start)) {
+            return false;
+        }
+        // If there is an end date and we're after it → too late
+        if (end != null && now.after(end)) {
+            return false;
+        }
+        // Otherwise, treat as open
+        return true;
     }
 }

@@ -86,6 +86,7 @@ public class WaitingListActivity extends AppCompatActivity {
         eventId = getIntent().getStringExtra("eventId");
         int capacityExtra = getIntent().getIntExtra("eventCapacity", -1);
         eventCapacity = capacityExtra >= 0 ? capacityExtra : null;
+        lotteryAlreadyRun = getIntent().getBooleanExtra("lotteryDone", false);
 
         if (eventId == null || eventId.trim().isEmpty()) {
             Toast.makeText(this, R.string.event_details_error_missing_data, Toast.LENGTH_SHORT).show();

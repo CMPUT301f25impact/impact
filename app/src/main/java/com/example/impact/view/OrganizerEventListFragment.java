@@ -261,6 +261,7 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         if (capacity != null) {
             intent.putExtra("eventCapacity", capacity);
         }
+        intent.putExtra("lotteryDone", event.isLotteryDone());
         startActivity(intent);
     }
 }

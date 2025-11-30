@@ -28,12 +28,14 @@ import java.util.Map;
  */
 public class WaitingListController {
     private static final String COLLECTION_WAITING_LISTS = "waitingLists";
+    private static final String COLLECTION_EVENTS = "events";
     private static final String SUB_COLLECTION_ENTRANTS = "entrants";
 
     private static final String STATUS_PENDING = "pending";
     private static final String STATUS_SELECTED = "selected";
     private static final String STATUS_ACCEPTED = "accepted";
     private static final String STATUS_CANCELLED = "cancelled";
+    private static final String FIELD_LOTTERY_DONE = "lottery_done";
 
     private final FirebaseFirestore firestore;
 
@@ -248,7 +250,15 @@ public class WaitingListController {
                         batch.update(document.getReference(), "status", STATUS_SELECTED);
                     }
                     Task<Void> commit = batch.commit();
-                    attachListeners(commit, successListener, failureListener);
+                    commit.addOnSuccessListener(v -> {
+                        updateLotteryState(eventId, true);
+                        if (successListener != null) {
+                            successListener.onSuccess(v);
+                        }
+                    });
+                    if (failureListener != null) {
+                        commit.addOnFailureListener(failureListener);
+                    }
                 })
                 .addOnFailureListener(error -> {
                     if (failureListener != null) {
@@ -440,5 +450,14 @@ public class WaitingListController {
             }
         }
         return candidate;
+    }
+
+    /**
+     * Marks the related event document with the latest lottery state.
+     */
+    private void updateLotteryState(@NonNull String eventId, boolean isDone) {
+        firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .update(FIELD_LOTTERY_DONE, isDone);
     }
 }

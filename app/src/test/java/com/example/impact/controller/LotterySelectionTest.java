@@ -1,6 +1,7 @@
 package com.example.impact.controller;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,11 +34,17 @@ public class LotterySelectionTest {
         Task<QuerySnapshot> queryTask = mock(Task.class);
         QuerySnapshot snapshot = mock(QuerySnapshot.class);
 
+        CollectionReference eventsCollection = mock(CollectionReference.class);
+        DocumentReference eventDocument = mock(DocumentReference.class);
+
         when(firestore.collection("waitingLists")
                 .document("event-42")
                 .collection("entrants")
                 .whereEqualTo("status", "pending")
                 .get()).thenReturn(queryTask);
+        when(firestore.collection("events")).thenReturn(eventsCollection);
+        when(eventsCollection.document("event-42")).thenReturn(eventDocument);
+        when(eventDocument.update("lottery_done", true)).thenReturn(mock(Task.class));
         when(queryTask.addOnSuccessListener(any())).thenAnswer(invocation -> {
             invocation.<com.google.android.gms.tasks.OnSuccessListener<QuerySnapshot>>getArgument(0).onSuccess(snapshot);
             return queryTask;
@@ -75,6 +82,7 @@ public class LotterySelectionTest {
 
         verify(batch, times(2)).update(any(DocumentReference.class), eq("status"), eq("selected"));
         verify(batch).commit();
+        verify(eventDocument).update("lottery_done", true);
         assertThat(successInvoked.get(), is(true));
     }
 }

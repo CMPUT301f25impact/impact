@@ -136,6 +136,21 @@ public class WaitingListController {
     }
 
     /**
+     * Public helper that draws a single replacement entrant from the pending pool.
+     * Used by organizers when they press the "Redraw" button.
+     *
+     * @param eventId         event identifier
+     * @param successListener invoked when the write succeeds
+     * @param failureListener invoked when the write fails
+     */
+    public void redrawNextEntrant(@NonNull String eventId,
+                                  @Nullable OnSuccessListener<Void> successListener,
+                                  @Nullable OnFailureListener failureListener) {
+        promoteNextEntrant(eventId, successListener, failureListener);
+    }
+
+
+    /**
      * Marks a selected entrant as having accepted their invitation.
      *
      * @param eventId         event identifier
@@ -422,7 +437,7 @@ public class WaitingListController {
     }
 
     /**
-     * Finds and promotes the next pending entrant for a given event.
+     * Finds and redraws the next entrant randomly for a given event.
      *
      * @param eventId          event identifier
      * @param successListener  forwarded when no replacement exists or promotion succeeds
@@ -437,11 +452,15 @@ public class WaitingListController {
                 .whereEqualTo("status", STATUS_PENDING)
                 .get()
                 .addOnSuccessListener(snapshot -> {
-                    DocumentSnapshot next = selectNextPending(snapshot);
-                    if (next == null) {
+                    List<DocumentSnapshot> pending = new ArrayList<>(snapshot.getDocuments());
+                    if (pending.isEmpty()) {
                         if (successListener != null) successListener.onSuccess(null);
                         return;
                     }
+
+                    Collections.shuffle(pending);
+                    DocumentSnapshot next = pending.get(0);
+
                     next.getReference()
                             .update("status", STATUS_SELECTED)
                             .addOnSuccessListener(v -> {

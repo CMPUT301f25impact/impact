@@ -200,6 +200,11 @@ public class EventDetailsFragment extends Fragment {
      * Removes the entrant from the waiting list or records a decline when they were selected.
      */
     private void leaveWaitingList() {
+        if (getString(R.string.event_status_selected).equalsIgnoreCase(currentStatus)) {
+            declineSelection();
+            return;
+        }
+
         waitingListController.leaveWaitingList(event.getId(), entrantId, unused -> {
             currentStatus = getString(R.string.event_status_pending);
             updateStatusLabel();

@@ -1,13 +1,17 @@
 package com.example.impact;
 
 import com.example.impact.model.Event;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class EventTest {
 
@@ -71,5 +75,31 @@ public class EventTest {
         assertNull(event.getEndDate());
         assertNull(event.getPosterUrl());
         assertNotNull(event.getTags()); // tags becomes empty list, not null
+    }
+
+    @Test
+    public void testOrganizerIdIsSerialized() {
+        Event event = new Event();
+        event.setOrganizerId("org-123");
+        event.setOrganizerEmail("legacy@mail.com");
+
+        Map<String, Object> data = event.toMap();
+
+        assertEquals("org-123", data.get("organizerId"));
+        assertEquals("legacy@mail.com", data.get("organizerEmail"));
+    }
+
+    @Test
+    public void testFromSnapshotReadsOrganizerId() {
+        DocumentSnapshot snapshot = mock(DocumentSnapshot.class);
+        when(snapshot.toObject(Event.class)).thenReturn(new Event());
+        when(snapshot.getId()).thenReturn("doc-1");
+        when(snapshot.contains("posterUrl")).thenReturn(false);
+        when(snapshot.contains("organizerId")).thenReturn(true);
+        when(snapshot.getString("organizerId")).thenReturn("org-789");
+
+        Event mapped = Event.fromSnapshot(snapshot);
+
+        assertEquals("org-789", mapped.getOrganizerId());
     }
 }

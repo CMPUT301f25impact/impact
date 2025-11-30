@@ -1,7 +1,5 @@
 package com.example.impact.view.adapter;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -16,15 +14,15 @@ import com.example.impact.view.OrganizerEventListFragment;
 public class OrganizerPagerAdapter extends FragmentStateAdapter {
 
     private static final int PAGE_COUNT = 2;
-    private final String organizerEmail;
+    private final String organizerId;
 
     /**
      * @param fragmentActivity host activity
-     * @param organizerEmail email used to scope organizer data
+     * @param organizerId organizer uid used to scope organizer data
      */
-    public OrganizerPagerAdapter(@NonNull FragmentActivity fragmentActivity, String organizerEmail) {
+    public OrganizerPagerAdapter(@NonNull FragmentActivity fragmentActivity, String organizerId) {
         super(fragmentActivity);
-        this.organizerEmail = organizerEmail;
+        this.organizerId = organizerId;
     }
     // position 0 = EVENTS, position 1 = CREATE
     /**
@@ -35,18 +33,10 @@ public class OrganizerPagerAdapter extends FragmentStateAdapter {
      */
     @Override @NonNull
     public Fragment createFragment(int position) {
-        Fragment fragment;
         if (position == 0) {
-            fragment = new OrganizerEventListFragment();
-        } else {
-            fragment = new OrganizerCreateEventFragment();
-        }  // <-- create form
-
-        Bundle args = new Bundle();
-        args.putString("organizerEmail", organizerEmail);
-        fragment.setArguments(args);
-
-        return fragment;
+            return OrganizerEventListFragment.newInstance(organizerId);
+        }
+        return OrganizerCreateEventFragment.newInstance(organizerId);
     }
 
     /**

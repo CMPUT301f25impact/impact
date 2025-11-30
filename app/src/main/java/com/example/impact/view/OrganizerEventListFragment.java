@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import com.example.impact.R;
 import com.example.impact.controller.EventController;
 import com.example.impact.model.Event;
 import com.example.impact.model.Organizer;
-import com.example.impact.model.User;
 import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.EventAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,7 +35,7 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
     private final EventController controller = new EventController();
     private final ImageController imageController = new ImageController();
     private EventAdapter adapter;
-    private String organizerEmail = "";
+    private String organizerId = "";
     private ListenerRegistration reg;
     private com.example.impact.model.Event eventBeingUpdatedPoster;
     private final androidx.activity.result.ActivityResultLauncher<String> posterPickerLauncher =
@@ -85,17 +83,14 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         if (getArguments() != null) {
-            organizerEmail = getArguments().getString("organizerEmail");
+            organizerId = getArguments().getString(EXTRA_ORGANIZER_ID);
         }
-        if (TextUtils.isEmpty(organizerEmail)) {
-            User currentUser = AppSession.getUser();
-            if (currentUser != null) {
-                organizerEmail = currentUser.getEmail();
-            }
+        if (TextUtils.isEmpty(organizerId)) {
+            organizerId = AppSession.getUserId();
         }
 
-        if (organizerEmail == null) {
-            Toast.makeText(requireContext(), "Organizer email missing", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(organizerId)) {
+            Toast.makeText(requireContext(), "Organizer id missing", Toast.LENGTH_SHORT).show();
             return v;
         }
 
@@ -104,17 +99,15 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
 
         FirebaseFirestore db = AppSession.db();
 
-        // Step 1: verify that this email belongs to an organizer
+        // Step 1: verify that this id belongs to an organizer
         db.collection("users")
-                .whereEqualTo("email", organizerEmail)
-                .whereEqualTo("role", "organizer")
-                .limit(1)
+                .document(organizerId)
                 .get()
-                .addOnSuccessListener(users -> {
-                    if (!users.isEmpty()) {
+                .addOnSuccessListener(userDoc -> {
+                    if (userDoc.exists() && Organizer.ROLE_KEY.equals(userDoc.getString("role"))) {
                         // Step 2: load events for this organizer
                         reg = db.collection("events")
-                                .whereEqualTo("organizerEmail", organizerEmail)
+                                .whereEqualTo("organizerId", organizerId)
                                 .addSnapshotListener((snap, err) -> {
                                     if (err != null || snap == null) return;
                                     List<Event> events = controller.mapEvents(snap);

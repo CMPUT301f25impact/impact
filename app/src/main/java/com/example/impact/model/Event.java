@@ -8,7 +8,9 @@ import com.google.firebase.firestore.PropertyName;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents an event that entrants can view and join waiting lists for.
@@ -25,6 +27,10 @@ public class Event implements Serializable {
     private String posterUrl;
     private List<String> tags = new ArrayList<>();
     private String qrCodeUrl;
+    private String organizerId;
+    /**
+     * @deprecated Use {@link #organizerId} as the canonical organizer identifier.
+     */
     private String organizerEmail;
     private Integer capacity;
     private boolean lottery_done;
@@ -181,6 +187,21 @@ public class Event implements Serializable {
     }
 
     /**
+     * @return organizer id tied to the event
+     */
+    @Nullable
+    public String getOrganizerId() {
+        return organizerId;
+    }
+
+    /**
+     * @param organizerId Firestore identifier of the organizer
+     */
+    public void setOrganizerId(@Nullable String organizerId) {
+        this.organizerId = organizerId;
+    }
+
+    /**
      * @return organizer email tied to the event
      */
     @Nullable
@@ -211,8 +232,26 @@ public class Event implements Serializable {
     }
 
     /**
-     * @return whether the lottery already ran for this event
+     * Serializes this event into a map for Firestore writes.
+     *
+     * @return mutable map representation of the event
      */
+    public Map<String, Object> toMap() {
+        Map<String, Object> data = new HashMap<>();
+        if (name != null) data.put("name", name);
+        if (description != null) data.put("description", description);
+        if (startDate != null) data.put("startDate", startDate);
+        if (endDate != null) data.put("endDate", endDate);
+        if (posterUrl != null) data.put("posterUrl", posterUrl);
+        data.put("tags", tags != null ? tags : new ArrayList<>());
+        if (qrCodeUrl != null) data.put("qrCodeUrl", qrCodeUrl);
+        if (organizerId != null) data.put("organizerId", organizerId);
+        if (organizerEmail != null) data.put("organizerEmail", organizerEmail);
+        if (capacity != null) data.put("capacity", capacity);
+        data.put("lottery_done", lottery_done);
+        return data;
+    }
+
     /**
      * Firestore-compatible accessor for {@code lottery_done}.
      */
@@ -263,6 +302,16 @@ public class Event implements Serializable {
         if (doc.contains("posterUrl")) {
             String poster = doc.getString("posterUrl");
             e.setPosterUrl(poster);
+        }
+        if (doc.contains("organizerId")) {
+            String organizerUid = doc.getString("organizerId");
+            e.setOrganizerId(organizerUid);
+        }
+        if (doc.contains("lottery_done")) {
+            Boolean lotteryDoneField = doc.getBoolean("lottery_done");
+            if (lotteryDoneField != null) {
+                e.setLottery_done(lotteryDoneField);
+            }
         }
 
         return e;

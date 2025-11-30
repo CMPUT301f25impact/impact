@@ -88,10 +88,6 @@ public class EventDetailsFragment extends Fragment {
         TextView descriptionText = view.findViewById(R.id.textViewEventDetailDescription);
         statusText = view.findViewById(R.id.textViewEventDetailStatus);
         countText = view.findViewById(R.id.textViewEventDetailCount);
-        TextView criteriaText = view.findViewById(R.id.textViewLotteryCriteria);
-        if (criteriaText != null) {
-            criteriaText.setText(R.string.event_details_lottery_criteria);
-        }
         joinButton = view.findViewById(R.id.buttonJoinWaitingList);
         leaveButton = view.findViewById(R.id.buttonLeaveWaitingList);
         acceptButton = view.findViewById(R.id.buttonAcceptInvitation);
@@ -201,7 +197,7 @@ public class EventDetailsFragment extends Fragment {
      */
     private void declineSelection() {
         waitingListController.declineSelection(event.getId(), entrantId, unused -> {
-            currentStatus = getString(R.string.event_status_not_selected);
+            currentStatus = getString(R.string.event_status_cancelled);
             updateStatusLabel();
             setButtonsForJoinedState(false);
             updateInvitationButtons();

@@ -13,10 +13,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Handles operations for joining or leaving event waiting lists.
@@ -28,7 +33,7 @@ public class WaitingListController {
     private static final String STATUS_PENDING = "pending";
     private static final String STATUS_SELECTED = "selected";
     private static final String STATUS_ACCEPTED = "accepted";
-    private static final String STATUS_NOT_SELECTED = "not selected";
+    private static final String STATUS_CANCELLED = "cancelled";
 
     private final FirebaseFirestore firestore;
 
@@ -98,7 +103,7 @@ public class WaitingListController {
     }
 
     /**
-     * Records a decline for a selected entrant, marking their entry as {@code "not selected"},
+     * Records a decline for a selected entrant, marking their entry as {@code "cancelled"},
      * and promotes the next eligible entrant when possible.
      *
      * @param eventId         event identifier
@@ -117,7 +122,7 @@ public class WaitingListController {
                 .collection(SUB_COLLECTION_ENTRANTS)
                 .document(entrantId);
 
-        entryRef.update("status", STATUS_NOT_SELECTED)
+        entryRef.update("status", STATUS_CANCELLED)
                 .addOnSuccessListener(v -> promoteNextEntrant(eventId, successListener, failureListener))
                 .addOnFailureListener(error -> {
                     if (failureListener != null) {
@@ -202,6 +207,106 @@ public class WaitingListController {
                         failureListener.onFailure(error);
                     }
                 });
+    }
+
+    /**
+     * Randomly selects pending entrants and marks them as selected.
+     *
+     * @param eventId         event identifier
+     * @param limit           optional maximum entrants to select (selects all pending when {@code null})
+     * @param successListener invoked once updates commit or when nothing needs updating
+     * @param failureListener invoked when either the read or write fails
+     */
+    public void runLottery(@NonNull String eventId,
+                           @Nullable Integer limit,
+                           @Nullable OnSuccessListener<Void> successListener,
+                           @Nullable OnFailureListener failureListener) {
+        if (isNullOrBlank(eventId)) {
+            throw new IllegalArgumentException("Event id is required");
+        }
+
+        firestore.collection(COLLECTION_WAITING_LISTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_ENTRANTS)
+                .whereEqualTo("status", STATUS_PENDING)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<DocumentSnapshot> pending = snapshot != null
+                            ? new ArrayList<>(snapshot.getDocuments())
+                            : new ArrayList<>();
+                    int selectionCount = determineSelectionCount(limit, pending.size());
+                    if (selectionCount == 0) {
+                        if (successListener != null) {
+                            successListener.onSuccess(null);
+                        }
+                        return;
+                    }
+                    Collections.shuffle(pending);
+                    WriteBatch batch = firestore.batch();
+                    for (int i = 0; i < selectionCount; i++) {
+                        DocumentSnapshot document = pending.get(i);
+                        batch.update(document.getReference(), "status", STATUS_SELECTED);
+                    }
+                    Task<Void> commit = batch.commit();
+                    attachListeners(commit, successListener, failureListener);
+                })
+                .addOnFailureListener(error -> {
+                    if (failureListener != null) {
+                        failureListener.onFailure(error);
+                    }
+                });
+    }
+
+    /**
+     * Indicates whether the event already has selected entrants, implying the lottery was run.
+     *
+     * @param eventId         event identifier
+     * @param successListener invoked with {@code true} when any selection exists
+     * @param failureListener invoked when the read fails
+     */
+    public void hasLotteryRun(@NonNull String eventId,
+                              @Nullable OnSuccessListener<Boolean> successListener,
+                              @Nullable OnFailureListener failureListener) {
+        if (isNullOrBlank(eventId)) {
+            throw new IllegalArgumentException("Event id is required");
+        }
+
+        List<String> selectionStatuses = Arrays.asList(
+                STATUS_SELECTED,
+                STATUS_ACCEPTED,
+                STATUS_CANCELLED
+        );
+
+        firestore.collection(COLLECTION_WAITING_LISTS)
+                .document(eventId)
+                .collection(SUB_COLLECTION_ENTRANTS)
+                .whereIn("status", selectionStatuses)
+                .limit(1)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (successListener != null) {
+                        successListener.onSuccess(snapshot != null && !snapshot.isEmpty());
+                    }
+                })
+                .addOnFailureListener(error -> {
+                    if (failureListener != null) {
+                        failureListener.onFailure(error);
+                    }
+                });
+    }
+
+    /**
+     * Calculates how many entrants should be promoted based on pending size and limit.
+     */
+    private int determineSelectionCount(@Nullable Integer limit, int pendingSize) {
+        if (pendingSize <= 0) {
+            return 0;
+        }
+        if (limit == null) {
+            return pendingSize;
+        }
+        int normalizedLimit = Math.max(limit, 0);
+        return Math.min(normalizedLimit, pendingSize);
     }
 
     /**

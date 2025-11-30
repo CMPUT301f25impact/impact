@@ -46,8 +46,8 @@ public class OrganizerActivity extends BaseDashboardActivity {
         } else if (itemId == R.id.organizer_nav_create_event) {
             return OrganizerCreateEventFragment.newInstance(organizerId);
         } else if (itemId == R.id.organizer_nav_notifications) {
-//            return OrganizerNotificationsFragment.newInstance(organizerId); // This doesn't exist yet but it will
-            return OrganizerEventListFragment.newInstance(organizerId); // For now just return event view
+            return OrganizerNotificationsFragment.newInstance(organizerId); // This doesn't exist yet but it will
+//            return OrganizerEventListFragment.newInstance(organizerId); // For now just return event view
         }
         return null;
     }

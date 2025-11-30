@@ -3,8 +3,10 @@ package com.example.impact.controller;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.impact.model.Event;
 import com.example.impact.model.WaitingListEntry;
 import com.example.impact.utils.AppSession;
+import com.example.impact.view.WaitingListActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -212,6 +214,27 @@ public class WaitingListController {
     }
 
     /**
+     * Retrieves the waiting list for the given eventId.
+     *
+     * @param eventId         event identifier
+     * @param successListener invoked with the count (never {@code null})
+     * @param failureListener invoked when the read fails
+     */
+    public void fetchWaitingListByEventId(@NonNull String eventId,
+                                      @Nullable OnSuccessListener<List<WaitingListEntry>> successListener,
+                                      @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_WAITING_LISTS)
+                .whereEqualTo("eventId", eventId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<WaitingListEntry> waitingList = mapWaitingList(snapshot);
+                    if (successListener != null) {
+                        successListener.onSuccess(waitingList);
+                    }
+                });
+// close failureListener here if needed
+    }
+    /**
      * Randomly selects pending entrants and marks them as selected.
      *
      * @param eventId         event identifier
@@ -331,6 +354,22 @@ public class WaitingListController {
         }
         return WaitingListEntry.fromSnapshot(snapshot);
     }
+
+    /**
+     * Maps firestore query into a list of waiting list entries
+     *
+     * @param snapshot query result
+     * @return mapped waiting list entry list
+     */
+    public List<WaitingListEntry> mapWaitingList(@Nullable QuerySnapshot snapshot) {
+        List<WaitingListEntry> waitingList = new ArrayList<>();
+        if (snapshot == null) {
+            return waitingList;
+        }
+        snapshot.getDocuments().forEach(document -> waitingList.add(WaitingListEntry.fromSnapshot(document)));
+        return waitingList;
+    }
+
 
     /**
      * Builds the Firestore payload for a waiting-list entry.

@@ -214,7 +214,7 @@ public class EventDetailsFragment extends Fragment {
      */
     private void declineSelection() {
         waitingListController.declineSelection(event.getId(), entrantId, unused -> {
-            currentStatus = getString(R.string.event_status_not_selected);
+            currentStatus = getString(R.string.event_status_cancelled);
             updateStatusLabel();
             setButtonsForJoinedState(false);
             updateInvitationButtons();

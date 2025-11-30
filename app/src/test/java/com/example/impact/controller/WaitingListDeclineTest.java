@@ -35,7 +35,7 @@ public class WaitingListDeclineTest {
                 .document("entrant-9")).thenReturn(entryRef);
 
         Task<Void> task = mock(Task.class);
-        when(entryRef.update("status", "not selected")).thenReturn(task);
+        when(entryRef.update("status", "cancelled")).thenReturn(task);
         when(task.addOnSuccessListener(any())).thenAnswer(invocation -> {
             invocation.<com.google.android.gms.tasks.OnSuccessListener<Void>>getArgument(0).onSuccess(null);
             return task;
@@ -61,7 +61,7 @@ public class WaitingListDeclineTest {
 
         controller.declineSelection("event-1", "entrant-9", unused -> successInvoked.set(true), error -> { });
 
-        verify(entryRef).update("status", "not selected");
+        verify(entryRef).update("status", "cancelled");
         assertThat(successInvoked.get(), is(true));
     }
 }

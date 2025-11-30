@@ -55,7 +55,7 @@ public class UserControllerTest {
     @Test
     public void mapHistory_ordersByMostRecent() {
         WaitingListEntry older = new WaitingListEntry("eventA", "Event A", "entrant", new Date(1000), "selected");
-        WaitingListEntry newer = new WaitingListEntry("eventB", "Event B", "entrant", new Date(5000), "not selected");
+        WaitingListEntry newer = new WaitingListEntry("eventB", "Event B", "entrant", new Date(5000), "cancelled");
 
         DocumentSnapshot olderSnapshot = mock(DocumentSnapshot.class);
         when(olderSnapshot.exists()).thenReturn(true);

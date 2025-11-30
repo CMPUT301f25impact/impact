@@ -63,6 +63,11 @@ public class Event implements Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     /**
      * @return Firestore identifier
      */

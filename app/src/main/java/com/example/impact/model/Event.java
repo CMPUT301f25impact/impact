@@ -248,9 +248,10 @@ public class Event implements Serializable {
         if (organizerId != null) data.put("organizerId", organizerId);
         if (organizerEmail != null) data.put("organizerEmail", organizerEmail);
         if (capacity != null) data.put("capacity", capacity);
+        data.put("lottery_done", lottery_done);
         return data;
-     * @return whether the lottery already ran for this event
-     */
+    }
+
     /**
      * Firestore-compatible accessor for {@code lottery_done}.
      */
@@ -305,6 +306,12 @@ public class Event implements Serializable {
         if (doc.contains("organizerId")) {
             String organizerUid = doc.getString("organizerId");
             e.setOrganizerId(organizerUid);
+        }
+        if (doc.contains("lottery_done")) {
+            Boolean lotteryDoneField = doc.getBoolean("lottery_done");
+            if (lotteryDoneField != null) {
+                e.setLottery_done(lotteryDoneField);
+            }
         }
 
         return e;

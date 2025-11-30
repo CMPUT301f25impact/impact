@@ -112,4 +112,5 @@
     <string name="entrant_dashboard_title">Entrant Dashboard</string>
     <string name="delete_dialog_text">Are you sure you want to delete %1$s? This action cannot be undone.</string>
     <string name="image_content_description">Event Poster Image</string>
+    <string name="event_details_registration_closed">Registration closed</string>
 </resources>

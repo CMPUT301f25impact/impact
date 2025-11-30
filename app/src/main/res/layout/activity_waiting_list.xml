@@ -16,6 +16,15 @@
             android:text="@string/event_details_run_lottery_button"
             android:visibility="gone" />
 
+        <Button
+            android:id="@+id/buttonRedraw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/waiting_list_redraw_button"
+            android:visibility="gone" />
+
+
         <TextView
             android:id="@+id/textViewLotteryCriteria"
             android:layout_width="match_parent"

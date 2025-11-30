@@ -250,6 +250,7 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
     public void onViewEntrantsClicked(@NonNull Event event) {
         Intent intent = new Intent(requireContext(), WaitingListActivity.class);
         intent.putExtra("eventId", event.getId());
+        intent.putExtra("eventName", event.getName());
         Integer capacity = event.getCapacity();
         if (capacity != null) {
             intent.putExtra("eventCapacity", capacity);

@@ -279,12 +279,22 @@ public class WaitingListActivity extends AppCompatActivity {
             int filled = selectedCount + acceptedCount;
             if (filled >= eventCapacity) {
                 // No vacancies left
+                Toast.makeText(
+                        this,
+                        getString(R.string.waiting_list_redraw_full_error),
+                        Toast.LENGTH_SHORT
+                ).show();
                 updateRedrawAvailability();
                 return;
             }
         }
         // Need at least one pending entrant to redraw
         if (pendingCount <= 0) {
+            Toast.makeText(
+                    this,
+                    getString(R.string.waiting_list_redraw_no_pending_error),
+                    Toast.LENGTH_SHORT
+            ).show();
             updateRedrawAvailability();
             return;
         }

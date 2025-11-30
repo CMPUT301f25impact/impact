@@ -49,10 +49,12 @@
     <string name="event_details_run_lottery_success">Lottery results published</string>
     <string name="event_details_run_lottery_error">Unable to run lottery</string>
     <string name="event_details_waiting_list_count">Total entrants: %1$d</string>
+    <string name="event_details_lottery_criteria">Lottery rules:\n• Earliest pending entrants are selected when spots open.\n• Selected entrants must accept or decline.\n• Declining promotes the next pending entrant.</string>
     <string name="waiting_list_pending_header">Pending Entrants</string>
     <string name="waiting_list_selected_header">Chosen Entrants</string>
     <string name="waiting_list_cancelled_header">Cancelled Entrants</string>
     <string name="waiting_list_accepted_header">Enrolled Entrants</string>
+    <string name="waiting_list_lottery_criteria">Lottery rules:\n• Earliest pending entrants are selected when spots open.\n• Selected entrants must accept or decline.\n• Declining promotes the next pending entrant.</string>
     <string name="waiting_list_empty_pending">No pending entrants yet.</string>
     <string name="waiting_list_empty_selected">No entrants have been chosen.</string>
     <string name="waiting_list_empty_cancelled">No entrants declined or were cancelled.</string>

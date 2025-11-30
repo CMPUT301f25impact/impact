@@ -43,6 +43,7 @@ public class WaitingListActivity extends AppCompatActivity {
     private TextView selectedEmptyView;
     private TextView cancelledEmptyView;
     private TextView acceptedEmptyView;
+    private TextView lotteryCriteriaView;
     private Button runLotteryButton;
 
     private ListenerRegistration pendingRegistration;
@@ -70,6 +71,7 @@ public class WaitingListActivity extends AppCompatActivity {
         selectedEmptyView = findViewById(R.id.textViewSelectedEmpty);
         cancelledEmptyView = findViewById(R.id.textViewCancelledEmpty);
         acceptedEmptyView = findViewById(R.id.textViewAcceptedEmpty);
+        lotteryCriteriaView = findViewById(R.id.textViewLotteryCriteria);
 
         pendingAdapter = new SimpleEntrantAdapter();
         selectedAdapter = new SimpleEntrantAdapter();
@@ -105,9 +107,15 @@ public class WaitingListActivity extends AppCompatActivity {
     private void configureRunLotteryButton() {
         if (!isOrganizer) {
             runLotteryButton.setVisibility(View.GONE);
+            if (lotteryCriteriaView != null) {
+                lotteryCriteriaView.setVisibility(View.GONE);
+            }
             return;
         }
         runLotteryButton.setVisibility(View.VISIBLE);
+        if (lotteryCriteriaView != null) {
+            lotteryCriteriaView.setVisibility(View.VISIBLE);
+        }
         runLotteryButton.setOnClickListener(v -> runLottery());
         determineLotteryRunState();
     }
@@ -165,9 +173,15 @@ public class WaitingListActivity extends AppCompatActivity {
     private void updateRunLotteryButton() {
         if (!isOrganizer) {
             runLotteryButton.setVisibility(View.GONE);
+            if (lotteryCriteriaView != null) {
+                lotteryCriteriaView.setVisibility(View.GONE);
+            }
             return;
         }
         runLotteryButton.setEnabled(!lotteryAlreadyRun);
+        if (lotteryCriteriaView != null) {
+            lotteryCriteriaView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void runLottery() {

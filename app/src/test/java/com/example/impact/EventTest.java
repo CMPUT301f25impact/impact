@@ -37,6 +37,7 @@ public class EventTest {
         assertEquals(end, event.getEndDate());
         assertEquals("poster.png", event.getPosterUrl());
         assertTrue(event.getTags().contains("coding"));
+        assertFalse(event.isLottery_done());
     }
 
     @Test
@@ -48,12 +49,14 @@ public class EventTest {
         event.setDescription("Robotics and physics");
         event.setPosterUrl("image.jpg");
         event.setCapacity(100);
+        event.setLottery_done(true);
 
         assertEquals("E200", event.getId());
         assertEquals("Science Fair", event.getName());
         assertEquals("Robotics and physics", event.getDescription());
         assertEquals("image.jpg", event.getPosterUrl());
         assertEquals(Integer.valueOf(100), event.getCapacity());
+        assertTrue(event.isLottery_done());
     }
 
     @Test

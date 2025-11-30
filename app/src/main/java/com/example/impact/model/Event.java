@@ -3,6 +3,7 @@ package com.example.impact.model;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.PropertyName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ public class Event implements Serializable {
      */
     private String organizerEmail;
     private Integer capacity;
+    private boolean lottery_done;
 
     /**
      * Required empty constructor for Firestore deserialization.
@@ -247,6 +249,36 @@ public class Event implements Serializable {
         if (organizerEmail != null) data.put("organizerEmail", organizerEmail);
         if (capacity != null) data.put("capacity", capacity);
         return data;
+     * @return whether the lottery already ran for this event
+     */
+    /**
+     * Firestore-compatible accessor for {@code lottery_done}.
+     */
+    @PropertyName("lottery_done")
+    public boolean isLottery_done() {
+        return lottery_done;
+    }
+
+    /**
+     * Firestore-compatible setter for {@code lottery_done}.
+     */
+    @PropertyName("lottery_done")
+    public void setLottery_done(boolean lottery_done) {
+        this.lottery_done = lottery_done;
+    }
+
+    /**
+     * Convenience getter matching standard Java naming.
+     */
+    public boolean isLotteryDone() {
+        return lottery_done;
+    }
+
+    /**
+     * Convenience setter matching standard Java naming.
+     */
+    public void setLotteryDone(boolean lotteryDone) {
+        this.lottery_done = lotteryDone;
     }
 
     /**

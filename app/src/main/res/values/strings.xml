@@ -45,6 +45,9 @@
     <string name="event_details_accept_error">Unable to accept invitation</string>
     <string name="event_details_decline_success">Invitation declined</string>
     <string name="event_details_decline_error">Unable to decline invitation</string>
+    <string name="event_details_run_lottery_button">Run Lottery</string>
+    <string name="event_details_run_lottery_success">Lottery results published</string>
+    <string name="event_details_run_lottery_error">Unable to run lottery</string>
     <string name="event_details_waiting_list_count">Total entrants: %1$d</string>
     <string name="event_details_lottery_criteria">Lottery rules:\n• Entrants may join the waiting list until the enrollment end date.\n• The organizer runs a lottery after enrollment closes.\n• The lottery randomly selects entrants to receive invitations.\n• Selected entrants must accept or decline their invitation.\n• Declining or cancellation triggers selection of replacement entrants.</string>
     <string name="event_qr_invalid">Invalid QR code</string>
@@ -54,7 +57,7 @@
     <string name="event_details_error_missing_data">Missing event information</string>
     <string name="event_details_status_label">Status: %1$s</string>
     <string name="event_status_selected">selected</string>
-    <string name="event_status_not_selected">not selected</string>
+    <string name="event_status_cancelled">cancelled</string>
     <string name="event_status_pending">pending</string>
     <string name="event_status_accepted">accepted</string>
     <string name="event_history_title">Event History</string>
@@ -112,4 +115,5 @@
     <string name="entrant_dashboard_title">Entrant Dashboard</string>
     <string name="delete_dialog_text">Are you sure you want to delete %1$s? This action cannot be undone.</string>
     <string name="image_content_description">Event Poster Image</string>
+    <string name="event_details_registration_closed">Registration closed</string>
 </resources>

@@ -238,9 +238,14 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
      */
     @Override
     public void onEventClicked(@NonNull Event event) {
-        eventBeingUpdatedPoster = event;
-        Toast.makeText(requireContext(), "Choose a new poster image…", Toast.LENGTH_SHORT).show();
-        posterPickerLauncher.launch("image/*");
+    //        eventBeingUpdatedPoster = event;
+    //        Toast.makeText(requireContext(), "Choose a new poster image…", Toast.LENGTH_SHORT).show();
+    //        posterPickerLauncher.launch("image/*");
+        OrganizerEditEventFragment fragment = OrganizerEditEventFragment.newInstance(organizerId, event);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.dashboard_fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.example.impact.model;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,7 +27,6 @@ public class Event implements Serializable {
     @Nullable
     private String posterUrl;
     private List<String> tags = new ArrayList<>();
-    private String qrCodeUrl;
     private String organizerId;
     /**
      * @deprecated Use {@link #organizerId} as the canonical organizer identifier.
@@ -72,6 +72,7 @@ public class Event implements Serializable {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return name;
     }
@@ -118,10 +119,10 @@ public class Event implements Serializable {
         this.description = description;
     }
 
-    @Nullable
     /**
      * @return optional start date
      */
+    @Nullable
     public Date getStartDate() {
         return startDate;
     }
@@ -133,10 +134,10 @@ public class Event implements Serializable {
         this.startDate = startDate;
     }
 
-    @Nullable
     /**
      * @return optional end date
      */
+    @Nullable
     public Date getEndDate() {
         return endDate;
     }
@@ -148,10 +149,10 @@ public class Event implements Serializable {
         this.endDate = endDate;
     }
 
-    @Nullable
     /**
      * @return poster URL if one exists
      */
+    @Nullable
     public String getPosterUrl() {
         return posterUrl;
     }
@@ -176,19 +177,12 @@ public class Event implements Serializable {
     public void setTags(List<String> tags) {
         this.tags = tags != null ? tags : new ArrayList<>();
     }
-    /**
-     * @return optional QR payload URL
-     */
-    @Nullable
-    public String getQrCodeUrl() {
-        return qrCodeUrl;
-    }
 
     /**
-     * @param qrCodeUrl optional QR payload URL
+     * @return QR code payload
      */
-    public void setQrCodeUrl(@Nullable String qrCodeUrl) {
-        this.qrCodeUrl = qrCodeUrl;
+    public String getQrCodePayload() {
+        return "impact://event/" + id;
     }
 
     /**
@@ -249,7 +243,6 @@ public class Event implements Serializable {
         if (endDate != null) data.put("endDate", endDate);
         if (posterUrl != null) data.put("posterUrl", posterUrl);
         data.put("tags", tags != null ? tags : new ArrayList<>());
-        if (qrCodeUrl != null) data.put("qrCodeUrl", qrCodeUrl);
         if (organizerId != null) data.put("organizerId", organizerId);
         if (organizerEmail != null) data.put("organizerEmail", organizerEmail);
         if (capacity != null) data.put("capacity", capacity);
@@ -290,7 +283,7 @@ public class Event implements Serializable {
     /**
      * Populates an event from a Firestore snapshot.
      *
-     * @param snapshot Firestore document
+     * @param doc Firestore document
      * @return mapped Event instance
      */
     public static Event fromSnapshot(DocumentSnapshot doc) {

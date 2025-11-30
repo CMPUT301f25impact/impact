@@ -66,7 +66,7 @@ public class OrganizerCreateEventFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_organizer_tools, container, false);
+        View v = inflater.inflate(R.layout.fragment_organizer_event_details, container, false);
 
         etName = v.findViewById(R.id.etEventName);
         etDesc = v.findViewById(R.id.etEventDescription);
@@ -164,10 +164,16 @@ public class OrganizerCreateEventFragment extends Fragment {
         picker.addOnPositiveButtonClickListener(ms -> {
             if (isStart) {
                 startDate = new Date(ms);
-                btnStart.setText("Start: " + picker.getHeaderText());
+                btnStart.setText(getString(
+                        R.string.event_details_start_date_picker_button_filled,
+                        picker.getHeaderText())
+                );
             } else {
                 endDate = new Date(ms);
-                btnEnd.setText("End: " + picker.getHeaderText());
+                btnEnd.setText(getString(
+                        R.string.event_details_end_date_picker_button_filled,
+                        picker.getHeaderText())
+                );
             }
         });
         picker.show(getParentFragmentManager(), isStart ? "reg_start" : "reg_end");
@@ -216,7 +222,7 @@ public class OrganizerCreateEventFragment extends Fragment {
                 );
             }
             // Build the QR payload (deep link or just the eventId)
-            String payload = "impact://event/" + eventId;
+            String payload = e.getQrCodePayload();
 
             // Save QR payload string in Firestore (NOT an image URL)
             controller.updateQrPayload(eventId, payload,

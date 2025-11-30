@@ -40,14 +40,17 @@ public class WaitingListActivity extends AppCompatActivity {
     private SimpleEntrantAdapter selectedAdapter;
     private SimpleEntrantAdapter cancelledAdapter;
     private SimpleEntrantAdapter acceptedAdapter;
-
+    private int pendingCount = 0;
+    private int selectedCount = 0;
+    private int acceptedCount = 0;
+    private int cancelledCount = 0;
     private TextView pendingEmptyView;
     private TextView selectedEmptyView;
     private TextView cancelledEmptyView;
     private TextView acceptedEmptyView;
     private TextView lotteryCriteriaView;
     private Button runLotteryButton;
-
+    private Button redrawButton;
     private ListenerRegistration pendingRegistration;
     private ListenerRegistration selectedRegistration;
     private ListenerRegistration cancelledRegistration;
@@ -72,6 +75,8 @@ public class WaitingListActivity extends AppCompatActivity {
         isOrganizer = Organizer.ROLE_KEY.equals(AppSession.getRole());
 
         runLotteryButton = findViewById(R.id.buttonRunLottery);
+        redrawButton = findViewById(R.id.buttonRedraw);
+        redrawButton.setOnClickListener(v -> redrawLottery());
         pendingEmptyView = findViewById(R.id.textViewPendingEmpty);
         selectedEmptyView = findViewById(R.id.textViewSelectedEmpty);
         cancelledEmptyView = findViewById(R.id.textViewCancelledEmpty);
@@ -120,6 +125,9 @@ public class WaitingListActivity extends AppCompatActivity {
     private void configureRunLotteryButton() {
         if (!isOrganizer) {
             runLotteryButton.setVisibility(View.GONE);
+            if (redrawButton != null) {
+                redrawButton.setVisibility(View.GONE);
+            }
             if (lotteryCriteriaView != null) {
                 lotteryCriteriaView.setVisibility(View.GONE);
             }
@@ -130,8 +138,13 @@ public class WaitingListActivity extends AppCompatActivity {
             lotteryCriteriaView.setVisibility(View.VISIBLE);
         }
         runLotteryButton.setOnClickListener(v -> runLottery());
+        if (redrawButton != null) {
+            redrawButton.setOnClickListener(v -> redrawLottery());
+        }
+
         determineLotteryRunState();
     }
+
 
     private void startStatusSubscriptions() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -157,6 +170,20 @@ public class WaitingListActivity extends AppCompatActivity {
                     adapter.submit(rows);
                     if (emptyView != null) {
                         emptyView.setVisibility(rows.isEmpty() ? View.VISIBLE : View.GONE);
+                    }
+                    switch (status) {
+                        case STATUS_PENDING:
+                            pendingCount = rows.size();
+                            break;
+                        case STATUS_SELECTED:
+                            selectedCount = rows.size();
+                            break;
+                        case STATUS_ACCEPTED:
+                            acceptedCount = rows.size();
+                            break;
+                        case STATUS_CANCELLED:
+                            cancelledCount = rows.size();
+                            break;
                     }
                 });
     }
@@ -186,16 +213,58 @@ public class WaitingListActivity extends AppCompatActivity {
     private void updateRunLotteryButton() {
         if (!isOrganizer) {
             runLotteryButton.setVisibility(View.GONE);
+            if (redrawButton != null) {
+                redrawButton.setVisibility(View.GONE);
+            }
             if (lotteryCriteriaView != null) {
                 lotteryCriteriaView.setVisibility(View.GONE);
             }
             return;
         }
+        // Run Lottery can only be used before the lottery has run
+        runLotteryButton.setVisibility(View.VISIBLE);
         runLotteryButton.setEnabled(!lotteryAlreadyRun);
+        // Redraw is only meaningful AFTER the initial lottery
+        if (redrawButton != null) {
+            redrawButton.setVisibility(lotteryAlreadyRun ? View.VISIBLE : View.GONE);
+            redrawButton.setEnabled(lotteryAlreadyRun);
+        }
         if (lotteryCriteriaView != null) {
             lotteryCriteriaView.setVisibility(View.VISIBLE);
         }
     }
+
+
+    private void updateRedrawAvailability() {
+        if (!isOrganizer || redrawButton == null) return;
+
+        // Only visible when lottery has already run
+        if (!lotteryAlreadyRun) {
+            redrawButton.setVisibility(View.GONE);
+            return;
+        }
+
+        // Not enough info to validate capacity
+        if (eventCapacity == null) {
+            boolean canRedraw = pendingCount > 0;
+            redrawButton.setVisibility(View.VISIBLE);
+            redrawButton.setEnabled(canRedraw);
+            redrawButton.setAlpha(canRedraw ? 1f : 0.5f);
+            return;
+        }
+
+        // Full? No redraw.
+        int filled = selectedCount + acceptedCount;
+        boolean hasVacancy = filled < eventCapacity;
+        boolean hasPending = pendingCount > 0;
+
+        boolean canRedraw = hasPending && hasVacancy;
+
+        redrawButton.setVisibility(View.VISIBLE);
+        redrawButton.setEnabled(canRedraw);
+        redrawButton.setAlpha(canRedraw ? 1f : 0.5f);
+    }
+
 
     private void runLottery() {
         if (!isOrganizer) {
@@ -212,6 +281,43 @@ public class WaitingListActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.event_details_run_lottery_error, Toast.LENGTH_SHORT).show();
         });
     }
+
+    private void redrawLottery() {
+        if (!isOrganizer) {
+            return;
+        }
+        // If we know the capacity, make sure there is at least one free spot
+        if (eventCapacity != null) {
+            int filled = selectedCount + acceptedCount;
+            if (filled >= eventCapacity) {
+                // No vacancies left
+                Toast.makeText(
+                        this,
+                        getString(R.string.waiting_list_redraw_full_error),
+                        Toast.LENGTH_SHORT
+                ).show();
+                updateRedrawAvailability();
+                return;
+            }
+        }
+        // Need at least one pending entrant to redraw
+        if (pendingCount <= 0) {
+            Toast.makeText(
+                    this,
+                    getString(R.string.waiting_list_redraw_no_pending_error),
+                    Toast.LENGTH_SHORT
+            ).show();
+            updateRedrawAvailability();
+            return;
+        }
+        waitingListController.redrawNextEntrant(eventId, unused -> {
+            Toast.makeText(this, R.string.waiting_list_redraw_success, Toast.LENGTH_SHORT).show();
+        }, error -> {
+            Toast.makeText(this, R.string.waiting_list_redraw_error, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+
 
     private void clearListeners() {
         if (pendingRegistration != null) {

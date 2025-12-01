@@ -471,7 +471,8 @@ public class WaitingListController {
     }
 
     /**
-     * Finds and redraws the next entrant randomly for a given event.
+     * Finds and redraws the next entrant randomly for a given event, issuing notifications to any
+     * entrant promoted into the selected state.
      *
      * @param eventId          event identifier
      * @param successListener  forwarded when no replacement exists or promotion succeeds
@@ -498,6 +499,13 @@ public class WaitingListController {
                     next.getReference()
                             .update("status", STATUS_SELECTED)
                             .addOnSuccessListener(v -> {
+                                if (notificationController != null) {
+                                    String entrantId = next.getString("entrantId");
+                                    String eventName = next.getString("eventName");
+                                    if (entrantId != null && eventName != null) {
+                                        notificationController.createOfferNotification(entrantId, eventId, eventName);
+                                    }
+                                }
                                 if (successListener != null) successListener.onSuccess(null);
                             })
                             .addOnFailureListener(error -> {

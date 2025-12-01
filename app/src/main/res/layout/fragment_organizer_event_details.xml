@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical" android:padding="16dp"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etEventName"
+            android:hint="Event Name"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etEventDescription"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etCapacity"
+            android:hint="Capacity"
+            android:inputType="number"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etWaitlistCapacity"
+            android:hint="(Optional) Waitlist Capacity"
+            android:inputType="number"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnPickStart"
+            android:text="Select Registration Start"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnPickEnd"
+            android:text="Select Registration End"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/imgQrPreview"
+            android:layout_width="180dp" android:layout_height="180dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="QR preview"
+            android:layout_marginTop="12dp"/>
+
+        <ImageView
+            android:id="@+id/imgPosterPreview"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/darker_gray"/>
+
+        <Button
+            android:id="@+id/btnSaveQr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Save QR to Gallery"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnUploadPoster"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Poster (optional)"
+            android:layout_marginTop="8dp"/>
+
+        <Button
+            android:id="@+id/btnCreateEvent"
+            android:text="Create Event"
+            android:layout_marginTop="12dp"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

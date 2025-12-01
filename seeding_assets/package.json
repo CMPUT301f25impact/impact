@@ -1,0 +1,13 @@
+{
+  "name": "impact-seeding",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Firestore seeding utilities for the Impact app",
+  "scripts": {
+    "seed": "node script/seed_demo_data.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-tools": "^13.12.2"
+  }
+}

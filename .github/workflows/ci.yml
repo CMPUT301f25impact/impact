@@ -3,8 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - dev
   pull_request:
+    branches:
+      - dev
 
 jobs:
   build:
@@ -23,6 +25,14 @@ jobs:
 
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
+
+
+      - name: Create google-services.json
+        run: |
+          echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
+
 
       - name: Build with Gradle
         run: ./gradlew build --stacktrace

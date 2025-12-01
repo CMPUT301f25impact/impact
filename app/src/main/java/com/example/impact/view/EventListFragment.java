@@ -1,0 +1,311 @@
+package com.example.impact.view;
+
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.impact.R;
+import com.example.impact.controller.EventController;
+import com.example.impact.model.Event;
+import com.example.impact.view.adapter.EventAdapter;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Displays a list of events and exposes filtering for entrant interests and availability.
+ */
+public class EventListFragment extends Fragment implements EventAdapter.OnEventClickListener {
+    public static final String EXTRA_ENTRANT_ID = "entrant_id";
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+
+    private EventController eventController;
+    private EventAdapter eventAdapter;
+    private TextView emptyStateView;
+    private String entrantId;
+    private ActivityResultLauncher<Intent> qrScannerLauncher;
+
+    private List<String> selectedTags;
+    @Nullable
+    private Date selectedStartDate;
+    @Nullable
+    private Date selectedEndDate;
+
+    /**
+     * Factory helper bundling an entrant id argument with the fragment.
+     *
+     * @param entrantId entrant identifier
+     * @return configured fragment instance
+     */
+    public static EventListFragment newInstance(String entrantId) {
+        EventListFragment fragment = new EventListFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ENTRANT_ID, entrantId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onViewEntrantsClicked(@NonNull Event event) {
+        // This screen doesn’t use “View Entrants”. No-op is fine.
+        // (Only Organizer screens navigate to WaitingListActivity.)
+    }
+
+    @Override
+    public void onEventClicked(Event event) {
+        if (event == null) {
+            return;
+        }
+        EventDetailsFragment detailsFragment = EventDetailsFragment.newInstance(event, entrantId);
+
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.dashboard_fragment_container, detailsFragment)
+                .addToBackStack(null) // This is crucial for back button support
+                .commit();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            entrantId = getArguments().getString(EXTRA_ENTRANT_ID);
+        }
+
+        eventController = new EventController();
+        qrScannerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() != Activity.RESULT_OK || result.getData() == null) {
+                        return;
+                    }
+                    String eventId = result.getData().getStringExtra(QrScannerActivity.EXTRA_EVENT_ID);
+                    handleScannedEventId(eventId);
+                });
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_event_list, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        emptyStateView = view.findViewById(R.id.textViewEmptyState);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewEvents);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        eventAdapter = new EventAdapter(this);
+        recyclerView.setAdapter(eventAdapter);
+
+        Button filterButton = view.findViewById(R.id.buttonFilterEvents);
+        Button clearFilterButton = view.findViewById(R.id.buttonClearFilter);
+        Button scanQrButton = view.findViewById(R.id.buttonScanQr);
+
+        filterButton.setOnClickListener(v -> showFilterDialog());
+        clearFilterButton.setOnClickListener(v -> {
+            selectedTags = null;
+            selectedStartDate = null;
+            selectedEndDate = null;
+            loadEvents();
+        });
+        scanQrButton.setOnClickListener(v -> launchQrScanner());
+
+        loadEvents();
+    }
+
+    /**
+     * Requests events from Firestore, applying filters if needed.
+     */
+    private void loadEvents() {
+        if (hasActiveFilter()) {
+            eventController.fetchFilteredEvents(selectedTags, selectedStartDate, selectedEndDate, this::onEventsLoaded,
+                    error -> Toast.makeText(requireContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
+        } else {
+            eventController.fetchAvailableEvents(this::onEventsLoaded,
+                    error -> Toast.makeText(requireContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
+        }
+    }
+
+    /**
+     * Indicates whether any filter criteria are currently set.
+     */
+    private boolean hasActiveFilter() {
+        return (selectedTags != null && !selectedTags.isEmpty())
+                || selectedStartDate != null
+                || selectedEndDate != null;
+    }
+
+    /**
+     * Updates the adapter when Firestore returns results.
+     */
+    private void onEventsLoaded(List<Event> events) {
+        eventAdapter.setEvents(events);
+        emptyStateView.setVisibility(events == null || events.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * Presents the filter dialog for selecting tags and date ranges.
+     */
+    private void showFilterDialog() {
+        Context context = getContext();
+        if (context == null) return;
+
+        View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_event_filter, null, false);
+        EditText interestInput = dialogView.findViewById(R.id.editTextFilterInterest);
+        TextView startDateText = dialogView.findViewById(R.id.textViewFilterStartDate);
+        TextView endDateText = dialogView.findViewById(R.id.textViewFilterEndDate);
+
+        if (selectedTags != null && !selectedTags.isEmpty()) {
+            interestInput.setText(TextUtils.join(", ", selectedTags));
+        }
+        final Date[] startHolder = new Date[]{selectedStartDate};
+        final Date[] endHolder = new Date[]{selectedEndDate};
+        updateDateLabel(startDateText, startHolder[0]);
+        updateDateLabel(endDateText, endHolder[0]);
+
+        startDateText.setOnClickListener(v -> showDatePicker(startHolder[0], date -> {
+            startHolder[0] = date;
+            updateDateLabel(startDateText, date);
+        }));
+        startDateText.setOnLongClickListener(v -> {
+            startHolder[0] = null;
+            updateDateLabel(startDateText, null);
+            return true;
+        });
+
+        endDateText.setOnClickListener(v -> showDatePicker(endHolder[0], date -> {
+            endHolder[0] = date;
+            updateDateLabel(endDateText, date);
+        }));
+        endDateText.setOnLongClickListener(v -> {
+            endHolder[0] = null;
+            updateDateLabel(endDateText, null);
+            return true;
+        });
+
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.event_filter_title)
+                .setView(dialogView)
+                .setPositiveButton(R.string.event_filter_apply, (dialog, which) -> {
+                    selectedTags = parseTags(interestInput.getText().toString());
+                    selectedStartDate = startHolder[0];
+                    selectedEndDate = endHolder[0];
+                    loadEvents();
+                })
+                .setNegativeButton(R.string.event_filter_cancel, (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    /**
+     * Launches the QR scanner so entrants can scan promotional codes.
+     */
+    private void launchQrScanner() {
+        if (qrScannerLauncher == null) {
+            return;
+        }
+        Intent intent = new Intent(requireContext(), QrScannerActivity.class);
+        qrScannerLauncher.launch(intent);
+    }
+
+    /**
+     * Handles the scanned event id and navigates to details when valid.
+     *
+     * @param eventId decoded QR payload (may be {@code null})
+     */
+    private void handleScannedEventId(@Nullable String eventId) {
+        if (eventId == null || eventId.trim().isEmpty()) {
+            Toast.makeText(requireContext(), R.string.event_qr_invalid, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        eventController.fetchEventById(eventId.trim(), event -> {
+            if (event == null) {
+                Toast.makeText(requireContext(), R.string.event_qr_not_found, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            onEventClicked(event);
+        }, error -> Toast.makeText(requireContext(), R.string.event_qr_fetch_error, Toast.LENGTH_SHORT).show());
+    }
+
+    /**
+     * Splits comma-delimited interest text into tags.
+     */
+    private List<String> parseTags(String input) {
+        if (TextUtils.isEmpty(input)) {
+            return null;
+        }
+        String[] segments = input.split(",");
+        List<String> tags = new ArrayList<>();
+        for (String segment : segments) {
+            String trimmed = segment.trim();
+            if (!trimmed.isEmpty()) {
+                tags.add(trimmed);
+            }
+        }
+        return tags.isEmpty() ? null : tags;
+    }
+
+    /**
+     * Updates the date labels inside the filter dialog.
+     */
+    private void updateDateLabel(TextView view, @Nullable Date date) {
+        view.setText(date != null ? dateFormat.format(date) : getString(R.string.event_filter_any_date));
+    }
+
+    /**
+     * Displays a picker and returns the chosen date through the callback.
+     */
+    private void showDatePicker(@Nullable Date initialDate, DateSelectionCallback callback) {
+        Calendar calendar = Calendar.getInstance();
+        if (initialDate != null) {
+            calendar.setTime(initialDate);
+        }
+
+        DatePickerDialog dialog = new DatePickerDialog(requireContext(), (picker, year, month, dayOfMonth) -> {
+            Calendar selected = Calendar.getInstance();
+            selected.set(Calendar.YEAR, year);
+            selected.set(Calendar.MONTH, month);
+            selected.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            selected.set(Calendar.HOUR_OF_DAY, 0);
+            selected.set(Calendar.MINUTE, 0);
+            selected.set(Calendar.SECOND, 0);
+            selected.set(Calendar.MILLISECOND, 0);
+            callback.onDateSelected(selected.getTime());
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        dialog.show();
+    }
+
+    /**
+     * Listener for date picker results.
+     */
+    private interface DateSelectionCallback {
+        void onDateSelected(Date date);
+    }
+}

@@ -126,6 +126,12 @@
     <string name="waiting_list_empty_cancelled">No cancelled entrants</string>
     <string name="waiting_list_accepted_header">Accepted Entrants</string>
     <string name="waiting_list_empty_accepted">No accepted entrants</string>
+    <string name="waiting_list_export_button">Export enrolled CSV</string>
+    <string name="waiting_list_export_empty_error">No enrolled entrants to export.</string>
+    <string name="waiting_list_export_title">Choose where to save the CSV</string>
+    <string name="waiting_list_export_subject">Enrolled entrants for %1$s</string>
+    <string name="waiting_list_export_error">Unable to export enrolled entrants.</string>
+    <string name="waiting_list_export_success">Enrolled entrants exported.</string>
     <string name="entrant_dashboard_title">Entrant Dashboard</string>
     <string name="delete_dialog_text">Are you sure you want to delete %1$s? This action cannot be undone.</string>
     <string name="image_content_description">Event Poster Image</string>

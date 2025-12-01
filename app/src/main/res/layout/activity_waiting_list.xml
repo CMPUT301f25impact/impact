@@ -129,6 +129,14 @@
                 android:text="@string/waiting_list_accepted_header"
                 android:textStyle="bold" />
 
+            <Button
+                android:id="@+id/buttonExportAcceptedCsv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/waiting_list_export_button"
+                android:visibility="gone" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerAcceptedEntrants"
                 android:layout_width="match_parent"

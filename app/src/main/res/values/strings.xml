@@ -130,6 +130,7 @@
     <string name="image_content_description">Event Poster Image</string>
     <string name="event_details_registration_closed">Registration closed</string>
     <string name="event_details_edit_event_button">Update Event</string>
+    <string name="event_details_count_error">Could not verify waitlist count</string>
     <string name="waiting_list_redraw_button">Redraw replacement</string>
     <string name="waiting_list_redraw_success">Replacement entrant drawn.</string>
     <string name="waiting_list_redraw_error">Unable to draw replacement entrant.</string>

@@ -174,7 +174,9 @@ public class OrganizerEditEventFragment extends Fragment {
 
         etName.setText(event.getName());
         etDesc.setText(event.getDescription());
-        etCapacity.setText(String.format(Locale.ENGLISH, "%d", capacity));
+        if (capacity != null) {
+            etCapacity.setText(String.format(Locale.ENGLISH, "%d", capacity));
+        }
 
         if (waitlistCapacity != null) {
             etWaitlistCapacity.setText(String.format(Locale.ENGLISH, "%d", waitlistCapacity));
@@ -338,7 +340,7 @@ public class OrganizerEditEventFragment extends Fragment {
             return;
         }
         if (waitlistCapacity != null && waitlistCapacity < capacity) {
-            Toast.makeText(requireContext(), "Waitlist capacity must be larger than event capacity", Toast.LENGTH_LONG).show();
+            Toast.makeText(requireContext(), "Waitlist capacity must be larger than (or equal to) event capacity", Toast.LENGTH_LONG).show();
             return;
         }
 

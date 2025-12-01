@@ -192,7 +192,7 @@ public class OrganizerCreateEventFragment extends Fragment {
             return;
         }
         if (waitlistCapacity != null && waitlistCapacity < capacity) {
-            toast("Waitlist capacity must be larger than event capacity");
+            toast("Waitlist capacity must be larger than (or equal to) event capacity");
             return;
         }
 

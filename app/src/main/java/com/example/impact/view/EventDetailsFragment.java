@@ -179,6 +179,8 @@ public class EventDetailsFragment extends Fragment {
      * Calls the controller to join the waiting list.
      */
     private void joinWaitingList() {
+        Integer waitlistCapacity = event.getWaitlistCapacity();
+
         if (event == null || !isRegistrationOpen(event)) {
             Toast.makeText(requireContext(),
                     R.string.event_details_registration_closed,
@@ -188,7 +190,13 @@ public class EventDetailsFragment extends Fragment {
             setButtonsForJoinedState(false);
             return;
         }
-        Integer waitlistCapacity = event.getWaitlistCapacity();
+        if (waitlistCount == null) { // verify waitlistCount has loaded async
+            Toast.makeText(requireContext(),
+                    R.string.event_details_count_error,
+                    Toast.LENGTH_LONG
+            ).show();
+            return;
+        }
         if (waitlistCapacity != null && waitlistCount >= waitlistCapacity) {
             Toast.makeText(requireContext(),
                     R.string.waiting_list_full_error,

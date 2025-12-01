@@ -1,6 +1,4 @@
 package com.example.impact.controller;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -31,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.google.firebase.firestore.FieldValue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -56,6 +55,14 @@ public class NotificationController {
         this.firestore = firestore;
     }
 
+    public com.google.android.gms.tasks.Task<com.google.firebase.firestore.QuerySnapshot>
+    getNotificationsForEntrant(String entrantId) {
+        return firestore.collection("notifications")
+                .whereEqualTo("entrantId", entrantId)
+                .get();
+    }
+
+
     /**
      * Persists the provided notification to Firestore.
      *
@@ -73,23 +80,6 @@ public class NotificationController {
                 .document(notification.getId())
                 .set(data);
         attachListeners(task, successListener, failureListener);
-    }
-
-    /**
-     * Builds the Firestore payload for a given notification.
-     *
-     * @param notification model to serialize
-     * @return map of primitive data ready for Firestore
-     */
-    static Map<String, Object> buildNotificationData(@NonNull Notification notification) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", notification.getId());
-        data.put("sender", notification.getSender());
-        data.put("recipients", notification.getRecipients());
-        data.put("related_event", notification.getRelated_event());
-        data.put("message", notification.getMessage());
-        data.put("time_stamp", notification.getTime_stamp());
-        return data;
     }
 
     public void fetchNotification(@NonNull String notificationId,
@@ -111,7 +101,7 @@ public class NotificationController {
     /**
      * Fetches all notifications for organizer reading.
      *
-     * @param sender organizer users to query
+     * @param senders organizer users to query
      * @param successListener invoked with the mapped entrants list (never {@code null})
      * @param failureListener invoked if the read fails
      */
@@ -217,6 +207,28 @@ public class NotificationController {
         return taskSource.getTask();
     }
 
+    public void createOfferNotification(String entrantId, String eventId, String eventName) {
+
+        String notificationId = firestore.collection("notifications").document().getId();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("notificationId", notificationId);
+        data.put("entrantId", entrantId);
+        data.put("eventId", eventId);
+        data.put("eventName", eventName);
+        data.put("type", "offer");
+        data.put("message",
+                "You have been offered a spot in " + eventName +
+                        ". To accept or decline, please visit " + eventName + " in your events list.");
+        data.put("createdAt", FieldValue.serverTimestamp());
+        data.put("read", false);
+
+        firestore.collection("notifications")
+                .document(notificationId)
+                .set(data);
+    }
+
+
     /**
      * Applies optional success/failure listeners to a Firestore task.
      *
@@ -224,6 +236,7 @@ public class NotificationController {
      * @param successListener  optional success callback
      * @param failureListener  optional failure callback
      */
+
     private void attachListeners(Task<Void> task,
                                  @Nullable OnSuccessListener<Void> successListener,
                                  @Nullable OnFailureListener failureListener) {

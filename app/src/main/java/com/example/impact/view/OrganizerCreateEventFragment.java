@@ -10,6 +10,10 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.provider.MediaStore;
+import android.net.Uri;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -29,6 +33,7 @@ import com.google.zxing.WriterException;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.io.OutputStream;
 
 /**
  * Provides organizers with a simple form to create events and preview QR codes.
@@ -41,6 +46,9 @@ public class OrganizerCreateEventFragment extends Fragment {
     private Date startDate, endDate;
     private ImageView imgPosterPreview;
     private String uploadedImageId = null;
+    private Bitmap qrBitmap;        // store the last generated QR
+    private Button btnSaveQr;       // save-to-gallery button
+
 
 
     private final EventController controller = new EventController();
@@ -78,6 +86,9 @@ public class OrganizerCreateEventFragment extends Fragment {
         btnCreate = v.findViewById(R.id.btnCreateEvent);
         btnUploadPoster = v.findViewById(R.id.btnUploadPoster);
         imgPosterPreview = v.findViewById(R.id.imgPosterPreview);
+        btnSaveQr = v.findViewById(R.id.btnSaveQr);
+        btnSaveQr.setVisibility(View.GONE);
+        btnSaveQr.setOnClickListener(view -> saveQrToGallery());
 
         if (getArguments() != null) {
             organizerId = getArguments().getString(EXTRA_ORGANIZER_ID);
@@ -230,14 +241,19 @@ public class OrganizerCreateEventFragment extends Fragment {
 
             // Generate and preview QR locally (no Storage)
             try {
-                Bitmap bmp = QrUtil.generateQr(payload);
-                imgQr.setImageBitmap(bmp);
+                qrBitmap = QrUtil.generateQr(payload);
+                imgQr.setImageBitmap(qrBitmap);
+                imgQr.setVisibility(View.VISIBLE);
+                btnSaveQr.setVisibility(View.VISIBLE);
                 toast("Event created");
             } catch (WriterException ex) {
+                qrBitmap = null;
+                btnSaveQr.setVisibility(View.GONE);
                 toast("QR generation failed: " + ex.getMessage());
             } finally {
                 btnCreate.setEnabled(true);
             }
+
 
         }, err -> {
             toast("Create failed: " + err.getMessage());
@@ -259,6 +275,40 @@ public class OrganizerCreateEventFragment extends Fragment {
             return null;
         }
         return value;
+    }
+
+    private void saveQrToGallery() {
+        if (qrBitmap == null) {
+            toast("No QR code to save yet");
+            return;
+        }
+
+        try {
+            ContentResolver resolver = requireContext().getContentResolver();
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME,
+                    "event_qr_" + System.currentTimeMillis() + ".png");
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+            // This puts it under Pictures/Impact in the gallery (API 29+)
+            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Impact");
+
+            Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            if (uri == null) {
+                toast("Failed to save QR: no URI");
+                return;
+            }
+
+            try (OutputStream out = resolver.openOutputStream(uri)) {
+                if (!qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
+                    toast("Failed to save QR");
+                    return;
+                }
+            }
+
+            toast("QR code saved to gallery");
+        } catch (Exception e) {
+            toast("Failed to save QR: " + e.getMessage());
+        }
     }
 
     /**

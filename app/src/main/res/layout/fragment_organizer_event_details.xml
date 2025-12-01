@@ -56,6 +56,14 @@
             android:background="@android:color/darker_gray"/>
 
         <Button
+            android:id="@+id/btnSaveQr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Save QR to Gallery"
+            android:visibility="gone" />
+
+        <Button
             android:id="@+id/btnUploadPoster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

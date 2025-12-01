@@ -41,6 +41,7 @@ public class EventDetailsFragment extends Fragment {
     private TextView countText;
     private TextView statusText;
     private String currentStatus;
+    private Integer waitlistCount;
     private String joinButtonDefaultText;
 
 
@@ -166,8 +167,9 @@ public class EventDetailsFragment extends Fragment {
      */
     private void loadWaitingListCount() {
         waitingListController.fetchWaitingListCount(event.getId(), count -> {
+            waitlistCount = count;
             if (countText != null) {
-                countText.setText(getString(R.string.event_details_waiting_list_count, count));
+                countText.setText(getString(R.string.event_details_waiting_list_count, waitlistCount));
             }
         }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
@@ -184,6 +186,14 @@ public class EventDetailsFragment extends Fragment {
             ).show();
             // Refresh the button state to reflect this
             setButtonsForJoinedState(false);
+            return;
+        }
+        Integer waitlistCapacity = event.getWaitlistCapacity();
+        if (waitlistCapacity != null && waitlistCount >= waitlistCapacity) {
+            Toast.makeText(requireContext(),
+                    R.string.waiting_list_full_error,
+                    Toast.LENGTH_LONG
+            ).show();
             return;
         }
 

@@ -135,4 +135,5 @@
     <string name="waiting_list_redraw_error">Unable to draw replacement entrant.</string>
     <string name="waiting_list_redraw_no_pending_error">There are no pending entrants to redraw.</string>
     <string name="waiting_list_redraw_full_error">The event is already at full capacity.</string>
+    <string name="waiting_list_full_error">The waitlist for this event is full.</string>
 </resources>

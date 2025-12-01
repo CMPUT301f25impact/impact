@@ -45,21 +45,24 @@ public class WaitingListController {
     private static final String FIELD_LOTTERY_DONE = "lottery_done";
 
     private final FirebaseFirestore firestore;
+    private final NotificationController notificationController;
+
 
     /**
      * Creates a controller backed by the default Firestore instance.
      */
     public WaitingListController() {
-        this(AppSession.db());
+        this(AppSession.db(), new NotificationController(AppSession.db()));
     }
 
-    /**
-     * Creates a controller with an injected Firestore instance.
-     *
-     * @param firestore shared Firestore reference
-     */
     public WaitingListController(@NonNull FirebaseFirestore firestore) {
+        this(firestore, null); // test mode => no notifications
+    }
+
+    public WaitingListController(@NonNull FirebaseFirestore firestore,
+                                 @Nullable NotificationController notificationController) {
         this.firestore = firestore;
+        this.notificationController = notificationController; // null during tests
     }
 
     /**

@@ -59,6 +59,18 @@
         android:layout_marginTop="4dp"
         android:text="You are getting this notification because ..."
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    <Button
+        android:id="@+id/admin_delete_notification_button"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
+        android:text="Delete Notificaton"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:paddingHorizontal="16dp"
+        android:backgroundTint="?attr/colorPrimary"
+        style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
 
 </LinearLayout>

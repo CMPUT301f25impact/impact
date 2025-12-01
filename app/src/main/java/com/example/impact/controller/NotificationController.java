@@ -84,6 +84,7 @@ public class NotificationController {
      * @param failureListener optional failure callback
      * @throws IllegalArgumentException when required entrant fields are missing
      */
+
     public void saveNotificationToFirestore(@NonNull Notification notification,
                                        @Nullable OnSuccessListener<Void> successListener,
                                        @Nullable OnFailureListener failureListener) {

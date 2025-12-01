@@ -1,11 +1,16 @@
 package com.example.impact.controller;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.impact.model.Event;
+import com.example.impact.model.User;
 import com.example.impact.model.WaitingListEntry;
 import com.example.impact.utils.AppSession;
+import com.example.impact.view.OrganizerNotificationsFragment;
 import com.example.impact.view.WaitingListActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -289,22 +294,20 @@ public class WaitingListController {
                     Collections.shuffle(pending);
                     WriteBatch batch = firestore.batch();
                     NotificationController notificationController = new NotificationController(firestore);
+                    final String[] eventNameHolder = new String[1];
 
                     for (int i = 0; i < selectionCount; i++) {
                         DocumentSnapshot document = pending.get(i);
                         batch.update(document.getReference(), "status", STATUS_SELECTED);
-
-                        String entrantId = document.getString("entrantId");
-                        String eventName = document.getString("eventName");
-
-                        if (entrantId != null && eventName != null) {
-                            notificationController.createOfferNotification(entrantId, eventId, eventName);
+                        if (i == 0 ) {
+                            eventNameHolder[0] = document.getString("eventName");
                         }
                     }
 
                     Task<Void> commit = batch.commit();
                     commit.addOnSuccessListener(v -> {
                         updateLotteryState(eventId, true);
+                        sendNotifications(eventId, eventNameHolder[0]);
                         if (successListener != null) {
                             successListener.onSuccess(v);
                         }
@@ -319,6 +322,75 @@ public class WaitingListController {
                         failureListener.onFailure(error);
                     }
                 });
+    }
+    public void sendNotifications(String eventId, String eventName) {
+        NotificationController notificationController = new NotificationController(firestore);
+        UserController userController = new UserController(firestore);
+
+        fetchWaitingListByEventId(eventId, waitingList -> {
+            List<Pair<User, WaitingListEntry>> globalWaitingListPairs = new ArrayList<>();
+            List<User> globalSelectedUsers = new ArrayList<>();
+            List<User> globalNotSelectedUsers = new ArrayList<>();
+
+            List<String> queryOnRoles = Arrays.asList("entrant");
+            userController.fetchAllUsers(queryOnRoles, userList -> {
+                        Map<String, User> mapUsers = new HashMap<>();
+                        for (User user : userList) {
+                            mapUsers.put(user.getId(), user);
+                        }
+                        for (WaitingListEntry entry : waitingList) {
+                            User user = mapUsers.get(entry.getEntrantId());
+                            if (user != null) {
+                                globalWaitingListPairs.add(new Pair<User, WaitingListEntry>(user, entry));
+                            }
+                        }
+                        for (Pair<User, WaitingListEntry> pair : globalWaitingListPairs) {
+                            if (pair.getEntry().getStatus().equals("selected")) {
+                                globalSelectedUsers.add(pair.getUser());
+                            }
+                            else if (pair.getEntry().getStatus().equals("cancelled")) {
+                                continue;
+                            }
+                            else {
+                                globalNotSelectedUsers.add(pair.getUser()); // Get the not selected users
+                            }
+                        }
+                        DocumentReference senderRef = AppSession.db().collection("users").document("system-organizer");
+                        DocumentReference eventRef = AppSession.db().collection("events").document(eventId);
+                        List<DocumentReference> selectedRecipientRefs = new ArrayList<>();
+                        List<DocumentReference> notSelectedRecipientRefs = new ArrayList<>();
+
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("sender", senderRef);
+                        data.put("related_event", eventRef);
+                        data.put("time_stamp", FieldValue.serverTimestamp());
+
+                        if (!globalSelectedUsers.isEmpty()) {
+                            for (User recipient : globalSelectedUsers) {
+                                selectedRecipientRefs.add(AppSession.db().collection("users").document(recipient.getId()));
+                            }
+                            data.put("recipients", selectedRecipientRefs);
+                            data.put("message", "You have been selected for event " + eventName);
+
+                        }
+                        if (!globalNotSelectedUsers.isEmpty()) {
+                            for (User recipient : globalNotSelectedUsers) {
+                                notSelectedRecipientRefs.add(AppSession.db().collection("users").document(recipient.getId()));
+                            }
+                            data.put("recipients", notSelectedRecipientRefs);
+                            data.put("message", "You have not been selected for event " + eventName);
+                        }
+                        AppSession.db().collection("notifications")
+                                .add(data);
+                    },
+                    exception -> {
+                        Log.e("Notification", "Error creating notification: " + exception.getMessage());
+                    });
+        },
+                error -> {
+                    Log.e("Notification", "Error creating notification: " + error.getMessage());
+                });
+
     }
 
     /**
@@ -533,5 +605,16 @@ public class WaitingListController {
         firestore.collection(COLLECTION_EVENTS)
                 .document(eventId)
                 .update(FIELD_LOTTERY_DONE, isDone);
+    }
+    private static class Pair<User, WaitingListEntry> {
+        private final User user;
+        private final WaitingListEntry entry;
+
+        public Pair(User user, WaitingListEntry entry) {
+            this.user = user;
+            this.entry = entry;
+        }
+        public User getUser() {return user;}
+        public WaitingListEntry getEntry() {return entry;}
     }
 }

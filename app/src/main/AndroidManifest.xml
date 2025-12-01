@@ -20,7 +20,11 @@
             android:name=".view.QrScannerActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.WaitingListActivity" />
+        <activity
+            android:name=".view.WaitingListActivity"
+            android:parentActivityName=".view.OrganizerActivity"
+            >
+        </activity>
         <activity
             android:name=".view.AdminActivity"
             android:exported="false" />

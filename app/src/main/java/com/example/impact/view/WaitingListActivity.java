@@ -7,9 +7,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.impact.R;
 import com.example.impact.controller.WaitingListController;
@@ -56,6 +58,7 @@ public class WaitingListActivity extends AppCompatActivity {
 
     private WaitingListController waitingListController;
     private String eventId;
+    private String eventName;
     @Nullable
     private Integer eventCapacity;
     private boolean lotteryAlreadyRun;
@@ -65,6 +68,8 @@ public class WaitingListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_waiting_list);
+        Toolbar toolbar = findViewById(R.id.waiting_list_toolbar);
+        setSupportActionBar(toolbar);
 
         waitingListController = new WaitingListController();
         isOrganizer = Organizer.ROLE_KEY.equals(AppSession.getRole());
@@ -89,6 +94,7 @@ public class WaitingListActivity extends AppCompatActivity {
         setupRecycler(R.id.recyclerAcceptedEntrants, acceptedAdapter);
 
         eventId = getIntent().getStringExtra("eventId");
+        eventName = getIntent().getStringExtra("eventName");
         int capacityExtra = getIntent().getIntExtra("eventCapacity", -1);
         eventCapacity = capacityExtra >= 0 ? capacityExtra : null;
         lotteryAlreadyRun = getIntent().getBooleanExtra("lotteryDone", false);
@@ -97,6 +103,12 @@ public class WaitingListActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.event_details_error_missing_data, Toast.LENGTH_SHORT).show();
             finish();
             return;
+        }
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(eventName);
         }
 
         startStatusSubscriptions();

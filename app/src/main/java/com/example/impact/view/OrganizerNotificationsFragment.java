@@ -105,7 +105,7 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
      */
     private void onNotificationsLoaded(List<Notification> notifications) {
         if (notifications.isEmpty()) {
-            Toast.makeText(requireContext(), "Orion there are no notificaoison ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "No notifications found.", Toast.LENGTH_SHORT).show();
         }
 
         notificationAdapter.setNotifications(notifications);

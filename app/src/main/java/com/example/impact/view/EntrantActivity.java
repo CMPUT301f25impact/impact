@@ -50,13 +50,12 @@ public class EntrantActivity extends BaseDashboardActivity
     public Fragment getSelectedFragment(@NonNull int itemId) {
         if (itemId == R.id.entrant_nav_events) {
             return EventListFragment.newInstance(entrantId);
-//            toolbarTitle = R.string.entrant_nav_events_tab;
         } else if (itemId == R.id.entrant_nav_profile) {
             return EntrantProfileFragment.newInstance(entrantId);
-//            toolbarTitle = R.string.entrant_nav_profile_tab;
         } else if (itemId == R.id.entrant_nav_history) {
             return EventHistoryFragment.newInstance(entrantId);
-//            toolbarTitle = R.string.entrant_nav_history_tab;
+        } else if (itemId == R.id.entrant_nav_notifications) {
+            return EntrantNotificationsFragment.newInstance(entrantId);
         }
         return null;
     }
@@ -74,9 +73,13 @@ public class EntrantActivity extends BaseDashboardActivity
             return R.string.entrant_nav_profile_tab;
         } else if (itemId == R.id.entrant_nav_history) {
             return R.string.entrant_nav_history_tab;
+        } else if (itemId == R.id.entrant_nav_notifications) {
+            // you can make a string later; for now hardcode if needed
+            return R.string.entrant_nav_history_tab; // or create R.string.entrant_nav_notifications_tab
         }
         return getInitialToolbarTitle();
     }
+
 
     /**
      * Callback for when a user deletes their profile while signed in

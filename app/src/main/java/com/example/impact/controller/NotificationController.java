@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.google.firebase.firestore.FieldValue;
 
 public class NotificationController {
     private static final String COLLECTION_NOTIFICATIONS = "notifications";
@@ -41,6 +42,14 @@ public class NotificationController {
     public NotificationController(@NonNull FirebaseFirestore firestore) {
         this.firestore = firestore;
     }
+
+    public com.google.android.gms.tasks.Task<com.google.firebase.firestore.QuerySnapshot>
+    getNotificationsForEntrant(String entrantId) {
+        return firestore.collection("notifications")
+                .whereEqualTo("entrantId", entrantId)
+                .get();
+    }
+
 
     /**
      * Persists the provided notification to Firestore.
@@ -154,6 +163,28 @@ public class NotificationController {
         return data;
     }
 
+    public void createOfferNotification(String entrantId, String eventId, String eventName) {
+
+        String notificationId = firestore.collection("notifications").document().getId();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("notificationId", notificationId);
+        data.put("entrantId", entrantId);
+        data.put("eventId", eventId);
+        data.put("eventName", eventName);
+        data.put("type", "offer");
+        data.put("message",
+                "You have been offered a spot in " + eventName +
+                        ". To accept or decline, please visit " + eventName + " in your events list.");
+        data.put("createdAt", FieldValue.serverTimestamp());
+        data.put("read", false);
+
+        firestore.collection("notifications")
+                .document(notificationId)
+                .set(data);
+    }
+
+
     /**
      * Applies optional success/failure listeners to a Firestore task.
      *
@@ -161,6 +192,7 @@ public class NotificationController {
      * @param successListener  optional success callback
      * @param failureListener  optional failure callback
      */
+
     private void attachListeners(Task<Void> task,
                                  @Nullable OnSuccessListener<Void> successListener,
                                  @Nullable OnFailureListener failureListener) {

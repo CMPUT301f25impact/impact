@@ -283,10 +283,20 @@ public class WaitingListController {
                     }
                     Collections.shuffle(pending);
                     WriteBatch batch = firestore.batch();
+                    NotificationController notificationController = new NotificationController(firestore);
+
                     for (int i = 0; i < selectionCount; i++) {
                         DocumentSnapshot document = pending.get(i);
                         batch.update(document.getReference(), "status", STATUS_SELECTED);
+
+                        String entrantId = document.getString("entrantId");
+                        String eventName = document.getString("eventName");
+
+                        if (entrantId != null && eventName != null) {
+                            notificationController.createOfferNotification(entrantId, eventId, eventName);
+                        }
                     }
+
                     Task<Void> commit = batch.commit();
                     commit.addOnSuccessListener(v -> {
                         updateLotteryState(eventId, true);
@@ -297,6 +307,7 @@ public class WaitingListController {
                     if (failureListener != null) {
                         commit.addOnFailureListener(failureListener);
                     }
+
                 })
                 .addOnFailureListener(error -> {
                     if (failureListener != null) {

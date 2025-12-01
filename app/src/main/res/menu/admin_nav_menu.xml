@@ -6,7 +6,7 @@
         android:title="@string/admin_nav_events_tab" />
     <item
         android:id="@+id/admin_nav_images"
-        android:icon="@drawable/outline_article_30"
+        android:icon="@drawable/baseline_image_30"
         android:title="@string/admin_nav_images_tab" />
     <item
         android:id="@+id/admin_nav_profiles"
@@ -14,6 +14,6 @@
         android:title="@string/admin_nav_profiles_tab" />
     <item
         android:id="@+id/admin_nav_notifications"
-        android:icon="@drawable/outline_article_30"
-        android:title="Notifications" />
+        android:icon="@drawable/outline_add_alert_30"
+        android:title="@string/admin_nav_notifications_tab" />
 </menu>

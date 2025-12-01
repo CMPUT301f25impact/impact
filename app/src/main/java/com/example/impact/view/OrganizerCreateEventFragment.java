@@ -1,4 +1,6 @@
 package com.example.impact.view;
+import static com.example.impact.utils.QrUtil.saveQrToGallery;
+
 import com.example.impact.model.Image;
 
 import android.annotation.SuppressLint;
@@ -88,7 +90,7 @@ public class OrganizerCreateEventFragment extends Fragment {
         imgPosterPreview = v.findViewById(R.id.imgPosterPreview);
         btnSaveQr = v.findViewById(R.id.btnSaveQr);
         btnSaveQr.setVisibility(View.GONE);
-        btnSaveQr.setOnClickListener(view -> saveQrToGallery());
+        btnSaveQr.setOnClickListener(view -> saveQrToGallery(qrBitmap, requireContext()));
 
         if (getArguments() != null) {
             organizerId = getArguments().getString(EXTRA_ORGANIZER_ID);
@@ -275,40 +277,6 @@ public class OrganizerCreateEventFragment extends Fragment {
             return null;
         }
         return value;
-    }
-
-    private void saveQrToGallery() {
-        if (qrBitmap == null) {
-            toast("No QR code to save yet");
-            return;
-        }
-
-        try {
-            ContentResolver resolver = requireContext().getContentResolver();
-            ContentValues values = new ContentValues();
-            values.put(MediaStore.Images.Media.DISPLAY_NAME,
-                    "event_qr_" + System.currentTimeMillis() + ".png");
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-            // This puts it under Pictures/Impact in the gallery (API 29+)
-            values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Impact");
-
-            Uri uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            if (uri == null) {
-                toast("Failed to save QR: no URI");
-                return;
-            }
-
-            try (OutputStream out = resolver.openOutputStream(uri)) {
-                if (!qrBitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
-                    toast("Failed to save QR");
-                    return;
-                }
-            }
-
-            toast("QR code saved to gallery");
-        } catch (Exception e) {
-            toast("Failed to save QR: " + e.getMessage());
-        }
     }
 
     /**

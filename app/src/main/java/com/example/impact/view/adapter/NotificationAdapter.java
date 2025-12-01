@@ -45,8 +45,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
          *
          * @param notification notification to be displayed
          */
-
-        void onViewEntrantClicked(@NonNull Notification notification);
     }
 
     private List<Notification> notifications = new ArrayList<>();

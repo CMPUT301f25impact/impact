@@ -51,7 +51,7 @@ public class OrganizerEditEventFragment extends Fragment {
 
     // views
     private EditText etName, etDesc, etCapacity, etWaitlistCapacity;
-    private Button btnStart, btnEnd, btnEdit, btnUploadPoster;
+    private Button btnStart, btnEnd, btnEdit, btnUploadPoster, btnSaveQr;
     private ImageView imgQr;
     private ImageView imgPosterPreview;
 
@@ -60,6 +60,7 @@ public class OrganizerEditEventFragment extends Fragment {
     private Event event;
     private String organizerId;
     private Image loadedPoster;
+    private Bitmap qrBitmap;
     private boolean posterUpdated;
 
     // controllers
@@ -119,10 +120,12 @@ public class OrganizerEditEventFragment extends Fragment {
         btnStart = v.findViewById(R.id.btnPickStart);
         btnEnd = v.findViewById(R.id.btnPickEnd);
         imgQr = v.findViewById(R.id.imgQrPreview);
+        btnSaveQr = v.findViewById(R.id.btnSaveQr);
         btnEdit = v.findViewById(R.id.btnCreateEvent);
         btnUploadPoster = v.findViewById(R.id.btnUploadPoster);
         imgPosterPreview = v.findViewById(R.id.imgPosterPreview);
 
+        btnSaveQr.setOnClickListener(view -> QrUtil.saveQrToGallery(qrBitmap, requireContext()));
         btnUploadPoster.setOnClickListener(view -> {
             Toast.makeText(requireContext(), "Opening image picker...", Toast.LENGTH_SHORT).show();
             pickImageLauncher.launch("image/*");
@@ -274,11 +277,14 @@ public class OrganizerEditEventFragment extends Fragment {
      */
     private void loadQRPreview(String qrPayload) {
         try {
-            Bitmap bmp = QrUtil.generateQr(qrPayload);
-            imgQr.setImageBitmap(bmp);
+            qrBitmap = QrUtil.generateQr(qrPayload);
+            imgQr.setImageBitmap(qrBitmap);
+            imgQr.setVisibility(View.VISIBLE);
+            btnSaveQr.setVisibility(View.VISIBLE);
         } catch (WriterException e) {
             Log.e("EditEventFragment", "Could not load QR code", e);
             imgQr.setVisibility(View.GONE);
+            btnSaveQr.setVisibility(View.GONE);
         }
     }
 

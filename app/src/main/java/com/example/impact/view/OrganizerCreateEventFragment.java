@@ -1,4 +1,6 @@
 package com.example.impact.view;
+import static com.example.impact.utils.QrUtil.saveQrToGallery;
+
 import com.example.impact.model.Image;
 
 import android.annotation.SuppressLint;
@@ -10,6 +12,10 @@ import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.view.*;
 import android.widget.*;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.provider.MediaStore;
+import android.net.Uri;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -29,6 +35,7 @@ import com.google.zxing.WriterException;
 
 import java.io.InputStream;
 import java.util.Date;
+import java.io.OutputStream;
 
 /**
  * Provides organizers with a simple form to create events and preview QR codes.
@@ -41,6 +48,9 @@ public class OrganizerCreateEventFragment extends Fragment {
     private Date startDate, endDate;
     private ImageView imgPosterPreview;
     private String uploadedImageId = null;
+    private Bitmap qrBitmap;        // store the last generated QR
+    private Button btnSaveQr;       // save-to-gallery button
+
 
 
     private final EventController controller = new EventController();
@@ -78,6 +88,9 @@ public class OrganizerCreateEventFragment extends Fragment {
         btnCreate = v.findViewById(R.id.btnCreateEvent);
         btnUploadPoster = v.findViewById(R.id.btnUploadPoster);
         imgPosterPreview = v.findViewById(R.id.imgPosterPreview);
+        btnSaveQr = v.findViewById(R.id.btnSaveQr);
+        btnSaveQr.setVisibility(View.GONE);
+        btnSaveQr.setOnClickListener(view -> saveQrToGallery(qrBitmap, requireContext()));
 
         if (getArguments() != null) {
             organizerId = getArguments().getString(EXTRA_ORGANIZER_ID);
@@ -230,14 +243,19 @@ public class OrganizerCreateEventFragment extends Fragment {
 
             // Generate and preview QR locally (no Storage)
             try {
-                Bitmap bmp = QrUtil.generateQr(payload);
-                imgQr.setImageBitmap(bmp);
+                qrBitmap = QrUtil.generateQr(payload);
+                imgQr.setImageBitmap(qrBitmap);
+                imgQr.setVisibility(View.VISIBLE);
+                btnSaveQr.setVisibility(View.VISIBLE);
                 toast("Event created");
             } catch (WriterException ex) {
+                qrBitmap = null;
+                btnSaveQr.setVisibility(View.GONE);
                 toast("QR generation failed: " + ex.getMessage());
             } finally {
                 btnCreate.setEnabled(true);
             }
+
 
         }, err -> {
             toast("Create failed: " + err.getMessage());

@@ -17,7 +17,6 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
  */
 public class QrScannerActivity extends AppCompatActivity {
     public static final String EXTRA_EVENT_ID = "event_id";
-
     private DecoratedBarcodeView barcodeView;
     private final BarcodeCallback callback = new BarcodeCallback() {
         @Override
@@ -26,6 +25,13 @@ public class QrScannerActivity extends AppCompatActivity {
                 return;
             }
             barcodeView.pause();
+            String text = result.getText();
+            String prefix = "impact://event/";
+            String eventId = text;
+
+            if (text.startsWith(prefix)) {
+                eventId = text.substring(prefix.length());
+            }
             Intent data = new Intent();
             data.putExtra(EXTRA_EVENT_ID, result.getText());
             setResult(RESULT_OK, data);

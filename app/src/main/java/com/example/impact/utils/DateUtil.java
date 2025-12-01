@@ -33,4 +33,13 @@ public class DateUtil {
         }
         return "";
     }
+
+    /**
+     * Formats the provided date into string
+     * @param date date to format
+     * @return formatted date
+     */
+    public static String formatDate(Date date) {
+        return dateFormat.format(date);
+    }
 }

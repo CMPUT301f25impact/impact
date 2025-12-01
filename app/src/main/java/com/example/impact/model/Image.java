@@ -30,13 +30,11 @@ public class Image implements Serializable {
     /**
      * Primary constructor.
      *
-     * @param imageId        unique ID to identify image
      * @param mimeType       MIME image type
      * @param fileName       file name
      * @param base64Content  base64-encoded image data
      */
-    public Image(String imageId, String mimeType, String fileName, String base64Content) {
-        this.imageId = imageId;
+    public Image(String mimeType, String fileName, String base64Content) {
         this.mimeType = mimeType;
         this.fileName = fileName;
         this.base64Content = base64Content;

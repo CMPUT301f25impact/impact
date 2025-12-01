@@ -66,7 +66,7 @@ public class OrganizerCreateEventFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_organizer_tools, container, false);
+        View v = inflater.inflate(R.layout.fragment_organizer_event_details, container, false);
 
         etName = v.findViewById(R.id.etEventName);
         etDesc = v.findViewById(R.id.etEventDescription);
@@ -114,7 +114,7 @@ public class OrganizerCreateEventFragment extends Fragment {
 
             // Convert bmp to base64 and upload
             String base64 = ImageUtil.bitmapToBase64(bmp);
-            String fileName = queryFileName(uri);
+            String fileName = ImageUtil.queryFileName(uri, requireContext());
             String mime = requireContext().getContentResolver().getType(uri);
             if (mime == null) mime = "image/jpeg";
 
@@ -138,24 +138,6 @@ public class OrganizerCreateEventFragment extends Fragment {
         }
     }
 
-    private String queryFileName(Uri uri) {
-        String result = null;
-        if ("content".equals(uri.getScheme())) {
-            try (android.database.Cursor cursor = requireContext().getContentResolver()
-                    .query(uri, new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(0);
-                }
-            } catch (Exception ignored) {}
-        }
-        if (result == null) {
-            String path = uri.getPath();
-            if (path == null) return null;
-            int cut = path.lastIndexOf('/');
-            if (cut != -1) result = path.substring(cut + 1);
-        }
-        return result;
-    }
      /**
      * Shows a material date picker and stores the chosen start/end date.
      */
@@ -164,10 +146,16 @@ public class OrganizerCreateEventFragment extends Fragment {
         picker.addOnPositiveButtonClickListener(ms -> {
             if (isStart) {
                 startDate = new Date(ms);
-                btnStart.setText("Start: " + picker.getHeaderText());
+                btnStart.setText(getString(
+                        R.string.event_details_start_date_picker_button_filled,
+                        picker.getHeaderText())
+                );
             } else {
                 endDate = new Date(ms);
-                btnEnd.setText("End: " + picker.getHeaderText());
+                btnEnd.setText(getString(
+                        R.string.event_details_end_date_picker_button_filled,
+                        picker.getHeaderText())
+                );
             }
         });
         picker.show(getParentFragmentManager(), isStart ? "reg_start" : "reg_end");
@@ -216,7 +204,7 @@ public class OrganizerCreateEventFragment extends Fragment {
                 );
             }
             // Build the QR payload (deep link or just the eventId)
-            String payload = "impact://event/" + eventId;
+            String payload = e.getQrCodePayload();
 
             // Save QR payload string in Firestore (NOT an image URL)
             controller.updateQrPayload(eventId, payload,

@@ -60,6 +60,12 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         // No need to call reg here — listener starts in onCreateView
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadEvents(); // reload events on fragment resume
+    }
+
     /**
      * Inflates the organizer events list and wires up real-time listeners.
      */
@@ -97,9 +103,15 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
         adapter = new EventAdapter(this, Organizer.ROLE_KEY);
         rv.setAdapter(adapter);
 
-        FirebaseFirestore db = AppSession.db();
+        loadEvents();
+        return v;
+    }
 
-        // Step 1: verify that this id belongs to an organizer
+    /**
+     * Verifies organizer ID and loads events from DB
+     */
+    private void loadEvents() {
+        FirebaseFirestore db = AppSession.db();
         db.collection("users")
                 .document(organizerId)
                 .get()
@@ -119,8 +131,6 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(requireContext(), "Error verifying organizer", Toast.LENGTH_SHORT).show());
-
-        return v;
     }
 
     /**
@@ -238,9 +248,14 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
      */
     @Override
     public void onEventClicked(@NonNull Event event) {
-        eventBeingUpdatedPoster = event;
-        Toast.makeText(requireContext(), "Choose a new poster image…", Toast.LENGTH_SHORT).show();
-        posterPickerLauncher.launch("image/*");
+    //        eventBeingUpdatedPoster = event;
+    //        Toast.makeText(requireContext(), "Choose a new poster image…", Toast.LENGTH_SHORT).show();
+    //        posterPickerLauncher.launch("image/*");
+        OrganizerEditEventFragment fragment = OrganizerEditEventFragment.newInstance(organizerId, event);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.dashboard_fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     /**

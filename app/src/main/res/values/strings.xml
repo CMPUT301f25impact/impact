@@ -63,6 +63,10 @@
     <string name="event_history_title">Event History</string>
     <string name="event_history_empty_state">No events in your history yet.</string>
     <string name="event_history_error_loading">Unable to load event history</string>
+    <string name="event_details_start_date_picker_button_filled">Start: %1$s</string>
+    <string name="event_details_end_date_picker_button_filled">End: %1$s</string>
+    <string name="event_details_edit_header">Edit Event</string>
+    <string name="event_details_update_poster">Select New Poster</string>
     <string name="main_seed_demo_button">Seed Demo Events</string>
     <string name="main_seed_demo_success">Demo events created</string>
     <string name="main_seed_demo_failure">Unable to create demo events</string>
@@ -125,6 +129,7 @@
     <string name="delete_dialog_text">Are you sure you want to delete %1$s? This action cannot be undone.</string>
     <string name="image_content_description">Event Poster Image</string>
     <string name="event_details_registration_closed">Registration closed</string>
+    <string name="event_details_edit_event_button">Update Event</string>
     <string name="waiting_list_redraw_button">Redraw replacement</string>
     <string name="waiting_list_redraw_success">Replacement entrant drawn.</string>
     <string name="waiting_list_redraw_error">Unable to draw replacement entrant.</string>

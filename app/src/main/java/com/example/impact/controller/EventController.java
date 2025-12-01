@@ -159,6 +159,30 @@ public class EventController {
     }
 
     /**
+     * Updates an existing event in the DB identified by event id.
+     * Uses data passed in new event object
+     *
+     * @param eventId ID of event to update
+     * @param newEvent new event data
+     * @param successListener invoked with the generated document id
+     * @param failureListener invoked when the write fails
+     */
+    public void updateEvent(String eventId,
+                            @NonNull Event newEvent,
+                            @Nullable OnSuccessListener<String> successListener,
+                            @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_EVENTS)
+                .document(eventId)
+                .set(newEvent)
+                .addOnSuccessListener(ref -> {
+                    if (successListener != null) successListener.onSuccess(eventId);
+                })
+                .addOnFailureListener(err -> {
+                    if (failureListener != null) failureListener.onFailure(err);
+                });
+    }
+
+    /**
      * Fetches an event document by id and forwards it to the provided callback.
      *
      * @param eventId          Firestore document id

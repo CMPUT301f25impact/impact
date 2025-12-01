@@ -32,6 +32,7 @@ import com.example.impact.model.User;
 import com.example.impact.model.WaitingListEntry;
 import com.example.impact.model.Notification;
 import com.example.impact.utils.AppSession;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.example.impact.view.adapter.NotificationAdapter;
 
@@ -91,16 +92,22 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
      * Requests events from Firestore, applying filters if needed.
      */
     private void loadNotificatons() {
-        List<User> senderList = new ArrayList<>();
-        senderList.add(AppSession.getUser());
-        notificationController.fetchAllNotifications(senderList, this::onNotificationsLoaded,
-                error -> Toast.makeText(requireContext(), R.string.event_list_error_loading, Toast.LENGTH_SHORT).show());
-
+        notificationController.fetchAllNotifications(AppSession.getUser(),
+                notifications -> {
+                    Toast.makeText(requireContext(), "No events found", Toast.LENGTH_SHORT).show();
+                    onNotificationsLoaded(notifications);
+                },
+                // error -> Toast.makeText(requireContext(), "Unable to load notifications :"+error.toString(), Toast.LENGTH_SHORT).show());
+                error -> {throw new RuntimeException(error);});
     }
     /**
      * Updates the adapter when Firestore returns results.
      */
     private void onNotificationsLoaded(List<Notification> notifications) {
+        if (notifications.isEmpty()) {
+            Toast.makeText(requireContext(), "Orion there are no notificaoison ", Toast.LENGTH_SHORT).show();
+        }
+
         notificationAdapter.setNotifications(notifications);
         emptyStateView.setVisibility(notifications == null || notifications.isEmpty() ? View.VISIBLE : View.GONE);
     }
@@ -141,7 +148,7 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
                 rbWinners.setEnabled(false);
                 rbWaitingList.setEnabled(false);
                 rbCancelled.setEnabled(false);
-                etMessage.setEnabled(false);
+//                etMessage.setEnabled(false);
                 btnSend.setEnabled(false);
                 return;
             }
@@ -188,10 +195,19 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
         Event related_event = selectedEvent;
         String message = etMessage.getText().toString().trim();
 
+        // Convert to DocumentReferences
+        DocumentReference senderRef = AppSession.db().collection("users").document(sender.getId());
+        DocumentReference eventRef = AppSession.db().collection("events").document(related_event.getId());
+
+        List<DocumentReference> recipientRefs = new ArrayList<>();
+        for (User recipient : recipients) {
+            recipientRefs.add(AppSession.db().collection("users").document(recipient.getId()));
+        }
+
         Map<String, Object> data = new HashMap<>();
-        data.put("sender", sender);
-        data.put("recipients", recipients);
-        data.put("related_event", related_event);
+        data.put("sender", senderRef);
+        data.put("recipients", recipientRefs);
+        data.put("related_event", eventRef);
         data.put("message", message);
         data.put("time_stamp", FieldValue.serverTimestamp());
 
@@ -223,7 +239,7 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
                         rbWinners.setEnabled(false);
                         rbWaitingList.setEnabled(false);
                         rbCancelled.setEnabled(false);
-                        etMessage.setEnabled(false);
+//                        etMessage.setEnabled(false);
                         btnSend.setEnabled(false);
                         return;
                     }

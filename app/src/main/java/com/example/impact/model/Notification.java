@@ -32,6 +32,15 @@ public class Notification implements Serializable {
         this.time_stamp = new Date();
     }
 
+    public Notification(String id, User sender, ArrayList<User> recipients, @Nullable Event related_event, String message, Date time_stamp) {
+        this.id = id;
+        this.sender = sender;
+        this.recipients = recipients;
+        this.related_event = related_event;
+        this.message = message;
+        this.time_stamp = time_stamp;
+    }
+
     public ArrayList<User> getRecipients() {
         return recipients;
     }

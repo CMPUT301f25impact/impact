@@ -388,7 +388,7 @@ public class WaitingListController {
                                 notSelectedRecipientRefs.add(AppSession.db().collection("users").document(recipient.getId()));
                             }
                             data.put("recipients", notSelectedRecipientRefs);
-                            data.put("message", "You have not been selected for event " + eventName);
+                            data.put("message", "You have not been selected for event " + eventName + ". If someone cancels, you could still be selected and notified!");
                             AppSession.db().collection("notifications")
                                     .add(data);
                         }

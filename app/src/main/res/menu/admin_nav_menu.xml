@@ -12,4 +12,8 @@
         android:id="@+id/admin_nav_profiles"
         android:icon="@drawable/outline_account_circle_30"
         android:title="@string/admin_nav_profiles_tab" />
+    <item
+        android:id="@+id/admin_nav_notifications"
+        android:icon="@drawable/outline_article_30"
+        android:title="Notifications" />
 </menu>

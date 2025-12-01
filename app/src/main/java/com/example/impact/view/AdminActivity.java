@@ -51,6 +51,9 @@ public class AdminActivity extends BaseDashboardActivity {
         } else if (itemId == R.id.admin_nav_profiles) {
             return AdminProfileListFragment.newInstance(adminId);
         }
+        else if (itemId == R.id.admin_nav_notifications) {
+            return AdminNotificationListFragment.newInstance(adminId);
+        }
         return null;
     }
 
@@ -62,6 +65,9 @@ public class AdminActivity extends BaseDashboardActivity {
             return R.string.admin_nav_profiles_tab;
         } else if (itemId == R.id.admin_nav_images) {
             return R.string.admin_nav_images_tab;
+        }
+        else if (itemId == R.id.admin_nav_notifications) {
+            return R.string.admin_nav_notifications_tab;
         }
         return getInitialToolbarTitle();
     }

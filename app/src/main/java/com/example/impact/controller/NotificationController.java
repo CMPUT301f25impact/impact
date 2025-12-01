@@ -76,6 +76,26 @@ public class NotificationController {
     }
 
     /**
+     * Deletes notification with provided ID
+     * @param notificationId notification ID
+     * @param successListener executed on success
+     * @param failureListener executed on failure
+     */
+    public void deleteNotification(@NonNull String notificationId,
+                            @Nullable OnSuccessListener<String> successListener,
+                            @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_NOTIFICATIONS)
+                .document(notificationId)
+                .delete()
+                .addOnSuccessListener(v -> {
+                    if (successListener != null) successListener.onSuccess(notificationId);
+                })
+                .addOnFailureListener(err -> {
+                    if (failureListener != null) failureListener.onFailure(err);
+                });
+    }
+
+    /**
      * Builds the Firestore payload for a given notification.
      *
      * @param notification model to serialize
@@ -131,6 +151,24 @@ public class NotificationController {
                 })
                 .addOnFailureListener(failureListener);
     }
+
+    /**
+     * Loads all available notifications.
+     *
+     * @param successListener invoked with the mapped notifications list
+     * @param failureListener invoked when the Firestore read fails
+     */
+    public void fetchAvailableNotifications(@Nullable OnSuccessListener<List<Notification>> successListener,
+                                     @Nullable OnFailureListener failureListener) {
+        firestore.collection(COLLECTION_NOTIFICATIONS)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    mapNotifications(snapshot, successListener, failureListener);
+                })
+                .addOnFailureListener(failureListener);
+    }
+
+
 
     /**
      * Converts a snapshot into notification models

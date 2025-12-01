@@ -94,7 +94,7 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
     private void loadNotificatons() {
         notificationController.fetchAllNotifications(AppSession.getUser(),
                 notifications -> {
-                    Toast.makeText(requireContext(), "No events found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "No notifications found", Toast.LENGTH_SHORT).show();
                     onNotificationsLoaded(notifications);
                 },
                 // error -> Toast.makeText(requireContext(), "Unable to load notifications :"+error.toString(), Toast.LENGTH_SHORT).show());

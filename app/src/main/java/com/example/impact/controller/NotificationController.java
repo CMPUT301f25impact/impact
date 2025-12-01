@@ -55,11 +55,24 @@ public class NotificationController {
         this.firestore = firestore;
     }
 
-    public com.google.android.gms.tasks.Task<com.google.firebase.firestore.QuerySnapshot>
-    getNotificationsForEntrant(String entrantId) {
-        return firestore.collection("notifications")
-                .whereEqualTo("entrantId", entrantId)
-                .get();
+    /**
+     * Get the notifications which list the provided user in the recipients
+     * @param entrant
+     * @param successListener
+     * @param failureListener
+     */
+    public void getNotificationsForEntrant(Entrant entrant,
+                                           @Nullable OnSuccessListener<List<Notification>> successListener,
+                                           @Nullable OnFailureListener failureListener) {
+        FirebaseFirestore db = FirebaseUtils.getFirestore();
+        DocumentReference entrantDocRef = db.collection("users").document(entrant.getId());
+        db.collection("notifications")
+                .whereArrayContains("recipients", entrantDocRef)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    mapNotifications(snapshot, successListener, failureListener);
+                })
+                .addOnFailureListener(failureListener);
     }
 
 
@@ -80,6 +93,23 @@ public class NotificationController {
                 .document(notification.getId())
                 .set(data);
         attachListeners(task, successListener, failureListener);
+    }
+
+    /**
+     * Builds the Firestore payload for a given notification.
+     *
+     * @param notification model to serialize
+     * @return map of primitive data ready for Firestore
+     */
+    static Map<String, Object> buildNotificationData(@NonNull Notification notification) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("id", notification.getId());
+        data.put("sender", notification.getSender());
+        data.put("recipients", notification.getRecipients());
+        data.put("related_event", notification.getRelated_event());
+        data.put("message", notification.getMessage());
+        data.put("time_stamp", notification.getTime_stamp());
+        return data;
     }
 
     public void fetchNotification(@NonNull String notificationId,

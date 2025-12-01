@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
 import com.example.impact.controller.NotificationController;
+import com.example.impact.model.Entrant;
 import com.example.impact.model.Notification;
+import com.example.impact.utils.AppSession;
 import com.example.impact.view.adapter.EntrantNotificationAdapter;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -85,39 +88,25 @@ public class EntrantNotificationsFragment extends Fragment {
             return;
         }
 
-        notificationController.getNotificationsForEntrant(entrantId)
-                .addOnSuccessListener(querySnapshot -> {
-                    List<Notification> notificationList = new ArrayList<>();
-
-                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                        String id = doc.getId();
-                        String message = doc.getString("message");
-
-                        Notification notification = new Notification(
-                                id,
-                                null,
-                                null,
-                                null,
-                                message != null ? message : ""
-                        );
-
-                        notificationList.add(notification);
-                    }
-
-                    notificationAdapter.setNotifications(notificationList);
-
-                    if (notificationList.isEmpty()) {
-                        noNotificationsText.setVisibility(View.VISIBLE);
-                        notificationsRecycler.setVisibility(View.GONE);
-                    } else {
-                        noNotificationsText.setVisibility(View.GONE);
-                        notificationsRecycler.setVisibility(View.VISIBLE);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    noNotificationsText.setText("Failed to load notifications.");
-                    noNotificationsText.setVisibility(View.VISIBLE);
-                    notificationsRecycler.setVisibility(View.GONE);
+        notificationController.getNotificationsForEntrant((Entrant) AppSession.getUser(),
+                notifications -> {
+                    onNotificationsLoaded(notifications);
+                },
+                error -> {
+                    Toast.makeText(requireContext(), "Error when loading notifications", Toast.LENGTH_SHORT).show();
                 });
+    }
+    
+    private void onNotificationsLoaded(List<Notification> notifications) {
+        notificationAdapter.setNotifications(notifications);
+
+        if (notifications.isEmpty()) {
+            noNotificationsText.setVisibility(View.VISIBLE);
+            notificationsRecycler.setVisibility(View.GONE);
+        }
+        else {
+            noNotificationsText.setVisibility(View.GONE);
+            notificationsRecycler.setVisibility(View.VISIBLE);
+        }
     }
 }

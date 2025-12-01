@@ -16,7 +16,6 @@ import com.example.impact.utils.AppSession;
  */
 public class AdminActivity extends BaseDashboardActivity {
 
-//    private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";
     private String adminId;
 
     @Override

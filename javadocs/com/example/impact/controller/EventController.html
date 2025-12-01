@@ -130,14 +130,14 @@ loadScripts(document, 'script');</script>
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;successListener,
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Creates an event document.</div>
+<div class="block">Creates an event document with the provided details.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deleteEvent(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">deleteEvent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;successListener,
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Deletes event with provided ID</div>
+<div class="block">Deletes the event document with the provided id.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchAvailableEvents(com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchAvailableEvents</a><wbr>(com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;&gt;&nbsp;successListener,
@@ -146,39 +146,62 @@ loadScripts(document, 'script');</script>
 <div class="block">Loads all available events.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchEventsByOrganizer(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchEventsByOrganizer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;organizerId,
- com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;&gt;&nbsp;success,
- com.google.android.gms.tasks.OnFailureListener&nbsp;failure)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchEventById(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchEventById</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Fetches a single event by organizer.</div>
+<div class="block">Fetches an event document by id and forwards it to the provided callback.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchFilteredEvents(java.util.List,java.util.Date,java.util.Date,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchFilteredEvents</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;tags,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchEventsByOrganizer(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchEventsByOrganizer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;organizerId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;&gt;&nbsp;success,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failure)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fetches a single event by organizer.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchFilteredEvents(java.util.List,java.util.Date,java.util.Date,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchFilteredEvents</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;tags,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a>&nbsp;startDate,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a>&nbsp;endDate,
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;&gt;&nbsp;successListener,
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Performs a filtered fetch constrained by tags and date range.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.firebase.firestore.ListenerRegistration</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#listenEventsByOrganizer(java.lang.String,com.google.firebase.firestore.EventListener)" class="member-name-link">listenEventsByOrganizer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.firebase.firestore.ListenerRegistration</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#listenEventsByOrganizer(java.lang.String,com.google.firebase.firestore.EventListener)" class="member-name-link">listenEventsByOrganizer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;organizerId,
  com.google.firebase.firestore.EventListener&lt;com.google.firebase.firestore.QuerySnapshot&gt;&nbsp;listener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Subscribes to real-time updates for events owned by an organizer email.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapEvents(com.google.firebase.firestore.QuerySnapshot)" class="member-name-link">mapEvents</a><wbr>(com.google.firebase.firestore.QuerySnapshot&nbsp;snapshot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Subscribes to real-time updates for events owned by an organizer id.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapEvents(com.google.firebase.firestore.QuerySnapshot)" class="member-name-link">mapEvents</a><wbr>(com.google.firebase.firestore.QuerySnapshot&nbsp;snapshot)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Maps Firestore documents into <a href="../model/Event.html" title="class in com.example.impact.model"><code>Event</code></a> instances.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateEvent(java.lang.String,com.example.impact.model.Event,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">updateEvent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&nbsp;newEvent,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Updates an existing event document with the provided payload.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateQrPayload(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">updateQrPayload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;payload,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePosterUrl(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">updatePosterUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;posterImageId,
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Stores a QR code download URL in the event doc.</div>
+<div class="block">Updates the <code>posterUrl</code> field for the event document.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateQrPayload(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">updateQrPayload</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;payload,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Stores a QR code payload string in the event document.</div>
 </div>
 </div>
 </div>
@@ -285,13 +308,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="listenEventsByOrganizer(java.lang.String,com.google.firebase.firestore.EventListener)">
 <h3>listenEventsByOrganizer</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.firebase.firestore.ListenerRegistration</span>&nbsp;<span class="element-name">listenEventsByOrganizer</span><wbr><span class="parameters">(@NonNull
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;email,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;organizerId,
  @NonNull
  com.google.firebase.firestore.EventListener&lt;com.google.firebase.firestore.QuerySnapshot&gt;&nbsp;listener)</span></div>
-<div class="block">Subscribes to real-time updates for events owned by an organizer email.</div>
+<div class="block">Subscribes to real-time updates for events owned by an organizer id.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>email</code> - organizer email address</dd>
+<dd><code>organizerId</code> - organizer uid</dd>
 <dd><code>listener</code> - callback invoked with snapshot updates</dd>
 <dt>Returns:</dt>
 <dd>listener registration to dispose of updates</dd>
@@ -307,14 +330,71 @@ loadScripts(document, 'script');</script>
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;successListener,
  @Nullable
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
-<div class="block">Creates an event document. The Event object should have:
- name, description, startDate, endDate, (optional) capacity, organizerId.
- Returns the new document id via successListener.</div>
+<div class="block">Creates an event document with the provided details.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>event</code> - event model to persist</dd>
 <dd><code>successListener</code> - invoked with the generated document id</dd>
 <dd><code>failureListener</code> - invoked when the write fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="updateEvent(java.lang.String,com.example.impact.model.Event,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>updateEvent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateEvent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @NonNull
+ <a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&nbsp;newEvent,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Updates an existing event document with the provided payload.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - id of the event document to update</dd>
+<dd><code>newEvent</code> - new event data</dd>
+<dd><code>successListener</code> - invoked upon successful completion (receives <code>eventId</code>)</dd>
+<dd><code>failureListener</code> - invoked when the write fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchEventById(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>fetchEventById</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchEventById</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="../model/Event.html" title="class in com.example.impact.model">Event</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Fetches an event document by id and forwards it to the provided callback.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - Firestore document id</dd>
+<dd><code>successListener</code> - invoked with the mapped event (may be <code>null</code> when missing)</dd>
+<dd><code>failureListener</code> - invoked when the read fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="updatePosterUrl(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>updatePosterUrl</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updatePosterUrl</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;posterImageId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Updates the <code>posterUrl</code> field for the event document.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event document id</dd>
+<dd><code>posterImageId</code> - Firestore id of the uploaded image</dd>
+<dd><code>successListener</code> - optional success callback</dd>
+<dd><code>failureListener</code> - optional failure callback</dd>
 </dl>
 </section>
 </li>
@@ -329,7 +409,7 @@ loadScripts(document, 'script');</script>
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
  @Nullable
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
-<div class="block">Stores a QR code download URL in the event doc.</div>
+<div class="block">Stores a QR code payload string in the event document.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>eventId</code> - id of the event document</dd>
@@ -348,7 +428,7 @@ loadScripts(document, 'script');</script>
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;successListener,
  @Nullable
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
-<div class="block">Deletes event with provided ID</div>
+<div class="block">Deletes the event document with the provided id.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>eventId</code> - event ID</dd>

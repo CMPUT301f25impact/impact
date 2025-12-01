@@ -83,13 +83,14 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Classes</span></div>
-<div class="summary-table two-column-summary">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button></div>
+<div id="class-summary.tabpanel" role="tabpanel">
+<div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="AdminActivity.html" title="class in com.example.impact.view">AdminActivity</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">The primary admin dashboard activity.</div>
+<div class="block">Dashboard host activity for administrators, wiring up events, images, profiles, and notifications.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AdminEventListFragment.html" title="class in com.example.impact.view">AdminEventListFragment</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -99,69 +100,88 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This is the list fragment that renders images in the admin dashboard</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AdminProfileListFragment.html" title="class in com.example.impact.view">AdminProfileListFragment</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AdminNotificationListFragment.html" title="class in com.example.impact.view">AdminNotificationListFragment</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Fragment that lists notifications created by administrators.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AdminProfileListFragment.html" title="class in com.example.impact.view">AdminProfileListFragment</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Displays entrant profiles for administrators.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Abstract base activity for all dashboard screens.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="EntrantActivity.html" title="class in com.example.impact.view">EntrantActivity</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Launcher screen for entrant-specific tools and shortcuts.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="EntrantProfileActivity.html" title="class in com.example.impact.view">EntrantProfileActivity</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="EntrantNotificationsFragment.html" title="class in com.example.impact.view">EntrantNotificationsFragment</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Fragment showing notifications targeted at the signed-in entrant.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="EntrantProfileFragment.html" title="class in com.example.impact.view">EntrantProfileFragment</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Activity that allows entrants to capture and persist their profile details.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="EntrantViewFragment.html" title="class in com.example.impact.view">EntrantViewFragment</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="EntrantProfileFragment.ProfileInteractionListener.html" title="interface in com.example.impact.view">EntrantProfileFragment.ProfileInteractionListener</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="EventDetailsFragment.html" title="class in com.example.impact.view">EventDetailsFragment</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Placeholder fragment for previewing entrant-facing screens.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="EventDetailsActivity.html" title="class in com.example.impact.view">EventDetailsActivity</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Displays event details and lets entrants manage their waiting list status.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="EventHistoryActivity.html" title="class in com.example.impact.view">EventHistoryActivity</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="EventHistoryFragment.html" title="class in com.example.impact.view">EventHistoryFragment</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Shows the entrant's historical event participation details.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="EventListActivity.html" title="class in com.example.impact.view">EventListActivity</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="EventListFragment.html" title="class in com.example.impact.view">EventListFragment</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Displays a list of events and exposes filtering for entrant interests and availability.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LoginActivity.html" title="class in com.example.impact.view">LoginActivity</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Handles Firestore-backed user login and role-based routing.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MainActivity.html" title="class in com.example.impact.view">MainActivity</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LoginActivity.html" title="class in com.example.impact.view">LoginActivity</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Temporary launcher to navigate between entrant demo screens.</div>
+<div class="block">Handles Firestore-backed user login and role-based routing.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="OrganizerActivity.html" title="class in com.example.impact.view">OrganizerActivity</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Hosts the organizer dashboard tabs for managing and creating events.</div>
+<div class="block">Host activity for organizer workflows (event list, creation, notifications).</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="OrganizerEventsFragment.html" title="class in com.example.impact.view">OrganizerEventsFragment</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="OrganizerCreateEventFragment.html" title="class in com.example.impact.view">OrganizerCreateEventFragment</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Provides organizers with a simple form to create events and preview QR codes.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="OrganizerEditEventFragment.html" title="class in com.example.impact.view">OrganizerEditEventFragment</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Provides Organizers with a UI to edit event details after it's creation</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="OrganizerEventListFragment.html" title="class in com.example.impact.view">OrganizerEventListFragment</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Fragment displaying all events created by the logged-in organizer.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="OrganizerToolsFragment.html" title="class in com.example.impact.view">OrganizerToolsFragment</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="OrganizerNotificationsFragment.html" title="class in com.example.impact.view">OrganizerNotificationsFragment</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Provides organizers with a simple form to create events and preview QR codes.</div>
+<div class="block">Fragment that lets organizers review outbound notifications and send new ones to entrants.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SignupActivity.html" title="class in com.example.impact.view">SignupActivity</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="QrScannerActivity.html" title="class in com.example.impact.view">QrScannerActivity</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Lightweight activity that scans QR codes and returns the encoded event id to the caller.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SignupActivity.html" title="class in com.example.impact.view">SignupActivity</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Collects minimal credentials and creates entrant accounts in Firestore.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SimpleEntrantAdapter.html" title="class in com.example.impact.view">SimpleEntrantAdapter</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SimpleEntrantAdapter.html" title="class in com.example.impact.view">SimpleEntrantAdapter</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Minimal adapter used by admin tools to show entrant records.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SplashActivity.html" title="class in com.example.impact.view">SplashActivity</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="SplashActivity.html" title="class in com.example.impact.view">SplashActivity</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Entry point that auto-logs users based on stored device identifiers.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="WaitingListActivity.html" title="class in com.example.impact.view">WaitingListActivity</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Displays a live list of entrants waiting for a specific event.</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="WaitingListActivity.html" title="class in com.example.impact.view">WaitingListActivity</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Displays organizer-specific waiting list information grouped by entrant status.</div>
+</div>
 </div>
 </div>
 </div>

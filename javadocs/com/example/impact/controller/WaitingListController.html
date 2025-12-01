@@ -109,7 +109,12 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.google.firebase.firestore.FirebaseFirestore)" class="member-name-link">WaitingListController</a><wbr>(com.google.firebase.firestore.FirebaseFirestore&nbsp;firestore)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a controller with an injected Firestore instance.</div>
+<div class="block">Creates a controller backed by the supplied Firestore instance (notifications disabled).</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.google.firebase.firestore.FirebaseFirestore,com.example.impact.controller.NotificationController)" class="member-name-link">WaitingListController</a><wbr>(com.google.firebase.firestore.FirebaseFirestore&nbsp;firestore,
+ <a href="NotificationController.html" title="class in com.example.impact.controller">NotificationController</a>&nbsp;notificationController)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates a controller with explicit Firestore and notification collaborators.</div>
 </div>
 </div>
 </section>
@@ -126,6 +131,37 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#acceptSelection(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">acceptSelection</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Marks a selected entrant as having accepted their invitation.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#declineSelection(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">declineSelection</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Records a decline for a selected entrant, marking their entry as <code>"cancelled"</code>,
+ and promotes the next eligible entrant when possible.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchWaitingListByEventId(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchWaitingListByEventId</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/WaitingListEntry.html" title="class in com.example.impact.model">WaitingListEntry</a>&gt;&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves all waiting-list entries for a specific event.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchWaitingListCount(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchWaitingListCount</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves the number of entrants currently on the waiting list for the event.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchWaitingListEntry(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">fetchWaitingListEntry</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="../model/WaitingListEntry.html" title="class in com.example.impact.model">WaitingListEntry</a>&gt;&nbsp;successListener,
@@ -134,21 +170,48 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks whether an entrant already joined the waiting list.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#joinWaitingList(java.lang.String,java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">joinWaitingList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasLotteryRun(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">hasLotteryRun</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Indicates whether the event already has selected entrants, implying the lottery was run.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#joinWaitingList(java.lang.String,java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">joinWaitingList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds the entrant to the waiting list for the specified event.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#leaveWaitingList(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">leaveWaitingList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#leaveWaitingList(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">leaveWaitingList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
  com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
  com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes the entrant from the waiting list.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../model/WaitingListEntry.html" title="class in com.example.impact.model">WaitingListEntry</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapWaitingList(com.google.firebase.firestore.QuerySnapshot)" class="member-name-link">mapWaitingList</a><wbr>(com.google.firebase.firestore.QuerySnapshot&nbsp;snapshot)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Maps a Firestore query into waiting-list entries for display.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#redrawNextEntrant(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">redrawNextEntrant</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Public helper that draws a single replacement entrant from the pending pool.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#runLottery(java.lang.String,java.lang.Integer,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)" class="member-name-link">runLottery</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;limit,
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Randomly selects pending entrants and marks them as selected.</div>
 </div>
 </div>
 </div>
@@ -179,10 +242,25 @@ loadScripts(document, 'script');</script>
 <h3>WaitingListController</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WaitingListController</span><wbr><span class="parameters">(@NonNull
  com.google.firebase.firestore.FirebaseFirestore&nbsp;firestore)</span></div>
-<div class="block">Creates a controller with an injected Firestore instance.</div>
+<div class="block">Creates a controller backed by the supplied Firestore instance (notifications disabled).</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>firestore</code> - shared Firestore reference</dd>
+<dd><code>firestore</code> - Firestore dependency, usually mocked during tests.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.google.firebase.firestore.FirebaseFirestore,com.example.impact.controller.NotificationController)">
+<h3>WaitingListController</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WaitingListController</span><wbr><span class="parameters">(@NonNull
+ com.google.firebase.firestore.FirebaseFirestore&nbsp;firestore,
+ @Nullable
+ <a href="NotificationController.html" title="class in com.example.impact.controller">NotificationController</a>&nbsp;notificationController)</span></div>
+<div class="block">Creates a controller with explicit Firestore and notification collaborators.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>firestore</code> - Firestore dependency used for all reads/writes.</dd>
+<dd><code>notificationController</code> - optional notification controller for entrant messaging.</dd>
 </dl>
 </section>
 </li>
@@ -240,6 +318,68 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="declineSelection(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>declineSelection</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">declineSelection</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Records a decline for a selected entrant, marking their entry as <code>"cancelled"</code>,
+ and promotes the next eligible entrant when possible.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier</dd>
+<dd><code>entrantId</code> - entrant identifier</dd>
+<dd><code>successListener</code> - invoked once the replacement flow completes (even when no replacement exists)</dd>
+<dd><code>failureListener</code> - invoked when either decline or replacement writes fail</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="redrawNextEntrant(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>redrawNextEntrant</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">redrawNextEntrant</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Public helper that draws a single replacement entrant from the pending pool.
+ Used by organizers when they press the "Redraw" button.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier</dd>
+<dd><code>successListener</code> - invoked when the write succeeds</dd>
+<dd><code>failureListener</code> - invoked when the write fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="acceptSelection(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>acceptSelection</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">acceptSelection</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;entrantId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Marks a selected entrant as having accepted their invitation.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier</dd>
+<dd><code>entrantId</code> - entrant identifier</dd>
+<dd><code>successListener</code> - invoked when the write succeeds</dd>
+<dd><code>failureListener</code> - invoked when the write fails</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="fetchWaitingListEntry(java.lang.String,java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
 <h3>fetchWaitingListEntry</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchWaitingListEntry</span><wbr><span class="parameters">(@NonNull
@@ -257,6 +397,95 @@ loadScripts(document, 'script');</script>
 <dd><code>entrantId</code> - entrant identifier</dd>
 <dd><code>successListener</code> - invoked with the mapped entry (may be <code>null</code>)</dd>
 <dd><code>failureListener</code> - invoked when the read fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchWaitingListCount(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>fetchWaitingListCount</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchWaitingListCount</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Retrieves the number of entrants currently on the waiting list for the event.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier</dd>
+<dd><code>successListener</code> - invoked with the count (never <code>null</code>)</dd>
+<dd><code>failureListener</code> - invoked when the read fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchWaitingListByEventId(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>fetchWaitingListByEventId</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">fetchWaitingListByEventId</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/WaitingListEntry.html" title="class in com.example.impact.model">WaitingListEntry</a>&gt;&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Retrieves all waiting-list entries for a specific event.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier</dd>
+<dd><code>successListener</code> - invoked with the mapped entry list</dd>
+<dd><code>failureListener</code> - invoked when the read fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="runLottery(java.lang.String,java.lang.Integer,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>runLottery</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">runLottery</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @Nullable
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;limit,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Randomly selects pending entrants and marks them as selected.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier</dd>
+<dd><code>limit</code> - optional maximum entrants to select (selects all pending when <code>null</code>)</dd>
+<dd><code>successListener</code> - invoked once updates commit or when nothing needs updating</dd>
+<dd><code>failureListener</code> - invoked when either the read or write fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="hasLotteryRun(java.lang.String,com.google.android.gms.tasks.OnSuccessListener,com.google.android.gms.tasks.OnFailureListener)">
+<h3>hasLotteryRun</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">hasLotteryRun</span><wbr><span class="parameters">(@NonNull
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;eventId,
+ @Nullable
+ com.google.android.gms.tasks.OnSuccessListener&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;successListener,
+ @Nullable
+ com.google.android.gms.tasks.OnFailureListener&nbsp;failureListener)</span></div>
+<div class="block">Indicates whether the event already has selected entrants, implying the lottery was run.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>eventId</code> - event identifier</dd>
+<dd><code>successListener</code> - invoked with <code>true</code> when any selection exists</dd>
+<dd><code>failureListener</code> - invoked when the read fails</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="mapWaitingList(com.google.firebase.firestore.QuerySnapshot)">
+<h3>mapWaitingList</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../model/WaitingListEntry.html" title="class in com.example.impact.model">WaitingListEntry</a>&gt;</span>&nbsp;<span class="element-name">mapWaitingList</span><wbr><span class="parameters">(@Nullable
+ com.google.firebase.firestore.QuerySnapshot&nbsp;snapshot)</span></div>
+<div class="block">Maps a Firestore query into waiting-list entries for display.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>snapshot</code> - query result (may be <code>null</code>)</dd>
+<dt>Returns:</dt>
+<dd>mapped waiting list entry list</dd>
 </dl>
 </section>
 </li>

@@ -13,11 +13,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.impact.R;
 import com.example.impact.controller.EventController;
@@ -27,32 +30,41 @@ import com.example.impact.controller.WaitingListController;
 import com.example.impact.model.Event;
 import com.example.impact.model.User;
 import com.example.impact.model.WaitingListEntry;
+import com.example.impact.model.Notification;
 import com.example.impact.utils.AppSession;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
+import com.example.impact.view.adapter.NotificationAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class OrganizerNotificationsFragment extends Fragment {
+public class OrganizerNotificationsFragment extends Fragment implements NotificationAdapter.OnNotificationClickListener {
 
     private Spinner sEventSelect;
     private RadioGroup radioGroup;
     private RadioButton rbWinners, rbWaitingList, rbCancelled;
     private EditText etMessage;
     private Button btnSend;
+    private TextView emptyStateView;
     private Event selectedEvent;
+
+    private List<Pair<User, WaitingListEntry>> globalWaitingListPairs;
     private List<User> globalUserWaitingList;
-    private List<String> globalWaitingListStatuses;
     private List<User> globalCancelledUsers;
+    private List<User> globalSelectedUsers;
     private List<User> globalUsersBeingNotified;
 
     private final NotificationController notificationController = new NotificationController();
     private final EventController eventController = new EventController();
     private final WaitingListController waitingListController = new WaitingListController();
     private final UserController userController = new UserController();
+
+    private NotificationAdapter notificationAdapter;
     public static final String EXTRA_ORGANIZER_ID = "organizer_id";
 
     public static OrganizerNotificationsFragment newInstance(String organizerId) {
@@ -62,6 +74,51 @@ public class OrganizerNotificationsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        emptyStateView = view.findViewById(R.id.textViewEmptyState);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerNotifications);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        notificationAdapter = new NotificationAdapter(this);
+        recyclerView.setAdapter(notificationAdapter);
+
+        loadNotificatons();
+    }
+    /**
+     * Requests events from Firestore, applying filters if needed.
+     */
+    private void loadNotificatons() {
+        notificationController.fetchAllNotifications(AppSession.getUser(),
+                notifications -> {
+                    Toast.makeText(requireContext(), "No events found", Toast.LENGTH_SHORT).show();
+                    onNotificationsLoaded(notifications);
+                },
+                // error -> Toast.makeText(requireContext(), "Unable to load notifications :"+error.toString(), Toast.LENGTH_SHORT).show());
+                error -> {throw new RuntimeException(error);});
+    }
+    /**
+     * Updates the adapter when Firestore returns results.
+     */
+    private void onNotificationsLoaded(List<Notification> notifications) {
+        if (notifications.isEmpty()) {
+            Toast.makeText(requireContext(), "No notifications found.", Toast.LENGTH_SHORT).show();
+        }
+
+        notificationAdapter.setNotifications(notifications);
+        emptyStateView.setVisibility(notifications == null || notifications.isEmpty() ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onNotificationClicked(Notification notification) {
+        // This screen doesn't use. No-op is fine.
+        // (Only Organizer screens navigate to WaitingListActivity.)
+    }
+
+
 
     @SuppressLint({"CutPasteId", "MissingInflatedId"})
     @Nullable
@@ -79,6 +136,7 @@ public class OrganizerNotificationsFragment extends Fragment {
         btnSend = v.findViewById(R.id.btnSend);
 
         btnSend.setEnabled(false);
+        etMessage.setEnabled(true);
         rbWinners.setEnabled(false);
         rbWaitingList.setEnabled(false);
         rbCancelled.setEnabled(false);
@@ -90,7 +148,7 @@ public class OrganizerNotificationsFragment extends Fragment {
                 rbWinners.setEnabled(false);
                 rbWaitingList.setEnabled(false);
                 rbCancelled.setEnabled(false);
-                etMessage.setEnabled(false);
+//                etMessage.setEnabled(false);
                 btnSend.setEnabled(false);
                 return;
             }
@@ -106,7 +164,7 @@ public class OrganizerNotificationsFragment extends Fragment {
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             globalUsersBeingNotified = new ArrayList<>();
             if (checkedId == R.id.rbWinners) {
-                globalUsersBeingNotified.addAll(globalUserWaitingList);
+                globalUsersBeingNotified.addAll(globalSelectedUsers);
             } else if (checkedId == R.id.rbWaitingList) {
                 globalUsersBeingNotified.addAll(globalUserWaitingList);
             } else if (checkedId == R.id.rbCancelled) {
@@ -137,10 +195,19 @@ public class OrganizerNotificationsFragment extends Fragment {
         Event related_event = selectedEvent;
         String message = etMessage.getText().toString().trim();
 
+        // Convert to DocumentReferences
+        DocumentReference senderRef = AppSession.db().collection("users").document(sender.getId());
+        DocumentReference eventRef = AppSession.db().collection("events").document(related_event.getId());
+
+        List<DocumentReference> recipientRefs = new ArrayList<>();
+        for (User recipient : recipients) {
+            recipientRefs.add(AppSession.db().collection("users").document(recipient.getId()));
+        }
+
         Map<String, Object> data = new HashMap<>();
-        data.put("sender", sender);
-        data.put("recipients", recipients);
-        data.put("related_event", related_event);
+        data.put("sender", senderRef);
+        data.put("recipients", recipientRefs);
+        data.put("related_event", eventRef);
         data.put("message", message);
         data.put("time_stamp", FieldValue.serverTimestamp());
 
@@ -158,53 +225,56 @@ public class OrganizerNotificationsFragment extends Fragment {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // We clear the global variables when a new event is selected
+                globalWaitingListPairs = new ArrayList<>();
                 globalUserWaitingList = new ArrayList<>();
-                globalWaitingListStatuses = new ArrayList<>();
                 globalCancelledUsers = new ArrayList<>();
+                globalSelectedUsers = new ArrayList<>();
+
                 selectedEvent = events.get(position);
 
                 waitingListController.fetchWaitingListByEventId(selectedEvent.getId(), waitingList -> {
                     if (waitingList.isEmpty()) {
                         Toast.makeText(requireContext(), "No entrants in waiting list found", Toast.LENGTH_SHORT).show();
-                        sEventSelect.setEnabled(false);
                         rbWinners.setEnabled(false);
                         rbWaitingList.setEnabled(false);
                         rbCancelled.setEnabled(false);
-                        etMessage.setEnabled(false);
+//                        etMessage.setEnabled(false);
                         btnSend.setEnabled(false);
                         return;
                     }
-
-                    List<String> waitingListEntrantIds = new ArrayList<>();
-                    for (WaitingListEntry entry : waitingList) {
-                        waitingListEntrantIds.add(entry.getEntrantId());
-                        globalWaitingListStatuses.add(entry.getStatus());
-                    }
                     List<String> queryOnRoles = Arrays.asList("entrant");
                     userController.fetchAllUsers(queryOnRoles, userList -> {
-                        for (int i = 0; i < userList.size(); i++) {
-                            User useri = userList.get(i);
-                            if (waitingListEntrantIds.contains(useri.getId())) {
-                                globalUserWaitingList.add(useri);
+                        Map<String, User> mapUsers = new HashMap<>();
+                        for (User user : userList) {
+                            mapUsers.put(user.getId(), user);
+                        }
+                        for (WaitingListEntry entry : waitingList) {
+                            User user = mapUsers.get(entry.getEntrantId());
+                            if (user != null) {
+                                globalWaitingListPairs.add(new Pair<User, WaitingListEntry>(user, entry));
                             }
                         }
-                    },
-                    exception -> Toast.makeText(requireContext(), "Error loading events: " + exception.getMessage(), Toast.LENGTH_SHORT).show());
-
-                    rbWaitingList.setEnabled(true);
-
-                    if (selectedEvent.isLotteryDone()) {
-                        rbWinners.setEnabled(true);
-
-                        for (int i = 0; i < waitingListEntrantIds.size(); i++) {
-                            if ("cancelled".equals(globalWaitingListStatuses.get(i))) {
-                                globalCancelledUsers.add(globalUserWaitingList.get(i));
+                        for (Pair<User, WaitingListEntry> pair : globalWaitingListPairs) {
+                            if (pair.getEntry().getStatus().equals("selected")) {
+                                globalSelectedUsers.add(pair.getUser());
                             }
+                            else if (pair.getEntry().getStatus().equals("cancelled")) {
+                                globalCancelledUsers.add(pair.getUser());
+                            }
+                            globalUserWaitingList.add(pair.getUser());
+                        }
+                        if (!globalUserWaitingList.isEmpty()) {
+                            rbWaitingList.setEnabled(true);
+                        }
+                        if (!globalSelectedUsers.isEmpty()) {
+                            rbWinners.setEnabled(true);
                         }
                         if (!globalCancelledUsers.isEmpty()) {
                             rbCancelled.setEnabled(true);
                         }
-                    }
+                    },
+                    exception -> Toast.makeText(requireContext(), "Error loading events: " + exception.getMessage(), Toast.LENGTH_SHORT).show());
                 },
                 exception -> Toast.makeText(requireContext(), "Error loading events: " + exception.getMessage(), Toast.LENGTH_SHORT).show());
             }
@@ -214,5 +284,17 @@ public class OrganizerNotificationsFragment extends Fragment {
                 // No-op
             }
         };
+    }
+
+    private static class Pair<User, WaitingListEntry> {
+        private final User user;
+        private final WaitingListEntry entry;
+
+        public Pair(User user, WaitingListEntry entry) {
+            this.user = user;
+            this.entry = entry;
+        }
+        public User getUser() {return user;}
+        public WaitingListEntry getEntry() {return entry;}
     }
 }

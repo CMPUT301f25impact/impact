@@ -239,15 +239,20 @@ public class WaitingListController {
                                       @Nullable OnSuccessListener<List<WaitingListEntry>> successListener,
                                       @Nullable OnFailureListener failureListener) {
         firestore.collection(COLLECTION_WAITING_LISTS)
-                .whereEqualTo("eventId", eventId)
+                .document(eventId)
+                .collection(SUB_COLLECTION_ENTRANTS)
                 .get()
                 .addOnSuccessListener(snapshot -> {
                     List<WaitingListEntry> waitingList = mapWaitingList(snapshot);
                     if (successListener != null) {
                         successListener.onSuccess(waitingList);
                     }
+                })
+                .addOnFailureListener(error -> {
+                    if (failureListener != null) {
+                        failureListener.onFailure(error);
+                    }
                 });
-// close failureListener here if needed
     }
     /**
      * Randomly selects pending entrants and marks them as selected.

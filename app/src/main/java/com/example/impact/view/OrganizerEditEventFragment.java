@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -49,7 +50,7 @@ public class OrganizerEditEventFragment extends Fragment {
     public static final String EXTRA_EVENT = "event";
 
     // views
-    private EditText etName, etDesc, etCapacity;
+    private EditText etName, etDesc, etCapacity, etWaitlistCapacity;
     private Button btnStart, btnEnd, btnEdit, btnUploadPoster;
     private ImageView imgQr;
     private ImageView imgPosterPreview;
@@ -114,6 +115,7 @@ public class OrganizerEditEventFragment extends Fragment {
         etName = v.findViewById(R.id.etEventName);
         etDesc = v.findViewById(R.id.etEventDescription);
         etCapacity = v.findViewById(R.id.etCapacity);
+        etWaitlistCapacity = v.findViewById(R.id.etWaitlistCapacity);
         btnStart = v.findViewById(R.id.btnPickStart);
         btnEnd = v.findViewById(R.id.btnPickEnd);
         imgQr = v.findViewById(R.id.imgQrPreview);
@@ -164,6 +166,7 @@ public class OrganizerEditEventFragment extends Fragment {
      */
     private void populateEventDetails() {
         Integer capacity = event.getCapacity();
+        Integer waitlistCapacity = event.getWaitlistCapacity();
         startDate = event.getStartDate();
         endDate = event.getEndDate();
         String posterId = event.getPosterUrl();
@@ -171,10 +174,14 @@ public class OrganizerEditEventFragment extends Fragment {
 
         etName.setText(event.getName());
         etDesc.setText(event.getDescription());
-
         if (capacity != null) {
             etCapacity.setText(String.format(Locale.ENGLISH, "%d", capacity));
         }
+
+        if (waitlistCapacity != null) {
+            etWaitlistCapacity.setText(String.format(Locale.ENGLISH, "%d", waitlistCapacity));
+        }
+
         if (startDate != null) {
             btnStart.setText(getString(
                     R.string.event_details_start_date_picker_button_filled,
@@ -307,7 +314,6 @@ public class OrganizerEditEventFragment extends Fragment {
      * Attempts to update the event with all new information
      */
     private void updateEvent() {
-        System.err.println("fired");
         // Form validation
         String name = etName.getText().toString().trim();
         if (TextUtils.isEmpty(name) || startDate == null || endDate == null) {
@@ -318,15 +324,23 @@ public class OrganizerEditEventFragment extends Fragment {
             Toast.makeText(requireContext(), "End date must be after start date!", Toast.LENGTH_LONG).show();
             return;
         }
-        int capacity;
-        try {
-            capacity = Integer.parseInt(etCapacity.getText().toString().trim());
-        } catch (NumberFormatException e) {
-            Toast.makeText(requireContext(), "Capacity must be an integer!", Toast.LENGTH_LONG).show();
+        Integer capacity = getTextIntegerValue(etCapacity);
+        if (capacity == null) {
+            Toast.makeText(requireContext(), "Capacity required and must be an integer", Toast.LENGTH_LONG).show();
             return;
         }
         if (capacity < 0) {
             Toast.makeText(requireContext(), "Capacity must be a positive integer!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        Integer waitlistCapacity = getTextIntegerValue(etWaitlistCapacity);
+        if (waitlistCapacity != null && waitlistCapacity < 0) {
+            Toast.makeText(requireContext(), "Waitlist capacity must be a positive integer!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (waitlistCapacity != null && waitlistCapacity < capacity) {
+            Toast.makeText(requireContext(), "Waitlist capacity must be larger than (or equal to) event capacity", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -336,6 +350,7 @@ public class OrganizerEditEventFragment extends Fragment {
         e.setName(name);
         e.setDescription(etDesc.getText().toString().trim());
         e.setCapacity(capacity);
+        e.setWaitlistCapacity(waitlistCapacity);
         e.setStartDate(startDate);
         e.setEndDate(endDate);
         e.setOrganizerId(organizerId);
@@ -368,6 +383,22 @@ public class OrganizerEditEventFragment extends Fragment {
         }, err -> {
             Toast.makeText(requireContext(), "Event saved but poster upload failed: " + err.getMessage(), Toast.LENGTH_LONG).show();
         });
+    }
+
+    /**
+     * Helper method to get the integer value of TextView (or returns null)
+     * @param tv text view
+     * @return integer value or null
+     */
+    private Integer getTextIntegerValue(TextView tv) {
+        int value;
+        try {
+            String textVal = tv.getText().toString().trim();
+            value = Integer.parseInt(textVal);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        return value;
     }
 
     /**

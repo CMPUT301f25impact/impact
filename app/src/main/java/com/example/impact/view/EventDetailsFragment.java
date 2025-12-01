@@ -41,6 +41,7 @@ public class EventDetailsFragment extends Fragment {
     private TextView countText;
     private TextView statusText;
     private String currentStatus;
+    private Integer waitlistCount;
     private String joinButtonDefaultText;
 
 
@@ -166,8 +167,9 @@ public class EventDetailsFragment extends Fragment {
      */
     private void loadWaitingListCount() {
         waitingListController.fetchWaitingListCount(event.getId(), count -> {
+            waitlistCount = count;
             if (countText != null) {
-                countText.setText(getString(R.string.event_details_waiting_list_count, count));
+                countText.setText(getString(R.string.event_details_waiting_list_count, waitlistCount));
             }
         }, error -> Toast.makeText(requireContext(), R.string.event_details_join_error, Toast.LENGTH_SHORT).show());
     }
@@ -177,6 +179,8 @@ public class EventDetailsFragment extends Fragment {
      * Calls the controller to join the waiting list.
      */
     private void joinWaitingList() {
+        Integer waitlistCapacity = event.getWaitlistCapacity();
+
         if (event == null || !isRegistrationOpen(event)) {
             Toast.makeText(requireContext(),
                     R.string.event_details_registration_closed,
@@ -184,6 +188,20 @@ public class EventDetailsFragment extends Fragment {
             ).show();
             // Refresh the button state to reflect this
             setButtonsForJoinedState(false);
+            return;
+        }
+        if (waitlistCount == null) { // verify waitlistCount has loaded async
+            Toast.makeText(requireContext(),
+                    R.string.event_details_count_error,
+                    Toast.LENGTH_LONG
+            ).show();
+            return;
+        }
+        if (waitlistCapacity != null && waitlistCount >= waitlistCapacity) {
+            Toast.makeText(requireContext(),
+                    R.string.waiting_list_full_error,
+                    Toast.LENGTH_LONG
+            ).show();
             return;
         }
 

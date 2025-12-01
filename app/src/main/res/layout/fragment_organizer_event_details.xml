@@ -19,7 +19,13 @@
 
         <EditText
             android:id="@+id/etCapacity"
-            android:hint="Capacity (optional)"
+            android:hint="Capacity"
+            android:inputType="number"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etWaitlistCapacity"
+            android:hint="(Optional) Waitlist Capacity"
             android:inputType="number"
             android:layout_width="match_parent" android:layout_height="wrap_content"/>
 

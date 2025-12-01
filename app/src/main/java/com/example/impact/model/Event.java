@@ -33,6 +33,7 @@ public class Event implements Serializable {
      */
     private String organizerEmail;
     private Integer capacity;
+    private Integer waitListCapacity;
     private boolean lottery_done;
 
     /**
@@ -216,18 +217,32 @@ public class Event implements Serializable {
     }
 
     /**
-     * @return optional capacity value
+     * @return Capacity of event (number of entrants to select)
      */
-    @Nullable
     public Integer getCapacity() {
         return capacity;
     }
 
     /**
-     * @param capacity optional capacity value
+     * @param capacity capacity value
      */
-    public void setCapacity(@Nullable Integer capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
+    }
+
+    /**
+     * @return optional waitlist capacity/limit
+     */
+    @Nullable
+    public Integer getWaitlistCapacity() {
+        return waitListCapacity;
+    }
+
+    /**
+     * @param waitListCapacity optional waitlist capacity
+     */
+    public void setWaitlistCapacity(@Nullable Integer waitListCapacity) {
+        this.waitListCapacity = waitListCapacity;
     }
 
     /**
@@ -246,6 +261,7 @@ public class Event implements Serializable {
         if (organizerId != null) data.put("organizerId", organizerId);
         if (organizerEmail != null) data.put("organizerEmail", organizerEmail);
         if (capacity != null) data.put("capacity", capacity);
+        if (waitListCapacity != null) data.put("waitListCapacity", waitListCapacity);
         data.put("lottery_done", lottery_done);
         return data;
     }

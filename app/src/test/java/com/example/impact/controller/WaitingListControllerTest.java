@@ -19,6 +19,10 @@ import static org.mockito.Mockito.when;
  */
 public class WaitingListControllerTest {
 
+    /**
+     * Ensures the helper payload includes event identifiers, entrant identifiers, status, and
+     * a timestamp when creating waiting list entries.
+     */
     @Test
     public void buildWaitingListData_includesRequiredFields() {
         WaitingListController controller = new WaitingListController(mock(FirebaseFirestore.class));
@@ -32,6 +36,10 @@ public class WaitingListControllerTest {
         assertThat(data.get("timestamp"), is(notNullValue()));
     }
 
+    /**
+     * Verifies {@link WaitingListController#mapSnapshot} returns a populated {@link WaitingListEntry}
+     * when the Firestore document exists.
+     */
     @Test
     public void mapSnapshot_returnsEntryWhenExists() {
         DocumentSnapshot snapshot = mock(DocumentSnapshot.class);

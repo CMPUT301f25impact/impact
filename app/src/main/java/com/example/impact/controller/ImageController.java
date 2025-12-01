@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handle image retrieval and saving to Firestore
+ * Handles image retrieval and saving to Firestore.
  */
 public class ImageController {
 
@@ -44,7 +44,7 @@ public class ImageController {
      * @param failureListener invoked if the read fails
      */
     public void fetchAllImages(@Nullable OnSuccessListener<List<Image>> successListener,
-                                     @Nullable OnFailureListener failureListener) {
+                               @Nullable OnFailureListener failureListener) {
         firestore.collection(COLLECTION_IMAGES)
                 .get()
                 .addOnSuccessListener(snapshot -> dispatchImages(successListener, snapshot))

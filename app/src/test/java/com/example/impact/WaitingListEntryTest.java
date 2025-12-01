@@ -6,10 +6,16 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests for the {@link WaitingListEntry} data container.
+ */
 public class WaitingListEntryTest {
 
+    /**
+     * Validates the constructor populates identifiers, status, and timestamp.
+     */
     @Test
     public void testWaitingListEntryConstructor() {
         Date now = new Date();
@@ -29,6 +35,9 @@ public class WaitingListEntryTest {
         assertEquals(now, entry.getTimestamp());
     }
 
+    /**
+     * Ensures setter methods modify each property after construction.
+     */
     @Test
     public void testWaitingListEntrySetters() {
         WaitingListEntry entry = new WaitingListEntry();

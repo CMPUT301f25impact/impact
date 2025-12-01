@@ -21,6 +21,10 @@ import static org.mockito.Mockito.when;
  */
 public class WaitingListCountTest {
 
+    /**
+     * Confirms {@link WaitingListController#fetchWaitingListCount} reports the number of entrant
+     * documents returned by Firestore.
+     */
     @Test
     public void fetchWaitingListCount_reportsSnapshotSize() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class, RETURNS_DEEP_STUBS);

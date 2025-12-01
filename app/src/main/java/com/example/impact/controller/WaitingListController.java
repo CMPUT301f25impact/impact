@@ -50,10 +50,21 @@ public class WaitingListController {
         this(AppSession.db(), new NotificationController(AppSession.db()));
     }
 
+    /**
+     * Creates a controller backed by the supplied Firestore instance (notifications disabled).
+     *
+     * @param firestore Firestore dependency, usually mocked during tests.
+     */
     public WaitingListController(@NonNull FirebaseFirestore firestore) {
         this(firestore, null); // test mode => no notifications
     }
 
+    /**
+     * Creates a controller with explicit Firestore and notification collaborators.
+     *
+     * @param firestore Firestore dependency used for all reads/writes.
+     * @param notificationController optional notification controller for entrant messaging.
+     */
     public WaitingListController(@NonNull FirebaseFirestore firestore,
                                  @Nullable NotificationController notificationController) {
         this.firestore = firestore;
@@ -232,10 +243,10 @@ public class WaitingListController {
     }
 
     /**
-     * Retrieves the waiting list for the given eventId.
+     * Retrieves all waiting-list entries for a specific event.
      *
      * @param eventId         event identifier
-     * @param successListener invoked with the count (never {@code null})
+     * @param successListener invoked with the mapped entry list
      * @param failureListener invoked when the read fails
      */
     public void fetchWaitingListByEventId(@NonNull String eventId,
@@ -394,9 +405,9 @@ public class WaitingListController {
     }
 
     /**
-     * Maps firestore query into a list of waiting list entries
+     * Maps a Firestore query into waiting-list entries for display.
      *
-     * @param snapshot query result
+     * @param snapshot query result (may be {@code null})
      * @return mapped waiting list entry list
      */
     public List<WaitingListEntry> mapWaitingList(@Nullable QuerySnapshot snapshot) {

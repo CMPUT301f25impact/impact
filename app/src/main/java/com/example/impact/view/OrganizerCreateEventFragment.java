@@ -62,7 +62,12 @@ public class OrganizerCreateEventFragment extends Fragment {
 
     public static final String EXTRA_ORGANIZER_ID = "organizer_id";
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory method for building the fragment with the organizer id argument.
+     *
+     * @param organizerId organizer document id
+     * @return configured fragment instance
+     */
     public static OrganizerCreateEventFragment newInstance(String organizerId) {
         OrganizerCreateEventFragment fragment = new OrganizerCreateEventFragment();
         Bundle args = new Bundle();
@@ -116,6 +121,11 @@ public class OrganizerCreateEventFragment extends Fragment {
         btnCreate.setOnClickListener(view -> createEvent());
         return v;
     }
+    /**
+     * Handles the image picker result by previewing and uploading the poster.
+     *
+     * @param uri content URI of the selected image
+     */
     private void onImagePicked(Uri uri) {
         if (uri == null) return;
         try {
@@ -152,8 +162,10 @@ public class OrganizerCreateEventFragment extends Fragment {
         }
     }
 
-     /**
+    /**
      * Shows a material date picker and stores the chosen start/end date.
+     *
+     * @param isStart {@code true} to fill the registration start date, {@code false} for end date
      */
     private void pickDate(boolean isStart) {
         MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker().build();

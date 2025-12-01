@@ -9,12 +9,22 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * Unit tests focused on the {@link Event} data model.
+ */
 public class EventTest {
 
+    /**
+     * Verifies the all-args constructor populates every field, including optional metadata.
+     */
     @Test
     public void testEventConstructorSetsFields() {
         Date start = new Date();
@@ -40,6 +50,9 @@ public class EventTest {
         assertFalse(event.isLottery_done());
     }
 
+    /**
+     * Ensures the setter methods override default field values.
+     */
     @Test
     public void testEventSettersWork() {
         Event event = new Event();
@@ -59,6 +72,9 @@ public class EventTest {
         assertTrue(event.isLottery_done());
     }
 
+    /**
+     * Checks that nullable constructor arguments remain null and tags default to an empty list.
+     */
     @Test
     public void testNullOptionalFields() {
         Event event = new Event(
@@ -77,6 +93,9 @@ public class EventTest {
         assertNotNull(event.getTags()); // tags becomes empty list, not null
     }
 
+    /**
+     * Confirms organizer credentials are serialized when writing event data.
+     */
     @Test
     public void testOrganizerIdIsSerialized() {
         Event event = new Event();
@@ -89,6 +108,9 @@ public class EventTest {
         assertEquals("legacy@mail.com", data.get("organizerEmail"));
     }
 
+    /**
+     * Validates {@link Event#fromSnapshot(DocumentSnapshot)} reads optional organizer metadata.
+     */
     @Test
     public void testFromSnapshotReadsOrganizerId() {
         DocumentSnapshot snapshot = mock(DocumentSnapshot.class);

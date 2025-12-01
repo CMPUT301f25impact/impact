@@ -8,8 +8,7 @@ import com.example.impact.R;
 import com.example.impact.utils.AppSession;
 
 /**
- * Launcher screen for entrant-specific tools and shortcuts.
- * Now extends BaseDashboardActivity for consistent UI/UX.
+ * Host activity for organizer workflows (event list, creation, notifications).
  */
 public class OrganizerActivity extends BaseDashboardActivity {
 

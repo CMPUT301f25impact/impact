@@ -31,7 +31,12 @@ public class EventHistoryFragment extends Fragment {
     private TextView emptyStateView;
     private String entrantId;
 
-    // Factory method to create a new instance of the fragment
+    /**
+     * Factory method to create a new instance of the fragment scoped to an entrant id.
+     *
+     * @param entrantId entrant identifier
+     * @return configured fragment instance
+     */
     public static EventHistoryFragment newInstance(String entrantId) {
         EventHistoryFragment fragment = new EventHistoryFragment();
         Bundle args = new Bundle();
@@ -40,6 +45,9 @@ public class EventHistoryFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Reads fragment arguments and prepares the user controller.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +59,9 @@ public class EventHistoryFragment extends Fragment {
         userController = new UserController();
     }
 
+    /**
+     * Inflates the history layout and wires up the recycler view.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

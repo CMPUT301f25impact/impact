@@ -22,7 +22,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
- * Adapter for displaying a list of events in the admin dashboard
+ * Adapter for displaying admin-authored notifications in the dashboard.
  */
 public class AdminNotificationAdapter extends RecyclerView.Adapter<AdminNotificationAdapter.AdminNotificationViewHolder> {
     private final List<Notification> notifications;
@@ -52,7 +52,7 @@ public class AdminNotificationAdapter extends RecyclerView.Adapter<AdminNotifica
     }
 
     /**
-     * Inflates an admin event row.
+     * Inflates an admin notification row.
      *
      * @param parent parent recycler view
      * @param viewType unused view type flag
@@ -67,7 +67,7 @@ public class AdminNotificationAdapter extends RecyclerView.Adapter<AdminNotifica
     }
 
     /**
-     * Binds an event to its row.
+     * Binds a notification to its row.
      *
      * @param holder   view holder
      * @param position adapter index being bound

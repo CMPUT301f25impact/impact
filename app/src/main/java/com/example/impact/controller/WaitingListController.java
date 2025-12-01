@@ -351,6 +351,9 @@ public class WaitingListController {
                             if (pair.getEntry().getStatus().equals("selected")) {
                                 globalSelectedUsers.add(pair.getUser());
                             }
+                            else if (pair.getEntry().getStatus().equals("accepted")) {
+                                globalSelectedUsers.add(pair.getUser());
+                            }
                             else if (pair.getEntry().getStatus().equals("cancelled")) {
                                 continue;
                             }

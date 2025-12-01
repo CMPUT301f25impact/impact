@@ -43,6 +43,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Fragment that lets organizers review outbound notifications and send new ones to entrants.
+ */
 public class OrganizerNotificationsFragment extends Fragment implements NotificationAdapter.OnNotificationClickListener {
 
     private Spinner sEventSelect;
@@ -67,6 +70,12 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
     private NotificationAdapter notificationAdapter;
     public static final String EXTRA_ORGANIZER_ID = "organizer_id";
 
+    /**
+     * Creates the fragment bundled with an organizer id argument.
+     *
+     * @param organizerId organizer identifier
+     * @return configured fragment
+     */
     public static OrganizerNotificationsFragment newInstance(String organizerId) {
         OrganizerNotificationsFragment fragment = new OrganizerNotificationsFragment();
         Bundle args = new Bundle();
@@ -75,6 +84,9 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
         return fragment;
     }
 
+    /**
+     * Sets up the recycler view for existing notifications.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -124,6 +136,9 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
 
     @SuppressLint({"CutPasteId", "MissingInflatedId"})
     @Nullable
+    /**
+     * Inflates the notification management UI and wires up form controls.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

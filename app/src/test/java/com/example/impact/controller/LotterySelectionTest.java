@@ -28,6 +28,10 @@ import static org.mockito.Mockito.when;
  */
 public class LotterySelectionTest {
 
+    /**
+     * Verifies {@link WaitingListController#runLottery} limits promotions to the requested number,
+     * updates entrant statuses, and marks the lottery complete on the parent event.
+     */
     @Test
     public void runLottery_updatesOnlyUpToLimitEntrants() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class, RETURNS_DEEP_STUBS);

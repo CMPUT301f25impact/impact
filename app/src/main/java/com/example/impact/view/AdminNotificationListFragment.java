@@ -22,7 +22,7 @@ import com.example.impact.view.adapter.AdminNotificationAdapter;
 import java.util.List;
 
 /**
- * This is the list fragment that renders list of events in the admin dashboard.
+ * Fragment that lists notifications created by administrators.
  */
 public class AdminNotificationListFragment extends Fragment
         implements AdminNotificationAdapter.DeleteListener {
@@ -33,7 +33,12 @@ public class AdminNotificationListFragment extends Fragment
 
     public static final String EXTRA_ADMIN_ID = "admin_id";
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory method bundling the admin id arg with the fragment.
+     *
+     * @param adminId administrator id
+     * @return configured fragment instance
+     */
     public static AdminNotificationListFragment newInstance(String adminId) {
         AdminNotificationListFragment fragment = new AdminNotificationListFragment();
         Bundle args = new Bundle();
@@ -42,12 +47,18 @@ public class AdminNotificationListFragment extends Fragment
         return fragment;
     }
 
+    /**
+     * Initializes the notification controller.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         notificationController = new NotificationController();
     }
 
+    /**
+     * Inflates the notification list layout and sets up the recycler view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

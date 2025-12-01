@@ -137,9 +137,7 @@ public class EventController {
 
 
     /**
-     * Creates an event document. The Event object should have:
-     * name, description, startDate, endDate, (optional) capacity, organizerId.
-     * Returns the new document id via successListener.
+     * Creates an event document with the provided details.
      *
      * @param event           event model to persist
      * @param successListener invoked with the generated document id
@@ -159,12 +157,11 @@ public class EventController {
     }
 
     /**
-     * Updates an existing event in the DB identified by event id.
-     * Uses data passed in new event object
+     * Updates an existing event document with the provided payload.
      *
-     * @param eventId ID of event to update
+     * @param eventId id of the event document to update
      * @param newEvent new event data
-     * @param successListener invoked with the generated document id
+     * @param successListener invoked upon successful completion (receives {@code eventId})
      * @param failureListener invoked when the write fails
      */
     public void updateEvent(String eventId,
@@ -210,7 +207,12 @@ public class EventController {
 
 
     /**
-     * Updates the posterUrl field for the event document.
+     * Updates the {@code posterUrl} field for the event document.
+     *
+     * @param eventId event document id
+     * @param posterImageId Firestore id of the uploaded image
+     * @param successListener optional success callback
+     * @param failureListener optional failure callback
      */
     public void updatePosterUrl(@NonNull String eventId,
                                 @NonNull String posterImageId,
@@ -228,7 +230,7 @@ public class EventController {
     }
 
     /**
-     * Stores a QR code download URL in the event doc.
+     * Stores a QR code payload string in the event document.
      *
      * @param eventId         id of the event document
      * @param payload         data to store under {@code qrPayload}
@@ -251,7 +253,8 @@ public class EventController {
     }
 
     /**
-     * Deletes event with provided ID
+     * Deletes the event document with the provided id.
+     *
      * @param eventId event ID
      * @param successListener executed on success
      * @param failureListener executed on failure

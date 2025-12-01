@@ -30,7 +30,12 @@ public class AdminEventListFragment extends Fragment
 
     public static final String EXTRA_ADMIN_ID = "admin_id";
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory method bundling the admin id arg with the fragment.
+     *
+     * @param adminId administrator id
+     * @return configured fragment instance
+     */
     public static AdminEventListFragment newInstance(String adminId) {
         AdminEventListFragment fragment = new AdminEventListFragment();
         Bundle args = new Bundle();
@@ -39,12 +44,18 @@ public class AdminEventListFragment extends Fragment
         return fragment;
     }
 
+    /**
+     * Initializes the event controller.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         eventController = new EventController();
     }
 
+    /**
+     * Inflates the list layout and prepares the recycler view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

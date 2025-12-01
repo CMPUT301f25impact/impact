@@ -4,6 +4,9 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 
+/**
+ * Base class for all app users (entrants, organizers, admins).
+ */
 public abstract class User implements Serializable {
     private String id; // Unique id for Users
     private String email;
@@ -31,31 +34,52 @@ public abstract class User implements Serializable {
         this.email = email;
         this.phone = phone;
     }
+    /**
+     * @return unique identifier for this profile
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * @param id unique identifier for this profile
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * @return optional display name
+     */
     @Nullable
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name optional display name
+     */
     public void setName(@Nullable String name) {
         this.name = name;
     }
 
+    /**
+     * @return contact email address
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * @param email contact email address
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * @return optional phone number
+     */
     @Nullable
     public String getPhone() {
         return phone;
@@ -83,5 +107,8 @@ public abstract class User implements Serializable {
         this.notificationsEnabled = notificationsEnabled;
     }
 
+    /**
+     * @return role string used for Firestore persistence
+     */
     public abstract String getRole();
 }

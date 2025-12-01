@@ -118,10 +118,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
     /**
-     * Formats the  time stamp  for display.
+     * Formats the timestamp for display.
      *
-     * @param notification notification whose time stamp should be formatted
-     * @return formatted date string (empty when no dates set)
+     * @param notification notification whose timestamp should be formatted
+     * @return formatted date string (empty when no timestamp set)
      */
     private String formatDateRange(Notification notification) {
         Date time_stamp = notification.getTime_stamp();
@@ -155,6 +155,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         /**
          * Binds an notification model to the row.
+         *
+         * @param notification notification rendered in this row
+         */
+        /**
+         * Renders the row contents and wires up click callbacks.
          *
          * @param notification notification rendered in this row
          */

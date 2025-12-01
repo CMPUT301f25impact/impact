@@ -35,9 +35,10 @@ public class DateUtil {
     }
 
     /**
-     * Formats the provided date into string
+     * Formats a single date using the shared pattern.
+     *
      * @param date date to format
-     * @return formatted date
+     * @return formatted date string
      */
     public static String formatDate(Date date) {
         return dateFormat.format(date);

@@ -24,6 +24,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Fragment showing notifications targeted at the signed-in entrant.
+ */
 public class EntrantNotificationsFragment extends Fragment {
 
     private static final String extraEntrantId = "extraEntrantId";
@@ -34,6 +37,12 @@ public class EntrantNotificationsFragment extends Fragment {
     private TextView noNotificationsText;
     private EntrantNotificationAdapter notificationAdapter;
 
+    /**
+     * Factory for bundling an entrant id argument with the fragment.
+     *
+     * @param entrantId entrant identifier
+     * @return configured fragment instance
+     */
     public static EntrantNotificationsFragment newInstance(String entrantId) {
         EntrantNotificationsFragment fragment = new EntrantNotificationsFragment();
         Bundle args = new Bundle();
@@ -42,6 +51,9 @@ public class EntrantNotificationsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Reads fragment arguments and initializes the notification controller.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +65,13 @@ public class EntrantNotificationsFragment extends Fragment {
         notificationController = new NotificationController();
     }
 
+    /**
+     * Inflates the entrant notification layout.
+     */
     @Nullable
+    /**
+     * Wires up the recycler view after inflation.
+     */
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater,
@@ -80,6 +98,9 @@ public class EntrantNotificationsFragment extends Fragment {
         loadNotifications();
     }
 
+    /**
+     * Requests notifications for the current entrant and toggles the empty state.
+     */
     private void loadNotifications() {
         if (entrantId == null || entrantId.trim().isEmpty()) {
             noNotificationsText.setText("No entrant id found.");
@@ -97,6 +118,11 @@ public class EntrantNotificationsFragment extends Fragment {
                 });
     }
     
+    /**
+     * Updates UI state when notifications arrive.
+     *
+     * @param notifications notifications fetched for entrant
+     */
     private void onNotificationsLoaded(List<Notification> notifications) {
         notificationAdapter.setNotifications(notifications);
 

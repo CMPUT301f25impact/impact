@@ -25,6 +25,10 @@ import static org.mockito.Mockito.when;
  */
 public class EventControllerTest {
 
+    /**
+     * Validates that {@link EventController#mapEvents} extracts each {@link Event} from the
+     * provided query snapshot and propagates Firestore ids to the models.
+     */
     @Test
     public void mapEvents_extractsEvents() {
         Event first = new Event("event-1", "Hackathon", "Build apps", new Date(), null, null, null);
@@ -49,6 +53,10 @@ public class EventControllerTest {
         assertThat(events.get(1).getId(), is("event-2"));
     }
 
+    /**
+     * Ensures {@link EventController#fetchEventById} maps an existing document and emits it through
+     * the supplied success listener.
+     */
     @Test
     public void fetchEventById_invokesSuccessWithMappedEvent() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class, org.mockito.Mockito.RETURNS_DEEP_STUBS);

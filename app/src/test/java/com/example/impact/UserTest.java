@@ -5,10 +5,17 @@ import com.example.impact.model.User;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
+/**
+ * Tests for the shared {@link User} base class via an {@link Entrant} instance.
+ */
 public class UserTest {
 
+    /**
+     * Ensures the constructor captures identity and contact fields.
+     */
     @Test
     public void testUserConstructorSetsFields() {
         User user = new Entrant("U1", "Sid", "sid@email.com", "1234567890");
@@ -19,6 +26,9 @@ public class UserTest {
         assertEquals("1234567890", user.getPhone());
     }
 
+    /**
+     * Verifies phone is optional and can be null.
+     */
     @Test
     public void testNullPhoneAllowed() {
         User user = new Entrant("U2", "Bob", "bob@mail.com", null);
@@ -29,6 +39,9 @@ public class UserTest {
         assertNull(user.getPhone());
     }
 
+    /**
+     * Confirms the setters mutate the user record.
+     */
     @Test
     public void testSettersUpdateValues() {
         User user = new Entrant();

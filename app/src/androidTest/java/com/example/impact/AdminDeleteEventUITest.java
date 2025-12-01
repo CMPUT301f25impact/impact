@@ -21,6 +21,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+/**
+ * UI workflow tests that confirm an admin can trigger the delete dialog from the events list.
+ */
 @RunWith(AndroidJUnit4.class)
 public class AdminDeleteEventUITest {
 
@@ -28,20 +31,24 @@ public class AdminDeleteEventUITest {
     public ActivityScenarioRule<AdminActivity> rule =
             new ActivityScenarioRule<>(AdminActivity.class);
 
+    /**
+     * Triggers a click on the first event item and verifies a delete confirmation action is shown.
+     */
     @Test
     public void testDeleteDialogShows() {
-        // Click the first visible item in the first visible RecyclerView
         Espresso.onView(isAssignableFrom(RecyclerView.class))
                 .perform(clickItemAtPosition(0));
 
-        // Check a delete confirmation element appears (adjust text to your dialog label if needed)
         Espresso.onView(withText("Delete"))
                 .check(ViewAssertions.matches(isDisplayed()));
     }
 
     /**
-     * Clicks the itemView of the ViewHolder at the given adapter position
+     * Clicks the itemView of the {@link RecyclerView.ViewHolder} at the target adapter position
      * without relying on espresso-contrib's RecyclerViewActions.
+     *
+     * @param position adapter position to click.
+     * @return a {@link ViewAction} that performs the click.
      */
     private static ViewAction clickItemAtPosition(final int position) {
         return new ViewAction() {

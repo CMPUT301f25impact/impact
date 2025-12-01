@@ -33,11 +33,12 @@ import com.google.firebase.firestore.FieldValue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Coordinates creation, retrieval, and mapping of notification documents.
+ */
 public class NotificationController {
     private static final String COLLECTION_NOTIFICATIONS = "notifications";
     private final FirebaseFirestore firestore;
-
-    private final UserController userController = new UserController();
 
     /**
      * Builds a controller using the shared Firestore instance.
@@ -56,10 +57,11 @@ public class NotificationController {
     }
 
     /**
-     * Get the notifications which list the provided user in the recipients
-     * @param entrant
-     * @param successListener
-     * @param failureListener
+     * Retrieves notifications where the entrant appears in the recipient list.
+     *
+     * @param entrant          entrant whose notifications should be fetched
+     * @param successListener  invoked with mapped notifications (never {@code null})
+     * @param failureListener  invoked if the read fails
      */
     public void getNotificationsForEntrant(Entrant entrant,
                                            @Nullable OnSuccessListener<List<Notification>> successListener,
@@ -97,7 +99,8 @@ public class NotificationController {
     }
 
     /**
-     * Deletes notification with provided ID
+     * Deletes the notification with the provided id.
+     *
      * @param notificationId notification ID
      * @param successListener executed on success
      * @param failureListener executed on failure
@@ -133,6 +136,13 @@ public class NotificationController {
         return data;
     }
 
+    /**
+     * Retrieves a single notification by id.
+     *
+     * @param notificationId Firestore document id
+     * @param successListener invoked with the mapped notification (may be {@code null})
+     * @param failureListener invoked if the read fails
+     */
     public void fetchNotification(@NonNull String notificationId,
                                   @Nullable OnSuccessListener<Notification> successListener,
                                   @Nullable OnFailureListener failureListener) {
@@ -150,10 +160,10 @@ public class NotificationController {
     }
 
     /**
-     * Fetches all notifications for organizer reading.
+     * Fetches all notifications sent by the provided organizer/user.
      *
-     * @param senders organizer users to query
-     * @param successListener invoked with the mapped entrants list (never {@code null})
+     * @param sender user document whose sent notifications should be retrieved
+     * @param successListener invoked with the mapped notifications list
      * @param failureListener invoked if the read fails
      */
     public void fetchAllNotifications(
@@ -174,7 +184,7 @@ public class NotificationController {
     }
 
     /**
-     * Loads all available notifications.
+     * Loads all available notifications without filtering.
      *
      * @param successListener invoked with the mapped notifications list
      * @param failureListener invoked when the Firestore read fails
@@ -192,10 +202,11 @@ public class NotificationController {
 
 
     /**
-     * Converts a snapshot into notification models
+     * Converts a snapshot into notification models.
      *
      * @param snapshot Firestore query result
-     * @return list of Notification models (never {@code null})
+     * @param successListener optional success callback
+     * @param failureListener optional failure callback
      */
     private void mapNotifications(
             @Nullable QuerySnapshot snapshot,
@@ -233,10 +244,10 @@ public class NotificationController {
 
 
     /**
-     * Safely maps a snapshot into an {@link Notification}.
+     * Asynchronously maps a snapshot into a {@link Notification}.
      *
      * @param snapshot Firestore document snapshot
-     * @return entrant instance or {@code null} when snapshot missing
+     * @return task resolving to the mapped notification (or {@code null})
      */
     static Task<Notification> mapSnapshotToNotification(@Nullable DocumentSnapshot snapshot) {
         TaskCompletionSource<Notification> taskSource = new TaskCompletionSource<>();
@@ -276,6 +287,13 @@ public class NotificationController {
         return taskSource.getTask();
     }
 
+    /**
+     * Creates a simple offer notification used when lottery selections promote an entrant.
+     *
+     * @param entrantId entrant receiving the offer
+     * @param eventId   event identifier
+     * @param eventName event display name used in the message
+     */
     public void createOfferNotification(String entrantId, String eventId, String eventName) {
 
         String notificationId = firestore.collection("notifications").document().getId();

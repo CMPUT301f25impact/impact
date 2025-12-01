@@ -8,8 +8,17 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 
+/**
+ * Convenience methods for encoding/decoding event imagery and resolving filenames.
+ */
 public class ImageUtil {
 
+    /**
+     * Converts a bitmap into a Base64 string using JPEG compression.
+     *
+     * @param bmp source bitmap (may be {@code null})
+     * @return encoded Base64 payload or {@code null} when input missing
+     */
     public static String bitmapToBase64(Bitmap bmp) {
         if (bmp == null) return null;
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -18,15 +27,23 @@ public class ImageUtil {
         return Base64.encodeToString(bytes, Base64.NO_WRAP);
     }
 
+    /**
+     * Decodes a Base64 image string back into a bitmap.
+     *
+     * @param base64 Base64 payload
+     * @return decoded bitmap or {@code null} on failure
+     */
     public static Bitmap base64ToBitmap(String base64) {
         return com.example.impact.model.Image.decodeBase64ToBitmapStatic(base64);
         // Alternatively, call Image.decodeBase64ToBitmap() if you prefer instance method.
     }
 
     /**
-     * Query an android filename from it's URI
+     * Queries the display name for a content URI or falls back to parsing the path.
+     *
      * @param uri file URI
-     * @return filename or null if no name found
+     * @param context resolver context used to query metadata
+     * @return filename or {@code null} if no name found
      */
     public static String queryFileName(Uri uri, Context context) {
         String result = null;

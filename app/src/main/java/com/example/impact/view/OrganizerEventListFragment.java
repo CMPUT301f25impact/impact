@@ -45,7 +45,12 @@ public class OrganizerEventListFragment extends Fragment implements EventAdapter
             );
     public static final String EXTRA_ORGANIZER_ID = "organizer_id";
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory helper bundling the organizer id argument with the fragment.
+     *
+     * @param organizerId organizer user id
+     * @return configured fragment instance
+     */
     public static OrganizerEventListFragment newInstance(String organizerId) {
         OrganizerEventListFragment fragment = new OrganizerEventListFragment();
         Bundle args = new Bundle();

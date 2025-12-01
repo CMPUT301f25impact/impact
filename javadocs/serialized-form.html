@@ -55,34 +55,15 @@ loadScripts(document, 'script');</script>
 <h2 title="Package">Package&nbsp;<a href="com/example/impact/model/package-summary.html">com.example.impact.model</a></h2>
 <ul class="block-list">
 <li>
-<section class="serialized-class-details" id="com.example.impact.model.Entrant">
-<h3>Class&nbsp;<a href="com/example/impact/model/Entrant.html" title="class in com.example.impact.model">com.example.impact.model.Entrant</a></h3>
-<div class="type-signature">class Entrant extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
-<ul class="block-list">
-<li>
-<section class="detail">
-<h4>Serialized Fields</h4>
-<ul class="block-list">
-<li class="block-list">
-<h5>email</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> email</pre>
-</li>
-<li class="block-list">
-<h5>id</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> id</pre>
-</li>
-<li class="block-list">
-<h5>name</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> name</pre>
-</li>
-<li class="block-list">
-<h5>phone</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> phone</pre>
-</li>
-</ul>
+<section class="serialized-class-details" id="com.example.impact.model.Admin">
+<h3>Class&nbsp;<a href="com/example/impact/model/Admin.html" title="class in com.example.impact.model">com.example.impact.model.Admin</a></h3>
+<div class="type-signature">class Admin extends <a href="com/example/impact/model/User.html" title="class in com.example.impact.model">User</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 </section>
 </li>
-</ul>
+<li>
+<section class="serialized-class-details" id="com.example.impact.model.Entrant">
+<h3>Class&nbsp;<a href="com/example/impact/model/Entrant.html" title="class in com.example.impact.model">com.example.impact.model.Entrant</a></h3>
+<div class="type-signature">class Entrant extends <a href="com/example/impact/model/User.html" title="class in com.example.impact.model">User</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 </section>
 </li>
 <li>
@@ -142,20 +123,27 @@ loadScripts(document, 'script');</script>
 <pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> id</pre>
 </li>
 <li class="block-list">
+<h5>lottery_done</h5>
+<pre>boolean lottery_done</pre>
+</li>
+<li class="block-list">
 <h5>name</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> name</pre>
 </li>
 <li class="block-list">
 <h5>organizerEmail</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> organizerEmail</pre>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <code>Event.organizerId</code> as the canonical organizer identifier.</div>
+</div>
+</li>
+<li class="block-list">
+<h5>organizerId</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> organizerId</pre>
 </li>
 <li class="block-list">
 <h5>posterUrl</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> posterUrl</pre>
-</li>
-<li class="block-list">
-<h5>qrCodeUrl</h5>
-<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> qrCodeUrl</pre>
 </li>
 <li class="block-list">
 <h5>startDate</h5>
@@ -164,6 +152,10 @@ loadScripts(document, 'script');</script>
 <li class="block-list">
 <h5>tags</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; tags</pre>
+</li>
+<li class="block-list">
+<h5>waitListCapacity</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a> waitListCapacity</pre>
 </li>
 </ul>
 </section>
@@ -195,6 +187,86 @@ loadScripts(document, 'script');</script>
 <li class="block-list">
 <h5>mimeType</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> mimeType</pre>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<li>
+<section class="serialized-class-details" id="com.example.impact.model.Notification">
+<h3>Class&nbsp;<a href="com/example/impact/model/Notification.html" title="class in com.example.impact.model">com.example.impact.model.Notification</a></h3>
+<div class="type-signature">class Notification extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+<ul class="block-list">
+<li>
+<section class="detail">
+<h4>Serialized Fields</h4>
+<ul class="block-list">
+<li class="block-list">
+<h5>id</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> id</pre>
+</li>
+<li class="block-list">
+<h5>message</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> message</pre>
+</li>
+<li class="block-list">
+<h5>recipients</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="com/example/impact/model/User.html" title="class in com.example.impact.model">User</a>&gt; recipients</pre>
+</li>
+<li class="block-list">
+<h5>related_event</h5>
+<pre><a href="com/example/impact/model/Event.html" title="class in com.example.impact.model">Event</a> related_event</pre>
+</li>
+<li class="block-list">
+<h5>sender</h5>
+<pre><a href="com/example/impact/model/User.html" title="class in com.example.impact.model">User</a> sender</pre>
+</li>
+<li class="block-list">
+<h5>time_stamp</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Date.html" title="class or interface in java.util" class="external-link">Date</a> time_stamp</pre>
+</li>
+</ul>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<li>
+<section class="serialized-class-details" id="com.example.impact.model.Organizer">
+<h3>Class&nbsp;<a href="com/example/impact/model/Organizer.html" title="class in com.example.impact.model">com.example.impact.model.Organizer</a></h3>
+<div class="type-signature">class Organizer extends <a href="com/example/impact/model/User.html" title="class in com.example.impact.model">User</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+</section>
+</li>
+<li>
+<section class="serialized-class-details" id="com.example.impact.model.User">
+<h3>Class&nbsp;<a href="com/example/impact/model/User.html" title="class in com.example.impact.model">com.example.impact.model.User</a></h3>
+<div class="type-signature">class User extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+<ul class="block-list">
+<li>
+<section class="detail">
+<h4>Serialized Fields</h4>
+<ul class="block-list">
+<li class="block-list">
+<h5>email</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> email</pre>
+</li>
+<li class="block-list">
+<h5>id</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> id</pre>
+</li>
+<li class="block-list">
+<h5>name</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> name</pre>
+</li>
+<li class="block-list">
+<h5>notificationsEnabled</h5>
+<pre>boolean notificationsEnabled</pre>
+</li>
+<li class="block-list">
+<h5>phone</h5>
+<pre><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> phone</pre>
 </li>
 </ul>
 </section>

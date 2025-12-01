@@ -30,7 +30,12 @@ public class AdminImageListFragment extends Fragment
 
     public static final String EXTRA_ADMIN_ID = "admin_id";
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory method to bundle the admin id argument with the fragment.
+     *
+     * @param adminId administrator identifier
+     * @return configured fragment instance
+     */
     public static AdminImageListFragment newInstance(String adminId) {
         AdminImageListFragment fragment = new AdminImageListFragment();
         Bundle args = new Bundle();
@@ -39,12 +44,18 @@ public class AdminImageListFragment extends Fragment
         return fragment;
     }
 
+    /**
+     * Initializes the image controller.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageController = new ImageController();
     }
 
+    /**
+     * Inflates the recycler layout for image browsing.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,7 +79,8 @@ public class AdminImageListFragment extends Fragment
     }
 
     /**
-     * Callback when images are successfully loaded
+     * Callback when images are successfully loaded.
+     *
      * @param images loaded images
      */
     private void onImagesLoaded(List<Image> images) {
@@ -85,7 +97,8 @@ public class AdminImageListFragment extends Fragment
     }
 
     /**
-     * Called when an image is deleted by clicking delete button
+     * Called when an image is deleted by clicking delete button.
+     *
      * @param position image position in list
      * @param image image object
      */

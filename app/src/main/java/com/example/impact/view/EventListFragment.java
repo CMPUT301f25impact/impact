@@ -55,7 +55,12 @@ public class EventListFragment extends Fragment implements EventAdapter.OnEventC
     @Nullable
     private Date selectedEndDate;
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory helper bundling an entrant id argument with the fragment.
+     *
+     * @param entrantId entrant identifier
+     * @return configured fragment instance
+     */
     public static EventListFragment newInstance(String entrantId) {
         EventListFragment fragment = new EventListFragment();
         Bundle args = new Bundle();

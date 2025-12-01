@@ -24,6 +24,10 @@ import static org.mockito.Mockito.when;
  */
 public class UserControllerTest {
 
+    /**
+     * Confirms {@link UserController#buildUserData} exports the entrant's core identifiers and
+     * contact details.
+     */
     @Test
     public void buildEntrantData_includesCoreFields() {
         Entrant entrant = new Entrant("id-123", "Sam Sample", "sam@example.com", null);
@@ -36,6 +40,9 @@ public class UserControllerTest {
         assertThat(data.get("phone"), is(nullValue()));
     }
 
+    /**
+     * Verifies the optional phone number is persisted when present on the {@link Entrant}.
+     */
     @Test
     public void buildEntrantData_includesPhoneWhenPresent() {
         Entrant entrant = new Entrant("id-456", "Alex Example", "alex@example.com", "7801234567");
@@ -45,6 +52,9 @@ public class UserControllerTest {
         assertThat(data.get("phone"), is("7801234567"));
     }
 
+    /**
+     * Ensures {@link UserController#validateUser} rejects entrants missing a name.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void validateEntrant_rejectsMissingName() {
         Entrant entrant = new Entrant("id-456", "", "alex@example.com", null);
@@ -52,6 +62,9 @@ public class UserControllerTest {
         UserController.validateUser(entrant);
     }
 
+    /**
+     * Confirms entrant history results are sorted by timestamp when mapped from Firestore.
+     */
     @Test
     public void mapHistory_ordersByMostRecent() {
         WaitingListEntry older = new WaitingListEntry("eventA", "Event A", "entrant", new Date(1000), "selected");

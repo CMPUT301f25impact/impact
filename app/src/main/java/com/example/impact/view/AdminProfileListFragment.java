@@ -32,7 +32,12 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
 
     public static final String EXTRA_ADMIN_ID = "admin_id";
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory method creating a fragment scoped to the supplied admin id.
+     *
+     * @param adminId administrator identifier to pass via arguments
+     * @return configured fragment instance
+     */
     public static AdminProfileListFragment newInstance(String adminId) {
         AdminProfileListFragment fragment = new AdminProfileListFragment();
         Bundle args = new Bundle();
@@ -41,12 +46,18 @@ public class AdminProfileListFragment extends Fragment implements AdminProfileAd
         return fragment;
     }
 
+    /**
+     * Initializes the user controller.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userController = new UserController();
     }
 
+    /**
+     * Inflates the profile list layout and wires up the recycler view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

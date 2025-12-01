@@ -18,6 +18,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 /**
  * Validates the declineSelection workflow updates status and notifies success listeners.
@@ -73,7 +74,8 @@ public class WaitingListDeclineTest {
     @Test
     public void declineSelection_notifiesPromotedEntrant() {
         FirebaseFirestore firestore = mock(FirebaseFirestore.class, RETURNS_DEEP_STUBS);
-        NotificationController notificationController = mock(NotificationController.class);
+        NotificationController notificationController =
+                mock(NotificationController.class, withSettings().useConstructor(mock(FirebaseFirestore.class)));
         DocumentReference entryRef = mock(DocumentReference.class);
         when(firestore.collection("waitingLists")
                 .document("event-1")

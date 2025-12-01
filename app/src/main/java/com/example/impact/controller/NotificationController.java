@@ -40,8 +40,6 @@ public class NotificationController {
     private static final String COLLECTION_NOTIFICATIONS = "notifications";
     private final FirebaseFirestore firestore;
 
-    private final UserController userController = new UserController();
-
     /**
      * Builds a controller using the shared Firestore instance.
      */

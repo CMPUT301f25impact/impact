@@ -67,7 +67,9 @@ public class AdminNotificationListFragment extends Fragment
      */
     private void loadNotifications() {
         notificationController.fetchAvailableNotifications(notifications -> {
-                    Toast.makeText(requireContext(), "No notifications found", Toast.LENGTH_SHORT).show();
+                    if (notifications.isEmpty()) {
+                        Toast.makeText(requireContext(), "No notifications found", Toast.LENGTH_SHORT).show();
+                    }
                     onNotificationsLoaded(notifications);
                 },
                 error -> Toast.makeText(getContext(), "Unable to load Notifications", Toast.LENGTH_SHORT).show());

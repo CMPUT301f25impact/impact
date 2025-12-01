@@ -366,28 +366,32 @@ public class WaitingListController {
                         List<DocumentReference> selectedRecipientRefs = new ArrayList<>();
                         List<DocumentReference> notSelectedRecipientRefs = new ArrayList<>();
 
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("sender", senderRef);
-                        data.put("related_event", eventRef);
-                        data.put("time_stamp", FieldValue.serverTimestamp());
-
+                        Map<String, Object> dataSelected = new HashMap<>();
+                        dataSelected.put("sender", senderRef);
+                        dataSelected.put("related_event", eventRef);
+                        dataSelected.put("time_stamp", FieldValue.serverTimestamp());
                         if (!globalSelectedUsers.isEmpty()) {
                             for (User recipient : globalSelectedUsers) {
                                 selectedRecipientRefs.add(AppSession.db().collection("users").document(recipient.getId()));
                             }
-                            data.put("recipients", selectedRecipientRefs);
-                            data.put("message", "You have been selected for event " + eventName);
-
+                            dataSelected.put("recipients", selectedRecipientRefs);
+                            dataSelected.put("message", "You have been selected for event " + eventName);
+                            AppSession.db().collection("notifications")
+                                    .add(dataSelected);
                         }
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("sender", senderRef);
+                        data.put("related_event", eventRef);
+                        data.put("time_stamp", FieldValue.serverTimestamp());
                         if (!globalNotSelectedUsers.isEmpty()) {
                             for (User recipient : globalNotSelectedUsers) {
                                 notSelectedRecipientRefs.add(AppSession.db().collection("users").document(recipient.getId()));
                             }
                             data.put("recipients", notSelectedRecipientRefs);
                             data.put("message", "You have not been selected for event " + eventName);
+                            AppSession.db().collection("notifications")
+                                    .add(data);
                         }
-                        AppSession.db().collection("notifications")
-                                .add(data);
                     },
                     exception -> {
                         Log.e("Notification", "Error creating notification: " + exception.getMessage());

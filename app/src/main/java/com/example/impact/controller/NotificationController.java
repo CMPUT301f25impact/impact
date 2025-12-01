@@ -106,7 +106,7 @@ public class NotificationController {
         data.put("id", notification.getId());
         data.put("sender", notification.getSender());
         data.put("recipients", notification.getRecipients());
-        data.put("related_event", notification.getRelated_event());
+        data.put("related_event", notification.getRelated_event()); // Does this exist?
         data.put("message", notification.getMessage());
         data.put("time_stamp", notification.getTime_stamp());
         return data;

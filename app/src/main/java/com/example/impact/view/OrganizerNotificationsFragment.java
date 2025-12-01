@@ -100,7 +100,7 @@ public class OrganizerNotificationsFragment extends Fragment implements Notifica
                     onNotificationsLoaded(notifications);
                 },
                 // error -> Toast.makeText(requireContext(), "Unable to load notifications :"+error.toString(), Toast.LENGTH_SHORT).show());
-                error -> {throw new RuntimeException(error);});
+                error -> {Toast.makeText(requireContext(), "Error when loading notifications", Toast.LENGTH_SHORT).show();});
     }
     /**
      * Updates the adapter when Firestore returns results.

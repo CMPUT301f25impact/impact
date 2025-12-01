@@ -12,4 +12,9 @@
         android:id="@+id/entrant_nav_history"
         android:icon="@drawable/outline_history_30"
         android:title="@string/entrant_nav_history_tab" />
+    <item
+        android:id="@+id/entrant_nav_notifications"
+        android:title="Notifications"
+        android:icon="@drawable/baseline_notifications_24" />
+
 </menu>

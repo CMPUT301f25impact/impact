@@ -40,21 +40,24 @@ public class WaitingListController {
     private static final String FIELD_LOTTERY_DONE = "lottery_done";
 
     private final FirebaseFirestore firestore;
+    private final NotificationController notificationController;
+
 
     /**
      * Creates a controller backed by the default Firestore instance.
      */
     public WaitingListController() {
-        this(AppSession.db());
+        this(AppSession.db(), new NotificationController(AppSession.db()));
     }
 
-    /**
-     * Creates a controller with an injected Firestore instance.
-     *
-     * @param firestore shared Firestore reference
-     */
     public WaitingListController(@NonNull FirebaseFirestore firestore) {
+        this(firestore, null); // test mode => no notifications
+    }
+
+    public WaitingListController(@NonNull FirebaseFirestore firestore,
+                                 @Nullable NotificationController notificationController) {
         this.firestore = firestore;
+        this.notificationController = notificationController; // null during tests
     }
 
     /**
@@ -288,10 +291,24 @@ public class WaitingListController {
                     }
                     Collections.shuffle(pending);
                     WriteBatch batch = firestore.batch();
+//                    NotificationController notificationController = null;
+//                    try {
+//                        notificationController = new NotificationController(firestore);
+//                    } catch (Exception ignored) {}
+
+
                     for (int i = 0; i < selectionCount; i++) {
                         DocumentSnapshot document = pending.get(i);
                         batch.update(document.getReference(), "status", STATUS_SELECTED);
+
+                        String entrantId = document.getString("entrantId");
+                        String eventName = document.getString("eventName");
+
+                        if (this.notificationController != null && entrantId != null && eventName != null) {
+                            this.notificationController.createOfferNotification(entrantId, eventId, eventName);
+                        }
                     }
+
                     Task<Void> commit = batch.commit();
                     commit.addOnSuccessListener(v -> {
                         updateLotteryState(eventId, true);
@@ -302,6 +319,7 @@ public class WaitingListController {
                     if (failureListener != null) {
                         commit.addOnFailureListener(failureListener);
                     }
+
                 })
                 .addOnFailureListener(error -> {
                     if (failureListener != null) {

@@ -67,4 +67,18 @@ public class Notification implements Serializable {
     }
 
     public String getId() {return id; }
+
+    // Entrant-friendly getters (do NOT remove old ones)
+
+    public String getEventName() {
+        if (related_event != null) {
+            return related_event.getName();
+        }
+        return null;
+    }
+
+    public Date getCreatedAt() {
+        return time_stamp;
+    }
+
 }

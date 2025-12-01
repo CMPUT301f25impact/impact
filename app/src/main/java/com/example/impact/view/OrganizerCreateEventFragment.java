@@ -114,7 +114,7 @@ public class OrganizerCreateEventFragment extends Fragment {
 
             // Convert bmp to base64 and upload
             String base64 = ImageUtil.bitmapToBase64(bmp);
-            String fileName = queryFileName(uri);
+            String fileName = ImageUtil.queryFileName(uri, requireContext());
             String mime = requireContext().getContentResolver().getType(uri);
             if (mime == null) mime = "image/jpeg";
 
@@ -138,24 +138,6 @@ public class OrganizerCreateEventFragment extends Fragment {
         }
     }
 
-    private String queryFileName(Uri uri) {
-        String result = null;
-        if ("content".equals(uri.getScheme())) {
-            try (android.database.Cursor cursor = requireContext().getContentResolver()
-                    .query(uri, new String[]{OpenableColumns.DISPLAY_NAME}, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(0);
-                }
-            } catch (Exception ignored) {}
-        }
-        if (result == null) {
-            String path = uri.getPath();
-            if (path == null) return null;
-            int cut = path.lastIndexOf('/');
-            if (cut != -1) result = path.substring(cut + 1);
-        }
-        return result;
-    }
      /**
      * Shows a material date picker and stores the chosen start/end date.
      */

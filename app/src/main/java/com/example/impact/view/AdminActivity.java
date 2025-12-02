@@ -11,12 +11,10 @@ import com.example.impact.R;
 import com.example.impact.utils.AppSession;
 
 /**
- * Launcher screen for entrant-specific tools and shortcuts.
- * Now extends BaseDashboardActivity for consistent UI/UX.
+ * Dashboard host activity for administrators, wiring up events, images, profiles, and notifications.
  */
 public class AdminActivity extends BaseDashboardActivity {
 
-//    private static final String PLACEHOLDER_ENTRANT_ID = "demo-entrant";
     private String adminId;
 
     @Override

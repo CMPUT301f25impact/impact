@@ -38,7 +38,8 @@ public class QrUtil {
     }
 
     /**
-     * Saves the provided QR code bitmap (or image bitmap) to the android phone's local gallery
+     * Saves the provided QR bitmap to the device gallery under Pictures/Impact.
+     *
      * @param qrBitmap bitmap of QR code
      * @param context app context
      */

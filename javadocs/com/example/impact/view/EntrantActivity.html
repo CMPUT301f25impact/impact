@@ -93,7 +93,9 @@ loadScripts(document, 'script');</script>
 <div class="inheritance">androidx.activity.ComponentActivity
 <div class="inheritance">androidx.fragment.app.FragmentActivity
 <div class="inheritance">androidx.appcompat.app.AppCompatActivity
+<div class="inheritance"><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">com.example.impact.view.BaseDashboardActivity</a>
 <div class="inheritance">com.example.impact.view.EntrantActivity</div>
+</div>
 </div>
 </div>
 </div>
@@ -106,12 +108,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>android.content.ComponentCallbacks</code>, <code>android.content.ComponentCallbacks2</code>, <code>android.view.KeyEvent.Callback</code>, <code>android.view.LayoutInflater.Factory</code>, <code>android.view.LayoutInflater.Factory2</code>, <code>android.view.View.OnCreateContextMenuListener</code>, <code>android.view.Window.Callback</code>, <code>androidx.activity.contextaware.ContextAware</code>, <code>androidx.activity.FullyDrawnReporterOwner</code>, <code>androidx.activity.OnBackPressedDispatcherOwner</code>, <code>androidx.activity.result.ActivityResultCaller</code>, <code>androidx.activity.result.ActivityResultRegistryOwner</code>, <code>androidx.appcompat.app.ActionBarDrawerToggle.DelegateProvider</code>, <code>androidx.appcompat.app.AppCompatCallback</code>, <code>androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback</code>, <code>androidx.core.app.ActivityCompat.RequestPermissionsRequestCodeValidator</code>, <code>androidx.core.app.OnMultiWindowModeChangedProvider</code>, <code>androidx.core.app.OnNewIntentProvider</code>, <code>androidx.core.app.OnPictureInPictureModeChangedProvider</code>, <code>androidx.core.app.OnUserLeaveHintProvider</code>, <code>androidx.core.app.TaskStackBuilder.SupportParentable</code>, <code>androidx.core.content.OnConfigurationChangedProvider</code>, <code>androidx.core.content.OnTrimMemoryProvider</code>, <code>androidx.core.view.KeyEventDispatcher.Component</code>, <code>androidx.core.view.MenuHost</code>, <code>androidx.lifecycle.HasDefaultViewModelProviderFactory</code>, <code>androidx.lifecycle.LifecycleOwner</code>, <code>androidx.lifecycle.ViewModelStoreOwner</code>, <code>androidx.savedstate.SavedStateRegistryOwner</code></dd>
+<dd><code>android.content.ComponentCallbacks</code>, <code>android.content.ComponentCallbacks2</code>, <code>android.view.KeyEvent.Callback</code>, <code>android.view.LayoutInflater.Factory</code>, <code>android.view.LayoutInflater.Factory2</code>, <code>android.view.View.OnCreateContextMenuListener</code>, <code>android.view.Window.Callback</code>, <code>androidx.activity.contextaware.ContextAware</code>, <code>androidx.activity.FullyDrawnReporterOwner</code>, <code>androidx.activity.OnBackPressedDispatcherOwner</code>, <code>androidx.activity.result.ActivityResultCaller</code>, <code>androidx.activity.result.ActivityResultRegistryOwner</code>, <code>androidx.appcompat.app.ActionBarDrawerToggle.DelegateProvider</code>, <code>androidx.appcompat.app.AppCompatCallback</code>, <code>androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback</code>, <code>androidx.core.app.ActivityCompat.RequestPermissionsRequestCodeValidator</code>, <code>androidx.core.app.OnMultiWindowModeChangedProvider</code>, <code>androidx.core.app.OnNewIntentProvider</code>, <code>androidx.core.app.OnPictureInPictureModeChangedProvider</code>, <code>androidx.core.app.OnUserLeaveHintProvider</code>, <code>androidx.core.app.TaskStackBuilder.SupportParentable</code>, <code>androidx.core.content.OnConfigurationChangedProvider</code>, <code>androidx.core.content.OnTrimMemoryProvider</code>, <code>androidx.core.view.KeyEventDispatcher.Component</code>, <code>androidx.core.view.MenuHost</code>, <code>androidx.lifecycle.HasDefaultViewModelProviderFactory</code>, <code>androidx.lifecycle.LifecycleOwner</code>, <code>androidx.lifecycle.ViewModelStoreOwner</code>, <code>androidx.savedstate.SavedStateRegistryOwner</code>, <code><a href="EntrantProfileFragment.ProfileInteractionListener.html" title="interface in com.example.impact.view">EntrantProfileFragment.ProfileInteractionListener</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">EntrantActivity</span>
-<span class="extends-implements">extends androidx.appcompat.app.AppCompatActivity</span></div>
-<div class="block">Launcher screen for entrant-specific tools and shortcuts.</div>
+<span class="extends-implements">extends <a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a>
+implements <a href="EntrantProfileFragment.ProfileInteractionListener.html" title="interface in com.example.impact.view">EntrantProfileFragment.ProfileInteractionListener</a></span></div>
+<div class="block">Launcher screen for entrant-specific tools and shortcuts.
+ Now extends BaseDashboardActivity for consistent UI/UX.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -137,6 +141,9 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-com.example.impact.view.BaseDashboardActivity">Fields inherited from class&nbsp;com.example.impact.view.<a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></h3>
+<code><a href="BaseDashboardActivity.html#activityTitleView">activityTitleView</a>, <a href="BaseDashboardActivity.html#bottomNav">bottomNav</a>, <a href="BaseDashboardActivity.html#toolbar">toolbar</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-android.app.Activity">Fields inherited from class&nbsp;android.app.Activity</h3>
 <code>DEFAULT_KEYS_DIALER, DEFAULT_KEYS_DISABLE, DEFAULT_KEYS_SEARCH_GLOBAL, DEFAULT_KEYS_SEARCH_LOCAL, DEFAULT_KEYS_SHORTCUT, FOCUSED_STATE_SET, FULLSCREEN_MODE_REQUEST_ENTER, FULLSCREEN_MODE_REQUEST_EXIT, OVERRIDE_TRANSITION_CLOSE, OVERRIDE_TRANSITION_OPEN, RESULT_CANCELED, RESULT_FIRST_USER, RESULT_OK</code></div>
@@ -172,18 +179,44 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActivityTitle()" class="member-name-link">getActivityTitle</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBottomNavigationMenuResource()" class="member-name-link">getBottomNavigationMenuResource</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected androidx.fragment.app.Fragment</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInitialFragment()" class="member-name-link">getInitialFragment</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInitialToolbarTitle()" class="member-name-link">getInitialToolbarTitle</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>androidx.fragment.app.Fragment</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSelectedFragment(int)" class="member-name-link">getSelectedFragment</a><wbr>(int&nbsp;itemId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the Bottom nagivation item options
+ Returns something like:
+ EventListFragment.newInstance(entrantId);</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSelectedToolBarTitle(int)" class="member-name-link">getSelectedToolBarTitle</a><wbr>(int&nbsp;itemId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the Bottom nagivation item toolBarTitle options</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreate(android.os.Bundle)" class="member-name-link">onCreate</a><wbr>(android.os.Bundle&nbsp;savedInstanceState)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCreateOptionsMenu(android.view.Menu)" class="member-name-link">onCreateOptionsMenu</a><wbr>(android.view.Menu&nbsp;menu)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onOptionsItemSelected(android.view.MenuItem)" class="member-name-link">onOptionsItemSelected</a><wbr>(android.view.MenuItem&nbsp;item)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onProfileDeleted()" class="member-name-link">onProfileDeleted</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Callback for when a user deletes their profile while signed in</div>
 </div>
 </div>
 </div>
+</div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.example.impact.view.BaseDashboardActivity">Methods inherited from class&nbsp;com.example.impact.view.<a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></h3>
+<code><a href="BaseDashboardActivity.html#hideActivityTitle()">hideActivityTitle</a>, <a href="BaseDashboardActivity.html#navigateToLogin()">navigateToLogin</a>, <a href="BaseDashboardActivity.html#onCreateCustomOptionsMenu(android.view.Menu)">onCreateCustomOptionsMenu</a>, <a href="BaseDashboardActivity.html#onCreateOptionsMenu(android.view.Menu)">onCreateOptionsMenu</a>, <a href="BaseDashboardActivity.html#onCustomOptionsItemSelected(android.view.MenuItem)">onCustomOptionsItemSelected</a>, <a href="BaseDashboardActivity.html#onOptionsItemSelected(android.view.MenuItem)">onOptionsItemSelected</a>, <a href="BaseDashboardActivity.html#performLogout()">performLogout</a>, <a href="BaseDashboardActivity.html#setActivityTitle(java.lang.String)">setActivityTitle</a>, <a href="BaseDashboardActivity.html#setToolbarTitle(int)">setToolbarTitle</a>, <a href="BaseDashboardActivity.html#setToolbarTitle(java.lang.String)">setToolbarTitle</a>, <a href="BaseDashboardActivity.html#setupCustomToolbarActions()">setupCustomToolbarActions</a>, <a href="BaseDashboardActivity.html#shouldShowBackButton()">shouldShowBackButton</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-androidx.appcompat.app.AppCompatActivity">Methods inherited from class&nbsp;androidx.appcompat.app.AppCompatActivity</h3>
 <code>addContentView, attachBaseContext, closeOptionsMenu, dispatchKeyEvent, findViewById, getDelegate, getDrawerToggleDelegate, getMenuInflater, getResources, getSupportActionBar, getSupportParentActivityIntent, invalidateOptionsMenu, onConfigurationChanged, onContentChanged, onCreateSupportNavigateUpTaskStack, onDestroy, onKeyDown, onLocalesChanged, onMenuItemSelected, onMenuOpened, onNightModeChanged, onPanelClosed, onPostCreate, onPostResume, onPrepareSupportNavigateUpTaskStack, onStart, onStop, onSupportActionModeFinished, onSupportActionModeStarted, onSupportContentChanged, onSupportNavigateUp, onTitleChanged, onWindowStartingSupportActionMode, openOptionsMenu, setContentView, setContentView, setContentView, setSupportActionBar, setSupportProgress, setSupportProgressBarIndeterminate, setSupportProgressBarIndeterminateVisibility, setSupportProgressBarVisibility, setTheme, startSupportActionMode, supportInvalidateOptionsMenu, supportNavigateUpTo, supportRequestWindowFeature, supportShouldUpRecreateTask</code></div>
@@ -245,27 +278,94 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onCreate</span><wbr><span class="parameters">(android.os.Bundle&nbsp;savedInstanceState)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code>onCreate</code>&nbsp;in class&nbsp;<code>androidx.fragment.app.FragmentActivity</code></dd>
+<dd><code><a href="BaseDashboardActivity.html#onCreate(android.os.Bundle)">onCreate</a></code>&nbsp;in class&nbsp;<code><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></code></dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="onCreateOptionsMenu(android.view.Menu)">
-<h3>onCreateOptionsMenu</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onCreateOptionsMenu</span><wbr><span class="parameters">(android.view.Menu&nbsp;menu)</span></div>
+<section class="detail" id="getInitialFragment()">
+<h3>getInitialFragment</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">androidx.fragment.app.Fragment</span>&nbsp;<span class="element-name">getInitialFragment</span>()</div>
 <dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>onCreateOptionsMenu</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="BaseDashboardActivity.html#getInitialFragment()">getInitialFragment</a></code>&nbsp;in class&nbsp;<code><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></code></dd>
+<dt>Returns:</dt>
+<dd>The initial fragment to display when the activity is created</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="onOptionsItemSelected(android.view.MenuItem)">
-<h3>onOptionsItemSelected</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onOptionsItemSelected</span><wbr><span class="parameters">(android.view.MenuItem&nbsp;item)</span></div>
+<section class="detail" id="getInitialToolbarTitle()">
+<h3>getInitialToolbarTitle</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInitialToolbarTitle</span>()</div>
 <dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>onOptionsItemSelected</code>&nbsp;in class&nbsp;<code>android.app.Activity</code></dd>
+<dt>Specified by:</dt>
+<dd><code><a href="BaseDashboardActivity.html#getInitialToolbarTitle()">getInitialToolbarTitle</a></code>&nbsp;in class&nbsp;<code><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></code></dd>
+<dt>Returns:</dt>
+<dd>The initial toolbar title resource ID</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBottomNavigationMenuResource()">
+<h3>getBottomNavigationMenuResource</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getBottomNavigationMenuResource</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BaseDashboardActivity.html#getBottomNavigationMenuResource()">getBottomNavigationMenuResource</a></code>&nbsp;in class&nbsp;<code><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></code></dd>
+<dt>Returns:</dt>
+<dd>The menu resource ID for bottom navigation, or 0 to hide bottom nav</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSelectedFragment(int)">
+<h3>getSelectedFragment</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">androidx.fragment.app.Fragment</span>&nbsp;<span class="element-name">getSelectedFragment</span><wbr><span class="parameters">(@NonNull
+ int&nbsp;itemId)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="BaseDashboardActivity.html#getSelectedFragment(int)">BaseDashboardActivity</a></code></span></div>
+<div class="block">Set the Bottom nagivation item options
+ Returns something like:
+ EventListFragment.newInstance(entrantId);</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BaseDashboardActivity.html#getSelectedFragment(int)">getSelectedFragment</a></code>&nbsp;in class&nbsp;<code><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getActivityTitle()">
+<h3>getActivityTitle</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getActivityTitle</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BaseDashboardActivity.html#getActivityTitle()">getActivityTitle</a></code>&nbsp;in class&nbsp;<code><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></code></dd>
+<dt>Returns:</dt>
+<dd>The activity-level title to display above the toolbar, or 0 to hide</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSelectedToolBarTitle(int)">
+<h3>getSelectedToolBarTitle</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSelectedToolBarTitle</span><wbr><span class="parameters">(@NonNull
+ int&nbsp;itemId)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="BaseDashboardActivity.html#getSelectedToolBarTitle(int)">BaseDashboardActivity</a></code></span></div>
+<div class="block">Set the Bottom nagivation item toolBarTitle options</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BaseDashboardActivity.html#getSelectedToolBarTitle(int)">getSelectedToolBarTitle</a></code>&nbsp;in class&nbsp;<code><a href="BaseDashboardActivity.html" title="class in com.example.impact.view">BaseDashboardActivity</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="onProfileDeleted()">
+<h3>onProfileDeleted</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onProfileDeleted</span>()</div>
+<div class="block">Callback for when a user deletes their profile while signed in</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="EntrantProfileFragment.ProfileInteractionListener.html#onProfileDeleted()">onProfileDeleted</a></code>&nbsp;in interface&nbsp;<code><a href="EntrantProfileFragment.ProfileInteractionListener.html" title="interface in com.example.impact.view">EntrantProfileFragment.ProfileInteractionListener</a></code></dd>
 </dl>
 </section>
 </li>

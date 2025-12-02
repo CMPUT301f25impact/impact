@@ -44,7 +44,12 @@ public class EntrantProfileFragment extends Fragment {
     }
     private ProfileInteractionListener listener;
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory helper bundling the entrant id argument with the fragment.
+     *
+     * @param entrantId entrant identifier
+     * @return configured fragment instance
+     */
     public static EntrantProfileFragment newInstance(String entrantId) {
         EntrantProfileFragment fragment = new EntrantProfileFragment();
         Bundle args = new Bundle();

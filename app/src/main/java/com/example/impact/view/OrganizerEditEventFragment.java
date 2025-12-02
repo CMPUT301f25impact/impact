@@ -69,7 +69,13 @@ public class OrganizerEditEventFragment extends Fragment {
     private final ActivityResultLauncher<String> pickImageLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), this::onPosterPicked);
 
-    // Use a static factory method to create the fragment and set arguments
+    /**
+     * Factory helper for constructing the fragment with organizer and event arguments.
+     *
+     * @param organizerId organizer identifier
+     * @param event event being edited
+     * @return configured fragment instance
+     */
     public static OrganizerEditEventFragment newInstance(String organizerId, Event event) {
         OrganizerEditEventFragment fragment = new OrganizerEditEventFragment();
         Bundle args = new Bundle();

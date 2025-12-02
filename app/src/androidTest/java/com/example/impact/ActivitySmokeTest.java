@@ -15,6 +15,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * Smoke tests that simply launch every major activity to ensure they start without crashes.
+ */
 @RunWith(AndroidJUnit4.class)
 public class ActivitySmokeTest {
 
@@ -39,8 +42,10 @@ public class ActivitySmokeTest {
     @Rule public ActivityScenarioRule<WaitingListActivity> waiting =
             new ActivityScenarioRule<>(WaitingListActivity.class);
 
+    /**
+     * Launches each registered activity; the instrumentation framework fails the test if any
+     * activity crashes while being started.
+     */
     @Test
-    public void launchers_NoCrash() {
-        // If any activity crashes on launch, test fails automatically.
-    }
+    public void launchers_NoCrash() {}
 }

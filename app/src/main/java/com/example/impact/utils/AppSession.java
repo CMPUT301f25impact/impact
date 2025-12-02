@@ -92,6 +92,9 @@ public final class AppSession {
         return db;
     }
 
+    /**
+     * Lazily hydrates cached identifiers from the original startup intent when available.
+     */
     private static void hydrateFromIntent() {
         if (startupIntent == null) {
             return;

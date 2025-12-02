@@ -1,11 +1,15 @@
 package com.example.impact.view;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +29,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Displays organizer-specific waiting list information grouped by entrant status.
@@ -51,6 +60,7 @@ public class WaitingListActivity extends AppCompatActivity {
     private TextView lotteryCriteriaView;
     private Button runLotteryButton;
     private Button redrawButton;
+    private Button exportAcceptedButton;
     private ListenerRegistration pendingRegistration;
     private ListenerRegistration selectedRegistration;
     private ListenerRegistration cancelledRegistration;
@@ -63,6 +73,9 @@ public class WaitingListActivity extends AppCompatActivity {
     private Integer eventCapacity;
     private boolean lotteryAlreadyRun;
     private boolean isOrganizer;
+    private ActivityResultLauncher<String> exportLauncher;
+    private String pendingCsvPayload;
+    private String pendingCsvFileName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,6 +95,7 @@ public class WaitingListActivity extends AppCompatActivity {
         cancelledEmptyView = findViewById(R.id.textViewCancelledEmpty);
         acceptedEmptyView = findViewById(R.id.textViewAcceptedEmpty);
         lotteryCriteriaView = findViewById(R.id.textViewLotteryCriteria);
+        exportAcceptedButton = findViewById(R.id.buttonExportAcceptedCsv);
 
         pendingAdapter = new SimpleEntrantAdapter();
         selectedAdapter = new SimpleEntrantAdapter();
@@ -112,6 +126,7 @@ public class WaitingListActivity extends AppCompatActivity {
         }
 
         startStatusSubscriptions();
+        setupExportLauncher();
         configureRunLotteryButton();
     }
 
@@ -131,11 +146,18 @@ public class WaitingListActivity extends AppCompatActivity {
             if (lotteryCriteriaView != null) {
                 lotteryCriteriaView.setVisibility(View.GONE);
             }
+            if (exportAcceptedButton != null) {
+                exportAcceptedButton.setVisibility(View.GONE);
+            }
             return;
         }
         runLotteryButton.setVisibility(View.VISIBLE);
         if (lotteryCriteriaView != null) {
             lotteryCriteriaView.setVisibility(View.VISIBLE);
+        }
+        if (exportAcceptedButton != null) {
+            exportAcceptedButton.setVisibility(View.VISIBLE);
+            exportAcceptedButton.setOnClickListener(v -> exportAcceptedEntrants());
         }
         runLotteryButton.setOnClickListener(v -> runLottery());
         if (redrawButton != null) {
@@ -315,6 +337,94 @@ public class WaitingListActivity extends AppCompatActivity {
         }, error -> {
             Toast.makeText(this, R.string.waiting_list_redraw_error, Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void exportAcceptedEntrants() {
+        if (!isOrganizer) {
+            return;
+        }
+        FirebaseFirestore.getInstance()
+                .collection("waitingLists")
+                .document(eventId)
+                .collection("entrants")
+                .whereEqualTo("status", STATUS_ACCEPTED)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot == null || snapshot.isEmpty()) {
+                        Toast.makeText(this, R.string.waiting_list_export_empty_error, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    pendingCsvPayload = buildAcceptedCsv(snapshot);
+                    pendingCsvFileName = buildCsvFileName();
+                    if (exportLauncher != null && pendingCsvPayload != null) {
+                        exportLauncher.launch(pendingCsvFileName);
+                    }
+                })
+                .addOnFailureListener(error ->
+                        Toast.makeText(this, R.string.waiting_list_export_error, Toast.LENGTH_SHORT).show());
+    }
+
+    private void setupExportLauncher() {
+        exportLauncher = registerForActivityResult(new ActivityResultContracts.CreateDocument("text/csv"), uri -> {
+            if (uri == null || pendingCsvPayload == null) {
+                pendingCsvPayload = null;
+                pendingCsvFileName = null;
+                return;
+            }
+            try (OutputStream stream = getContentResolver().openOutputStream(uri)) {
+                if (stream != null) {
+                    stream.write(pendingCsvPayload.getBytes(StandardCharsets.UTF_8));
+                    Toast.makeText(this, R.string.waiting_list_export_success, Toast.LENGTH_SHORT).show();
+                }
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.waiting_list_export_error, Toast.LENGTH_SHORT).show();
+            } finally {
+                pendingCsvPayload = null;
+                pendingCsvFileName = null;
+            }
+        });
+    }
+
+    private String buildAcceptedCsv(QuerySnapshot snapshot) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("entrantId,eventId,eventName,timestamp\n");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        for (DocumentSnapshot doc : snapshot.getDocuments()) {
+            String entrant = safeCsvValue(doc.getString("entrantId"));
+            String event = safeCsvValue(eventId);
+            String name = safeCsvValue(eventName);
+            com.google.firebase.Timestamp ts = doc.getTimestamp("timestamp");
+            String time = ts != null ? formatter.format(ts.toDate()) : "";
+            builder.append(entrant).append(',')
+                    .append(event).append(',')
+                    .append(name).append(',')
+                    .append(safeCsvValue(time))
+                    .append('\n');
+        }
+        return builder.toString();
+    }
+
+    private String safeCsvValue(String value) {
+        if (value == null) {
+            value = "";
+        }
+        boolean needsQuotes = value.contains(",") || value.contains("\n") || value.contains("\"");
+        if (value.contains("\"")) {
+            value = value.replace("\"", "\"\"");
+        }
+        if (needsQuotes) {
+            return '"' + value + '"';
+        }
+        return value;
+    }
+
+    private String buildCsvFileName() {
+        String base = eventName != null && !eventName.trim().isEmpty() ? eventName : eventId;
+        if (base == null) {
+            base = "enrolled";
+        }
+        base = base.replaceAll("[/\\\\?%*:|\"<>]", "_");
+        return base + "_enrolled.csv";
     }
 
 
